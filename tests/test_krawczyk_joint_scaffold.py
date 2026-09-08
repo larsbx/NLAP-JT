@@ -14,17 +14,37 @@ def test_krawczyk_scaffold_has_required_policies():
     assert "struct KrawczykWitnessStatus" in src
     assert "fn p21_value" in src
     assert "fn p21_derivative" in src
+    assert "fn p21_krawczyk_image" in src
+    assert "fn verify_p21_krawczyk_c_minus_2" in src
     assert "fn demo_krawczyk_p21_c_minus_2" in src
     assert "fn demo_krawczyk_p41_m41_placeholder" in src
-    assert "full interval inclusion" in src
     assert "placeholder-only" in src
 
 
-def test_p21_polynomial_and_derivative_preserved():
+def test_p21_polynomial_derivative_and_inverse_preserved():
     src = read(KRAW)
-    assert "P_{2,1}(C)=C(C+2)" in src
-    assert "P'_{2,1}(C)=2C+2" in src
-    assert "A=-1/2" in src
+    assert "P21(C)=C(C+2)" in src
+    assert "dP21(C)=2C+2" in src
+    assert "complex_minus_half" in src
+    assert "Q(-1, 2)" in src
+
+
+def test_p21_demo_is_computed_not_status_asserted():
+    src = read(KRAW)
+    demo_start = src.index("fn demo_krawczyk_p21_c_minus_2")
+    demo_src = src[demo_start:src.index("fn f7_name")]
+    assert "verify_p21_krawczyk_c_minus_2(8)" in demo_src
+    assert "var ok" in demo_src
+    assert "KrawczykWitnessStatus(\"P_2_1\", True, True, True, ok" in demo_src
+    assert "KrawczykWitnessStatus(\"P_2_1\", True, True, True, True" not in demo_src
+
+
+def test_krawczyk_formula_is_present():
+    src = read(KRAW)
+    assert "K(beta)=m-A P(m)+(1-A P'(beta))(beta-m)" in src
+    assert "one_minus_a_dp" in src
+    assert "beta_minus_m" in src
+    assert "image.strict_subset_of(beta)" in src
 
 
 def test_p41_remains_not_accepted_until_interval_eval_lands():

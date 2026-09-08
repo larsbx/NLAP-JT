@@ -19,8 +19,17 @@ def test_inverse_uses_quadrance_conjugate_formula():
 def test_p21_inverse_is_exact_minus_half():
     src = text()
     assert "fn inverse_p21_derivative_at_minus_2" in src
-    assert "ComplexQ.point(-1, 2, 0, 1)" in src
+    assert "ComplexQ.coord(-1, 2, 0, 1)" in src
     assert "P21'(-2)=-2" in src
+
+
+def test_no_points_language_in_inverse_api():
+    src = text()
+    assert "fn point(" not in src
+    assert "to_point_interval" not in src
+    assert "fn coord(" in src
+    assert "to_singleton_box" in src
+    assert "coordinate record" in src
 
 
 def test_m41_inverse_stays_pending_until_exact_eval():

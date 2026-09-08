@@ -6,7 +6,7 @@
 # boxes, and interval inclusion checks. It contains no analytic trig primitives.
 #
 # Status:
-# - P_{2,1}=C(C+2) has a concrete hand-checkable witness shape.
+# - P_{2,1}=C(C+2) has a native interval Krawczyk computation.
 # - P_{4,1}=C(C+2)(C^3+2C^2+2C+2)F7 is represented by its required
 #   witness fields, but full interval polynomial evaluation remains pending.
 
@@ -39,16 +39,34 @@ struct KrawczykWitnessStatus:
         )
 
 
+fn complex_neg(z: ComplexIQ) -> ComplexIQ:
+    return ComplexIQ(z.re.neg(), z.im.neg())
+
+
+fn complex_one() -> ComplexIQ:
+    return ComplexIQ.point(Q.one(), Q.zero())
+
+
+fn complex_two() -> ComplexIQ:
+    return ComplexIQ.point(Q(2, 1), Q.zero())
+
+
+fn complex_minus_half() -> ComplexIQ:
+    return ComplexIQ.point(Q(-1, 2), Q.zero())
+
+
+fn complex_minus_two_point() -> ComplexIQ:
+    return ComplexIQ.point(Q(-2, 1), Q.zero())
+
+
 fn p21_value(c: ComplexIQ) -> ComplexIQ:
-    # P_{2,1}(C)=C(C+2).
-    var two = ComplexIQ.point(Q(2, 1), Q.zero())
-    return c.mul(c.add(two))
+    # P21(C)=C(C+2).
+    return c.mul(c.add(complex_two()))
 
 
 fn p21_derivative(c: ComplexIQ) -> ComplexIQ:
-    # P'_{2,1}(C)=2C+2.
-    var two = ComplexIQ.point(Q(2, 1), Q.zero())
-    return c.mul(two).add(two)
+    # dP21(C)=2C+2.
+    return c.mul(complex_two()).add(complex_two())
 
 
 fn c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
@@ -61,14 +79,29 @@ fn c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
     return ComplexIQ(IQ(Q(-2, 1).sub(h), Q(-2, 1).add(h)), IQ(h.neg(), h))
 
 
+fn p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
+    # K(beta)=m-A P(m)+(1-A P'(beta))(beta-m)
+    # for m=-2 and A=-1/2.
+    var m = complex_minus_two_point()
+    var a = complex_minus_half()
+    var p_m = p21_value(m)
+    var beta_minus_m = beta.sub(m)
+    var one_minus_a_dp = complex_one().sub(a.mul(p21_derivative(beta)))
+    return m.sub(a.mul(p_m)).add(one_minus_a_dp.mul(beta_minus_m))
+
+
+fn verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
+    var beta = c_minus_2_box(radius_den_power)
+    var image = p21_krawczyk_image(beta)
+    return image.strict_subset_of(beta)
+
+
 fn demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
-    # Hand-checkable witness:
-    #   P(C)=C(C+2), c0=-2, P(c0)=0, P'(c0)=-2.
-    #   Choose A=-1/2. For sufficiently small dyadic beta around -2,
-    #   K(beta) is strictly contained in beta.
-    # This function records the accepted witness status; full interval inclusion
-    # is implemented once polynomial interval evaluation is native.
-    return KrawczykWitnessStatus("P_2_1", True, True, True, True, "beta_c_minus_2")
+    # Computed native interval witness for beta centered at -2.
+    # The default radius 2^-8 is intentionally small enough for the current
+    # Int64 rational scaffold and still large enough for readable debugging.
+    var ok = verify_p21_krawczyk_c_minus_2(8)
+    return KrawczykWitnessStatus("P_2_1", True, True, True, ok, "beta_c_minus_2")
 
 
 fn f7_name() -> String:
@@ -83,7 +116,7 @@ fn demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:
     # Required target witness for M_{4,1}:
     #   P=P_4_1 squarefree polynomial.
     #   beta centered at dyadic approximation of upper non-real F7 root.
-    #   A dyadic enclosure for 1/P'(m).
+    #   A dyadic enclosure for inverse derivative at the center.
     #   Proof that K_P(beta) is strictly inside beta.
     # This remains placeholder-only until polynomial interval evaluation lands.
     return KrawczykWitnessStatus("P_4_1", True, True, True, False, "beta_m41_pending")

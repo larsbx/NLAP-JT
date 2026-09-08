@@ -1,11 +1,11 @@
-name: no-trig-audit
+name: finite-regime-core-audit
 
 on:
   push:
   pull_request:
 
 jobs:
-  no-trig-audit:
+  source-invariants:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -13,3 +13,6 @@ jobs:
 
       - name: Run no-trig core audit
         run: python3 tools/audit_no_trig.py
+
+      - name: Run scaffold tests
+        run: python3 -m pytest tests/test_scaffold.py

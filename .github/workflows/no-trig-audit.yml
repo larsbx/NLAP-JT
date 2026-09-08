@@ -18,7 +18,7 @@ jobs:
         run: python3 tools/audit_no_points.py
 
       - name: Run scaffold tests
-        run: python3 -m pytest tests/test_scaffold.py tests/test_certificate_contracts.py tests/test_interval_exclusion_reference.py tests/test_interval_orbit_scaffold.py tests/test_krawczyk_joint_scaffold.py tests/test_poly_interval_eval.py tests/test_complex_inverse.py
+        run: python3 -m pytest tests/test_scaffold.py tests/test_certificate_contracts.py tests/test_interval_exclusion_reference.py tests/test_interval_orbit_scaffold.py tests/test_krawczyk_joint_scaffold.py tests/test_poly_interval_eval.py tests/test_complex_inverse.py tests/test_vertex_incidence.py
 
       - name: Run polynomial reference oracle
         run: python3 tools/poly_reference.py

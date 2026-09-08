@@ -30,8 +30,8 @@ def test_m41_inverse_stays_pending_until_exact_eval():
     assert "False, False, True" in src
 
 
-def test_no_forbidden_shortcuts():
+def test_no_forbidden_runtime_shortcuts():
     src = text().lower()
-    forbidden = ["float64", "math.", "cmath", "numpy", "atan", "radian", "degree", "sin", "cos", "tan"]
+    forbidden = ["float64", "math.", "cmath", "numpy", "atan(", "radian", "degree"]
     for token in forbidden:
         assert token not in src

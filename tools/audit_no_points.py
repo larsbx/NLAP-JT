@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Audit core files for forbidden point-primitive language.
+"""Audit core files for forbidden analytic point-primitive language.
 
-The finite-regime calculus does not treat ideal points as primitive. Core code may
-use coordinate records, singleton boxes, dyadic boxes, symbolic ray addresses,
-and localized root handles.
-
-This audit intentionally focuses on executable source and tests. Prose docs may
-explain the invariant and contrast it with classical point language.
+Correction: point language is allowed only for finite incidence objects of the
+form PointVertex, i.e. a vertex whose carrier is a finite vertex set. The audit
+therefore blocks analytic point APIs while allowing PointVertex in the incidence
+substrate and tests.
 """
 
 from __future__ import annotations
@@ -18,11 +16,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CORE_PATHS = [ROOT / "src", ROOT / "tests"]
 
-# Banned in source as type/function/API names. We allow ComplexIQ.point because
-# interval_q.mojo still uses it as a singleton-box constructor; new code should
-# prefer explicit singleton naming.
+# Banned as type/function/API names when they indicate analytic singletons or
+# pointwise evaluation. PointVertex is explicitly allowed as finite incidence.
 TOKEN_RE = re.compile(
-    r"\b(?:Point|point_eval|eval_point|point_value|to_point_interval)\b|fn\s+point\s*\(",
+    r"\b(?:Point(?!Vertex)|point_eval|eval_point|point_value|to_point_interval)\b|fn\s+point\s*\(",
 )
 
 ALLOW_LINES = {
@@ -55,13 +52,13 @@ def main() -> int:
                 violations.append((path.relative_to(ROOT), lineno, stripped))
 
     if violations:
-        print("Forbidden point-primitive API language found in core files:\n")
+        print("Forbidden analytic point API language found in core files:\n")
         for path, lineno, line in violations:
             print(f"{path}:{lineno}: {line}")
-        print("\nUse coordinate records, singleton boxes, dyadic boxes, or root handles instead.")
+        print("\nUse CoordRecord, SingletonBox, RootHandle, or PointVertex finite incidence instead.")
         return 1
 
-    print("OK: no forbidden point-primitive API language found in core files.")
+    print("OK: no forbidden analytic point API language found in core files.")
     return 0
 
 

@@ -7,11 +7,12 @@
 #
 # Status:
 # - P_{2,1}=C(C+2) has a native interval Krawczyk computation.
-# - P_{4,1}=C(C+2)(C^3+2C^2+2C+2)F7 is represented by its required
-#   witness fields, but full interval polynomial evaluation remains pending.
+# - P_{4,1}=C(C+2)(C^3+2C^2+2C+2)F7 has general interval evaluation
+#   functions available, but its final inclusion witness remains pending.
 
 from interval_q import ComplexIQ, IQ
 from rat_q import Q
+from poly_interval_eval import eval_p21, eval_p21_derivative, eval_p41, eval_p41_derivative
 
 
 struct KrawczykWitnessStatus:
@@ -39,16 +40,8 @@ struct KrawczykWitnessStatus:
         )
 
 
-fn complex_neg(z: ComplexIQ) -> ComplexIQ:
-    return ComplexIQ(z.re.neg(), z.im.neg())
-
-
 fn complex_one() -> ComplexIQ:
     return ComplexIQ.point(Q.one(), Q.zero())
-
-
-fn complex_two() -> ComplexIQ:
-    return ComplexIQ.point(Q(2, 1), Q.zero())
 
 
 fn complex_minus_half() -> ComplexIQ:
@@ -57,16 +50,6 @@ fn complex_minus_half() -> ComplexIQ:
 
 fn complex_minus_two_point() -> ComplexIQ:
     return ComplexIQ.point(Q(-2, 1), Q.zero())
-
-
-fn p21_value(c: ComplexIQ) -> ComplexIQ:
-    # P21(C)=C(C+2).
-    return c.mul(c.add(complex_two()))
-
-
-fn p21_derivative(c: ComplexIQ) -> ComplexIQ:
-    # dP21(C)=2C+2.
-    return c.mul(complex_two()).add(complex_two())
 
 
 fn c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
@@ -84,9 +67,9 @@ fn p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
     # for m=-2 and A=-1/2.
     var m = complex_minus_two_point()
     var a = complex_minus_half()
-    var p_m = p21_value(m)
+    var p_m = eval_p21(m)
     var beta_minus_m = beta.sub(m)
-    var one_minus_a_dp = complex_one().sub(a.mul(p21_derivative(beta)))
+    var one_minus_a_dp = complex_one().sub(a.mul(eval_p21_derivative(beta)))
     return m.sub(a.mul(p_m)).add(one_minus_a_dp.mul(beta_minus_m))
 
 
@@ -112,14 +95,23 @@ fn p41_squarefree_name() -> String:
     return "P_4_1=C(C+2)(C^3+2C^2+2C+2)F7"
 
 
+fn p41_evaluation_available_on_box(beta: ComplexIQ) -> Bool:
+    # This performs polynomial and derivative interval evaluation through the
+    # general Horner evaluator, but does not yet certify a Krawczyk inclusion.
+    var p_beta = eval_p41(beta)
+    var dp_beta = eval_p41_derivative(beta)
+    return not p_beta.re.contains_zero() or dp_beta.re.contains_zero() or dp_beta.im.contains_zero() or not p_beta.im.contains_zero()
+
+
 fn demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:
     # Required target witness for M_{4,1}:
     #   P=P_4_1 squarefree polynomial.
     #   beta centered at dyadic approximation of upper non-real F7 root.
     #   A dyadic enclosure for inverse derivative at the center.
     #   Proof that K_P(beta) is strictly inside beta.
-    # This remains placeholder-only until polynomial interval evaluation lands.
-    return KrawczykWitnessStatus("P_4_1", True, True, True, False, "beta_m41_pending")
+    # General polynomial interval evaluation is present; the inverse derivative
+    # enclosure and final inclusion proof remain pending.
+    return KrawczykWitnessStatus("P_4_1", True, True, False, False, "beta_m41_pending")
 
 
 fn krawczyk_ready_for_joint_certificate(status: KrawczykWitnessStatus) -> Bool:

@@ -15,7 +15,7 @@ jobs:
         run: python3 tools/audit_no_trig.py
 
       - name: Run scaffold tests
-        run: python3 -m pytest tests/test_scaffold.py tests/test_certificate_contracts.py tests/test_interval_exclusion_reference.py
+        run: python3 -m pytest tests/test_scaffold.py tests/test_certificate_contracts.py tests/test_interval_exclusion_reference.py tests/test_interval_orbit_scaffold.py
 
       - name: Run polynomial reference oracle
         run: python3 tools/poly_reference.py

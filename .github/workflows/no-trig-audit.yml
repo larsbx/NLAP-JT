@@ -16,3 +16,6 @@ jobs:
 
       - name: Run scaffold tests
         run: python3 -m pytest tests/test_scaffold.py tests/test_certificate_contracts.py
+
+      - name: Run polynomial reference oracle
+        run: python3 tools/poly_reference.py

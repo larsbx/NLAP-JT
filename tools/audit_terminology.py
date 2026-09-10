@@ -6,7 +6,8 @@ This is not a theorem checker. It enforces repository hygiene:
 - risky bridge/isomorphism language must be governed;
 - novel bridge terms must include genealogy and leak discipline;
 - rank-2 files must not introduce circle/locus primitives;
-- a project terminology registry and use manifest must exist.
+- a project terminology registry and use manifest must exist;
+- deprecated C1 bridge terminology must not be used for new claims.
 """
 
 from __future__ import annotations
@@ -57,6 +58,15 @@ NEGATING_CONTEXT = [
     "is not",
 ]
 
+MIGRATION_CONTEXT = [
+    "deprecated",
+    "legacy",
+    "replaces",
+    "rather than",
+    "migration",
+    "old term",
+]
+
 RANK2_FILES = [
     ROOT / "docs" / "rank2-coordinate-substrate.md",
     ROOT / "src" / "rank2_operator.mojo",
@@ -76,8 +86,10 @@ REGISTRY_REQUIRED_TERMS = [
     "PointVertex",
     "rank-2 coordinate record",
     "finite rational-ray nest",
+    "SeparatorCatalogueAdequacy",
     "persistent non-separation",
     "persistent wake ambiguity",
+    "Mojo theorem kernel",
 ]
 
 C1_SCOPED_TERMS = [
@@ -85,9 +97,15 @@ C1_SCOPED_TERMS = [
     "persistent non-separation",
     "persistent wake ambiguity",
     "wake ambiguity",
-    "catalogue extensionality",
+    "SeparatorCatalogueAdequacy",
+    "SeparatorCatalogueSoundness",
+    "SeparatorCatalogueCompleteness",
     "side-assignment witness",
     "separator code",
+]
+
+DEPRECATED_TERMS = [
+    "catalogue extensionality",
 ]
 
 C1_SCOPED_PREFIXES = (
@@ -125,9 +143,17 @@ def has_full_declaration(text: str) -> bool:
     return all(field in text for field in REQUIRED_DECLARATION_FIELDS)
 
 
+def has_context(text: str, index: int, markers: list[str]) -> bool:
+    window = text[max(0, index - 140): index + 140].lower()
+    return any(marker in window for marker in markers)
+
+
 def is_negated_context(text: str, index: int) -> bool:
-    window = text[max(0, index - 90): index].lower()
-    return any(marker in window for marker in NEGATING_CONTEXT)
+    return has_context(text, index, NEGATING_CONTEXT)
+
+
+def is_migration_context(text: str, index: int) -> bool:
+    return has_context(text, index, MIGRATION_CONTEXT)
 
 
 def audit_registry(errors: list[str]) -> None:
@@ -139,6 +165,8 @@ def audit_registry(errors: list[str]) -> None:
         errors.append("docs/terminology-registry.md: missing established field terms section")
     if "## Project terms with declarations" not in text:
         errors.append("docs/terminology-registry.md: missing project declaration section")
+    if "## Deprecated project terms" not in text:
+        errors.append("docs/terminology-registry.md: missing deprecated project terms section")
     for term in REGISTRY_REQUIRED_TERMS:
         if term not in text:
             errors.append(f"docs/terminology-registry.md: missing governed term {term!r}")
@@ -167,6 +195,8 @@ def audit_use_manifest(errors: list[str]) -> None:
     for term in C1_SCOPED_TERMS:
         if term not in text:
             errors.append(f"docs/terminology-use-manifest.md: missing scoped term {term!r}")
+    if "catalogue extensionality" in text and "deprecated" not in text.lower():
+        errors.append("docs/terminology-use-manifest.md: legacy catalogue extensionality must be marked deprecated")
 
 
 def audit_declarations(path: Path, text: str, errors: list[str]) -> None:
@@ -196,6 +226,22 @@ def audit_risky_phrases(path: Path, text: str, errors: list[str]) -> None:
                     f"{rp}: risky phrase '{phrase}' requires terminology declaration with genealogy and leaks"
                 )
             start = idx + len(phrase)
+
+
+def audit_deprecated_terms(path: Path, text: str, errors: list[str]) -> None:
+    rp = rel(path)
+    lower = text.lower()
+    for term in DEPRECATED_TERMS:
+        start = 0
+        while True:
+            idx = lower.find(term, start)
+            if idx == -1:
+                break
+            if not is_migration_context(lower, idx):
+                errors.append(
+                    f"{rp}: deprecated term '{term}' requires migration/deprecation context; use SeparatorCatalogueAdequacy/Soundness/Completeness"
+                )
+            start = idx + len(term)
 
 
 def audit_c1_scoped_terms(path: Path, text: str, errors: list[str]) -> None:
@@ -237,6 +283,7 @@ def main() -> int:
         text = path.read_text(encoding="utf-8")
         audit_declarations(path, text, errors)
         audit_risky_phrases(path, text, errors)
+        audit_deprecated_terms(path, text, errors)
         audit_c1_scoped_terms(path, text, errors)
     audit_rank2_loci(errors)
 

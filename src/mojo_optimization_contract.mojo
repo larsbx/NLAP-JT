@@ -1,7 +1,7 @@
-# Mojo optimization contract for NLAP-JT finite computations.
+# Mojo optimization contract for NLAP-JT finite computations and proof objects.
 #
 # These functions are intentionally simple status hooks that tests can enforce
-# while the optimized kernels mature.
+# while the optimized kernels and theorem kernel mature.
 
 struct KernelDiscipline:
     var name: String
@@ -53,7 +53,22 @@ fn interval_kernel_discipline() -> KernelDiscipline:
     )
 
 
+fn theorem_kernel_discipline() -> KernelDiscipline:
+    return KernelDiscipline(
+        "finite_proof_object_kernel",
+        True,  # proof objects and rule applications are explicit records
+        True,  # debug derivations are never proof-grade by default
+        True,  # deterministic replay should avoid ambient heap-heavy state
+        True,  # batchable proof replay over ordered rule applications
+        True,  # theorem-tag imports are an explicit trust boundary
+    )
+
+
 fn default_computation_language() -> String:
+    return "Mojo"
+
+
+fn default_theorem_kernel_language() -> String:
     return "Mojo"
 
 
@@ -65,11 +80,23 @@ fn python_primary_certificate_engine_allowed_after_mojo_port() -> Bool:
     return False
 
 
+fn python_primary_theorem_kernel_allowed_after_mojo_port() -> Bool:
+    return False
+
+
 fn horner_polynomial_evaluation_required() -> Bool:
     return True
 
 
 fn batchable_catalogue_scans_required() -> Bool:
+    return True
+
+
+fn deterministic_proof_replay_required() -> Bool:
+    return True
+
+
+fn theorem_tag_import_boundary_explicit() -> Bool:
     return True
 
 

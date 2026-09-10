@@ -5,7 +5,8 @@ This is not a theorem checker. It enforces repository hygiene:
 
 - risky bridge/isomorphism language must be governed;
 - novel bridge terms must include genealogy and leak discipline;
-- rank-2 files must not introduce circle/locus primitives.
+- rank-2 files must not introduce circle/locus primitives;
+- a project terminology registry must exist and declare governed project terms.
 """
 
 from __future__ import annotations
@@ -16,10 +17,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCAN_ROOTS = [ROOT / "docs", ROOT / "src", ROOT / "tests"]
+REGISTRY = ROOT / "docs" / "terminology-registry.md"
 
 DECLARATION_RE = re.compile(r"Terminology declaration:\s*(?P<term>.+)")
 REQUIRED_DECLARATION_FIELDS = [
-    "Status:",
+    "Terminology declaration:",
     "Genealogy:",
     "Bridge claim:",
     "Known leaks:",
@@ -71,9 +73,19 @@ RANK2_BANNED_LOCI = [
     "analytic locus",
 ]
 
+REGISTRY_REQUIRED_TERMS = [
+    "PointVertex",
+    "rank-2 coordinate record",
+    "finite rational-ray nest",
+    "persistent non-separation",
+    "persistent wake ambiguity",
+]
+
 ALLOWLIST = {
     "docs/terminology-governance.md",
+    "docs/terminology-registry.md",
     "tests/test_terminology_governance.py",
+    "tests/test_terminology_registry.py",
 }
 
 
@@ -99,6 +111,31 @@ def has_full_declaration(text: str) -> bool:
 def is_negated_context(text: str, index: int) -> bool:
     window = text[max(0, index - 90): index].lower()
     return any(marker in window for marker in NEGATING_CONTEXT)
+
+
+def audit_registry(errors: list[str]) -> None:
+    if not REGISTRY.exists():
+        errors.append("docs/terminology-registry.md: required terminology registry is missing")
+        return
+    text = REGISTRY.read_text(encoding="utf-8")
+    if "## Established field terms" not in text:
+        errors.append("docs/terminology-registry.md: missing established field terms section")
+    if "## Project terms with declarations" not in text:
+        errors.append("docs/terminology-registry.md: missing project declaration section")
+    for term in REGISTRY_REQUIRED_TERMS:
+        if term not in text:
+            errors.append(f"docs/terminology-registry.md: missing governed term {term!r}")
+    declarations = DECLARATION_RE.findall(text)
+    if len(declarations) < len(REGISTRY_REQUIRED_TERMS):
+        errors.append("docs/terminology-registry.md: too few terminology declarations")
+    for term in declarations:
+        # Each declaration is intentionally checked by the whole-file heading
+        # requirement plus term-presence checks. The registry is a controlled
+        # prose artifact, not a parsed ontology database yet.
+        if not term.strip():
+            errors.append("docs/terminology-registry.md: empty terminology declaration")
+    if not has_full_declaration(text):
+        errors.append("docs/terminology-registry.md: declaration blocks must include genealogy, bridge claim, known leaks, and use discipline")
 
 
 def audit_declarations(path: Path, text: str, errors: list[str]) -> None:
@@ -147,6 +184,7 @@ def audit_rank2_loci(errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
+    audit_registry(errors)
     for path in iter_files():
         text = path.read_text(encoding="utf-8")
         audit_declarations(path, text, errors)

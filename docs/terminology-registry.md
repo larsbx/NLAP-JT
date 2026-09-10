@@ -65,21 +65,33 @@ Use discipline: Use for polynomial recurrence, quadrance, determinant, spread, a
 
 Terminology declaration: A finite rational-ray nest is a finite prefix of certified rational-ray separator data around incidence objects.
 
-Genealogy: It is derived from Schleicher-style fiber definitions using rational rays and separation, plus finite certificate/interval-refinement practice.
+Genealogy: It is derived from Schleicher-style fiber definitions using rational rays and separation, plus finite certificate and interval-refinement practice.
 
-Bridge claim: Conditional bridge theorem target. Under catalogue extensionality, the finite stream of separator prefixes matches the classical rational-ray separation relation.
+Bridge claim: Conditional bridge theorem target. Under `SeparatorCatalogueAdequacy`, the finite stream of separator prefixes matches the classical rational-ray separation relation.
 
-Known leaks: A finite prefix is not a classical fiber. Absence of separation in one prefix does not prove same fiber. Stabilization of all prefixes requires an additional global argument.
+Known leaks: A finite prefix is not a classical fiber. Absence of separation in one prefix does not prove same fiber. Stabilization of all prefixes requires an additional global argument with MLC-strength unless restricted to established cases.
 
 Use discipline: Use only with an explicit prefix level or stream-level quantifier.
+
+### SeparatorCatalogueAdequacy
+
+Terminology declaration: `SeparatorCatalogueAdequacy` is the project term for the two-sided bridge between finite separator-catalogue prefixes and the classical rational-ray separation relation used in fiber theory.
+
+Genealogy: It packages standard rational-ray separation, wake combinatorics, orbit portraits, kneading data, and finite rational-address encodings. It replaces the deprecated phrase `catalogue extensionality`.
+
+Bridge claim: Conditional bridge theorem. It follows only from separate proofs of `SeparatorCatalogueSoundness` and `SeparatorCatalogueCompleteness`.
+
+Known leaks: Adequacy of the separator catalogue does not prove all fibers are trivial. It does not prove local connectivity, puzzle-piece shrinkage, a priori bounds, or MLC. It only aligns the finite separation predicate with the classical separation predicate.
+
+Use discipline: Use for the two-sided bridge. Use `SeparatorCatalogueSoundness` for finite-to-classical and `SeparatorCatalogueCompleteness` for classical-to-finite. Do not use it as evidence that C1 is solved.
 
 ### persistent non-separation
 
 Terminology declaration: Persistent non-separation is the meta-level condition `forall k, not Separated_k(A,B)`.
 
-Genealogy: It comes from the classical definition of fibers as equivalence classes under non-separation by rational rays, translated through catalogue prefixes.
+Genealogy: It comes from the classical definition of fibers as equivalence classes under non-separation by rational rays, translated through separator-catalogue prefixes.
 
-Bridge claim: Conditional bridge theorem target, not a finite computation. It becomes classical same-fiber only after catalogue extensionality is proved.
+Bridge claim: Conditional bridge theorem target, not a finite computation. It becomes classical same-fiber only after `SeparatorCatalogueAdequacy` is proved and invoked.
 
 Known leaks: No bounded search establishes it. It does not imply singleton fibers, local connectivity, or C1 by itself.
 
@@ -93,9 +105,25 @@ Genealogy: It comes from wake decompositions in parameter-space combinatorics an
 
 Bridge claim: Proof-route abstraction, not an established field term or theorem.
 
-Known leaks: Wake ambiguity may be an artifact of incomplete catalogues, missing landing tags, or inadequate side-witness extraction. It must not be treated as a classical obstruction until those alternatives are discharged.
+Known leaks: Wake ambiguity may be an artifact of incomplete separator catalogues, missing landing tags, or inadequate side-witness extraction. It must not be treated as a classical obstruction until those alternatives are discharged.
 
 Use discipline: Use only inside F1 obstruction extraction and WakeAmbiguityElimination documents.
+
+### Mojo theorem kernel
+
+Terminology declaration: `Mojo theorem kernel` is the project term for a small trusted checker for finite proof objects, rule applications, and certificate derivations written in Mojo.
+
+Genealogy: It follows LCF-style proof-kernel discipline and proof-carrying certificate systems, but is specialized to this repository's finite algebraic and combinatorial proof objects.
+
+Bridge claim: Definition-only project architecture with a future implementation target. It does not make Mojo a replacement for classical complex-dynamics literature. External analytic theorems enter only as explicit theorem tags or axioms with source metadata.
+
+Known leaks: The kernel can check finite derivations encoded in its rule set. It cannot by itself prove analytic landing theorems, MLC, puzzle shrinkage, a priori bounds, or fiber triviality for generic boundary parameters.
+
+Use discipline: Use Mojo as the first-class computation language and the first-class finite proof-object checker. Do not treat an unchecked theorem tag as a proved internal theorem.
+
+## Deprecated project terms
+
+- `catalogue extensionality`: deprecated. Use `SeparatorCatalogueAdequacy`, `SeparatorCatalogueSoundness`, or `SeparatorCatalogueCompleteness`.
 
 ## Banned rank-2 locus language
 

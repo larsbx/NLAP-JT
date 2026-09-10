@@ -21,21 +21,31 @@ def test_manifest_has_required_control_sections():
         assert section in body
 
 
-def test_manifest_scopes_c1_terms():
+def test_manifest_scopes_c1_terms_and_marks_legacy_term_deprecated():
     body = text(MANIFEST)
     for term in [
         "finite rational-ray nest",
         "persistent non-separation",
         "persistent wake ambiguity",
         "wake ambiguity",
-        "catalogue extensionality",
+        "SeparatorCatalogueAdequacy",
+        "SeparatorCatalogueSoundness",
+        "SeparatorCatalogueCompleteness",
         "side-assignment witness",
         "separator code",
     ]:
         assert term in body
+    assert "catalogue extensionality` — use only when explicitly marked deprecated" in body
     assert "docs/C1_" in body
     assert "src/C1_" in body
     assert "tests/test_C1_" in body
+
+
+def test_manifest_registers_mojo_theorem_kernel_boundary():
+    body = text(MANIFEST)
+    assert "Mojo theorem kernel" in body
+    assert "finite proof-object theorem kernel" in body
+    assert "external analytic theorems remain theorem-tag imports" in body
 
 
 def test_linter_reads_manifest_and_scoped_terms():
@@ -43,7 +53,9 @@ def test_linter_reads_manifest_and_scoped_terms():
     assert "USE_MANIFEST" in body
     assert "audit_use_manifest" in body
     assert "audit_c1_scoped_terms" in body
+    assert "audit_deprecated_terms" in body
     assert "C1_SCOPED_TERMS" in body
+    assert "DEPRECATED_TERMS" in body
     assert "C1_SCOPED_PREFIXES" in body
 
 

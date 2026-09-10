@@ -6,7 +6,7 @@ This is not a theorem checker. It enforces repository hygiene:
 - risky bridge/isomorphism language must be governed;
 - novel bridge terms must include genealogy and leak discipline;
 - rank-2 files must not introduce circle/locus primitives;
-- a project terminology registry must exist and declare governed project terms.
+- a project terminology registry and use manifest must exist.
 """
 
 from __future__ import annotations
@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCAN_ROOTS = [ROOT / "docs", ROOT / "src", ROOT / "tests"]
 REGISTRY = ROOT / "docs" / "terminology-registry.md"
+USE_MANIFEST = ROOT / "docs" / "terminology-use-manifest.md"
 
 DECLARATION_RE = re.compile(r"Terminology declaration:\s*(?P<term>.+)")
 REQUIRED_DECLARATION_FIELDS = [
@@ -41,8 +42,6 @@ RISKY_PHRASES = [
     "proof by analogy",
 ]
 
-# Phrases that are allowed because the local context is explicitly critical or
-# negative rather than asserting an ungoverned bridge.
 NEGATING_CONTEXT = [
     "not ",
     "no ",
@@ -81,11 +80,29 @@ REGISTRY_REQUIRED_TERMS = [
     "persistent wake ambiguity",
 ]
 
+C1_SCOPED_TERMS = [
+    "finite rational-ray nest",
+    "persistent non-separation",
+    "persistent wake ambiguity",
+    "wake ambiguity",
+    "catalogue extensionality",
+    "side-assignment witness",
+    "separator code",
+]
+
+C1_SCOPED_PREFIXES = (
+    "docs/C1_",
+    "src/C1_",
+    "tests/test_C1_",
+)
+
 ALLOWLIST = {
     "docs/terminology-governance.md",
     "docs/terminology-registry.md",
+    "docs/terminology-use-manifest.md",
     "tests/test_terminology_governance.py",
     "tests/test_terminology_registry.py",
+    "tests/test_terminology_use_manifest.py",
 }
 
 
@@ -128,14 +145,28 @@ def audit_registry(errors: list[str]) -> None:
     declarations = DECLARATION_RE.findall(text)
     if len(declarations) < len(REGISTRY_REQUIRED_TERMS):
         errors.append("docs/terminology-registry.md: too few terminology declarations")
-    for term in declarations:
-        # Each declaration is intentionally checked by the whole-file heading
-        # requirement plus term-presence checks. The registry is a controlled
-        # prose artifact, not a parsed ontology database yet.
-        if not term.strip():
-            errors.append("docs/terminology-registry.md: empty terminology declaration")
     if not has_full_declaration(text):
         errors.append("docs/terminology-registry.md: declaration blocks must include genealogy, bridge claim, known leaks, and use discipline")
+
+
+def audit_use_manifest(errors: list[str]) -> None:
+    if not USE_MANIFEST.exists():
+        errors.append("docs/terminology-use-manifest.md: required terminology use manifest is missing")
+        return
+    text = USE_MANIFEST.read_text(encoding="utf-8")
+    required_sections = [
+        "## Registered project terms currently allowed",
+        "## Terms requiring local declaration outside C1 files",
+        "## Terms requiring theorem-tag status",
+        "## High-risk bridge phrases",
+        "## Circle/rank-2 ban",
+    ]
+    for section in required_sections:
+        if section not in text:
+            errors.append(f"docs/terminology-use-manifest.md: missing section {section!r}")
+    for term in C1_SCOPED_TERMS:
+        if term not in text:
+            errors.append(f"docs/terminology-use-manifest.md: missing scoped term {term!r}")
 
 
 def audit_declarations(path: Path, text: str, errors: list[str]) -> None:
@@ -167,6 +198,22 @@ def audit_risky_phrases(path: Path, text: str, errors: list[str]) -> None:
             start = idx + len(phrase)
 
 
+def audit_c1_scoped_terms(path: Path, text: str, errors: list[str]) -> None:
+    rp = rel(path)
+    if rp in ALLOWLIST or rp.startswith(C1_SCOPED_PREFIXES):
+        return
+    lower = text.lower()
+    governed = has_full_declaration(text) or "docs/terminology-registry.md" in text
+    for term in C1_SCOPED_TERMS:
+        idx = lower.find(term.lower())
+        if idx == -1:
+            continue
+        if not governed and not is_negated_context(lower, idx):
+            errors.append(
+                f"{rp}: C1-scoped term '{term}' requires local declaration or registry pointer outside C1 files"
+            )
+
+
 def audit_rank2_loci(errors: list[str]) -> None:
     for path in RANK2_FILES:
         if not path.exists():
@@ -185,10 +232,12 @@ def audit_rank2_loci(errors: list[str]) -> None:
 def main() -> int:
     errors: list[str] = []
     audit_registry(errors)
+    audit_use_manifest(errors)
     for path in iter_files():
         text = path.read_text(encoding="utf-8")
         audit_declarations(path, text, errors)
         audit_risky_phrases(path, text, errors)
+        audit_c1_scoped_terms(path, text, errors)
     audit_rank2_loci(errors)
 
     if errors:

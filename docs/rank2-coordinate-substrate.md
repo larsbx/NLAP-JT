@@ -8,6 +8,33 @@ In this finite-regime project, a complex-like object is not an analytic or mysti
 
 The multiplication has the same algebraic behavior as ordinary complex multiplication, but the finite core interprets it as polynomial arithmetic over coordinate records, dyadic boxes, root handles, and vertex data.
 
+## Rank-2 ontology rule
+
+At rank 2, the primitive objects are coordinate records and polynomial relations among their coordinates.
+
+The following are not primitive rank-2 objects:
+
+- circle;
+- unit circle;
+- disk;
+- arc;
+- circumference;
+- analytic point-locus.
+
+The finite core may use the scalar polynomial
+
+```text
+Q(x, y) = x^2 + y^2
+```
+
+and may use the constraint
+
+```text
+Q(x, y) = r
+```
+
+as an algebraic condition. It must not reify that condition as a circle at rank 2. A circle-like locus, if ever needed, belongs to a higher incidence/constraint layer, not to the rank-2 coordinate substrate.
+
 ## Multiplication as a linear operator
 
 Fix a coordinate record `(u, v)`. Multiplication by `(u, v)` sends any record `(x, y)` to
@@ -51,7 +78,7 @@ Therefore:
 - if `Q(u, v) < 1`, multiplication contracts quadrance;
 - if `Q(u, v) = 1`, multiplication preserves quadrance.
 
-The last case is the rotor case. The finite core does not introduce measured angle coordinates. It says only:
+The last case is the rotor case. The finite core does not introduce measured angle coordinates, and it does not introduce a unit circle. It says only:
 
 ```text
 (u, v) is a rotor iff u^2 + v^2 = 1.

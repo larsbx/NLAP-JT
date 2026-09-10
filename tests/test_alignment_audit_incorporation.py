@@ -4,6 +4,7 @@ ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "docs" / "alignment_audit_deep_research_findings.md"
 MOJO_POLICY = ROOT / "docs" / "mojo_first_execution_policy.md"
 STATUS = ROOT / "src" / "alignment_audit_status.mojo"
+KERNEL = ROOT / "src" / "mojo_theorem_kernel.mojo"
 
 
 def text(path: Path) -> str:
@@ -34,11 +35,21 @@ def test_finite_state_does_not_prove_global_termination():
     assert "return False" in body
 
 
-def test_mojo_is_first_class_but_not_theorem_kernel():
-    body = text(MOJO_POLICY) + "\n" + text(STATUS)
+def test_mojo_is_first_class_execution_and_finite_theorem_kernel():
+    body = text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
     assert "Mojo is the default first-class language" in body
+    assert "finite proof-object theorem kernel" in body
     assert "mojo_is_first_class_execution_language() -> Bool" in body
-    assert "mojo_is_trusted_theorem_kernel() -> Bool" in body
+    assert "mojo_is_finite_theorem_kernel() -> Bool" in body
+    assert "return True" in body
+
+
+def test_mojo_kernel_does_not_reprove_imported_analytic_theorems():
+    body = text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
+    assert "mojo_reproves_imported_analytic_theorems() -> Bool" in body
+    assert "mojo_reproves_external_analytic_theorems() -> Bool" in body
+    assert "theorem_tags_require_import_validation() -> Bool" in body
+    assert "TheoremTagImport" in body
     assert "return False" in body
 
 
@@ -51,8 +62,9 @@ def test_separator_catalogue_adequacy_replaces_extensionality_for_new_work():
 
 
 def test_rank2_layer_restriction_not_absolute_ontology_claim():
-    body = text(AUDIT) + "\n" + text(MOJO_POLICY) + "\n" + text(STATUS)
+    body = text(AUDIT) + "\n" + text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
     assert "layer restriction" in body
     assert "not primitive constructors" in body or "must not expose primitive constructors" in body
     assert "rank2_circle_primitive_available() -> Bool" in body
     assert "rank2_higher_layer_adapter_required() -> Bool" in body
+    assert "rank2_circle_primitive_available_in_kernel() -> Bool" in body

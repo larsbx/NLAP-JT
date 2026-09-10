@@ -7,7 +7,7 @@ This is not a theorem checker. It enforces repository hygiene:
 - novel bridge terms must include genealogy and leak discipline;
 - rank-2 files must not introduce circle/locus primitives;
 - a project terminology registry and use manifest must exist;
-- deprecated C1 bridge terminology must not be used for new claims.
+- deprecated C1 bridge terminology must not be used for new non-migration claims.
 """
 
 from __future__ import annotations
@@ -113,6 +113,11 @@ C1_SCOPED_PREFIXES = (
     "src/C1_",
     "tests/test_C1_",
 )
+
+LEGACY_C1_MIGRATION_FILES = {
+    "docs/C1_catalogue_extensionality.md",
+    "docs/C1_catalogue_extensionality_proof_consolidation.md",
+}
 
 ALLOWLIST = {
     "docs/terminology-governance.md",
@@ -230,6 +235,8 @@ def audit_risky_phrases(path: Path, text: str, errors: list[str]) -> None:
 
 def audit_deprecated_terms(path: Path, text: str, errors: list[str]) -> None:
     rp = rel(path)
+    if rp in LEGACY_C1_MIGRATION_FILES:
+        return
     lower = text.lower()
     for term in DEPRECATED_TERMS:
         start = 0

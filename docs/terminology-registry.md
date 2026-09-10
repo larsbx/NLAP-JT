@@ -1,0 +1,136 @@
+# Terminology Registry
+
+Status: controlled vocabulary registry.
+
+This registry exists so the research program does not drift into private jargon. Mathematical language should be recognizable in the field. Project-specific names are allowed only when their status is explicit.
+
+## Established field terms
+
+These terms may be used without a project terminology declaration, provided they are used in their ordinary field sense:
+
+- Mandelbrot set
+- Mandelbrot local connectivity
+- MLC
+- fiber
+- trivial fiber
+- rational external ray
+- parameter ray
+- landing
+- Misiurewicz parameter
+- parabolic parameter
+- hyperbolic component
+- wake
+- kneading sequence
+- orbit portrait
+- cyclic order
+- dyadic box
+- interval arithmetic
+- Krawczyk method
+- squarefree polynomial
+- rational address
+- doubling map
+- quadrance
+- spread
+- incidence relation
+- vertex
+- theorem tag
+
+## Project terms with declarations
+
+### PointVertex
+
+Terminology declaration: `PointVertex` is a project term for a finite incidence object whose carrier is a finite set of vertices.
+
+Genealogy: It comes from incidence-geometry language and the user's project rule that a point is a vertex of vertices. It is not the analytic point of complex dynamics.
+
+Bridge claim: Definition-only project term. It is not claimed to be isomorphic to a classical point.
+
+Known leaks: A classical point can carry topological and analytic structure; `PointVertex` carries only finite incidence data. It cannot by itself express neighborhoods, connectedness, metric distance, or local connectivity.
+
+Use discipline: Use only for finite certificate carriers such as root handles, ray-address sets, and dyadic boxes. Do not use as an analytic singleton.
+
+### rank-2 coordinate record
+
+Terminology declaration: A rank-2 coordinate record is a finite pair `(x,y)` with polynomial operations such as `(x,y) star (u,v) = (xu-yv, xv+yu)`.
+
+Genealogy: It is inherited from coordinate algebra for the quadratic family and from rational-trigonometry style use of quadrance and spread. It is also the finite-regime replacement for informal complex-number language inside the certificate core.
+
+Bridge claim: Conditional formal translation, not an ontological identification. Classical complex arithmetic can be translated into rank-2 polynomial arithmetic for the operations used in certificates.
+
+Known leaks: The record does not supply analytic topology, limits, circles, disks, arcs, arguments, or measured angles. At rank 2, a circle is undefined; `Q(x,y)=r` is only a polynomial constraint unless lifted to a higher incidence/constraint layer.
+
+Use discipline: Use for polynomial recurrence, quadrance, determinant, spread, and operator matrices only.
+
+### finite rational-ray nest
+
+Terminology declaration: A finite rational-ray nest is a finite prefix of certified rational-ray separator data around incidence objects.
+
+Genealogy: It is derived from Schleicher-style fiber definitions using rational rays and separation, plus finite certificate/interval-refinement practice.
+
+Bridge claim: Conditional bridge theorem target. Under catalogue extensionality, the finite stream of separator prefixes matches the classical rational-ray separation relation.
+
+Known leaks: A finite prefix is not a classical fiber. Absence of separation in one prefix does not prove same fiber. Stabilization of all prefixes requires an additional global argument.
+
+Use discipline: Use only with an explicit prefix level or stream-level quantifier.
+
+### persistent non-separation
+
+Terminology declaration: Persistent non-separation is the meta-level condition `forall k, not Separated_k(A,B)`.
+
+Genealogy: It comes from the classical definition of fibers as equivalence classes under non-separation by rational rays, translated through catalogue prefixes.
+
+Bridge claim: Conditional bridge theorem target, not a finite computation. It becomes classical same-fiber only after catalogue extensionality is proved.
+
+Known leaks: No bounded search establishes it. It does not imply singleton fibers, local connectivity, or C1 by itself.
+
+Use discipline: Always state the universal-prefix quantifier. Never use it as a synonym for same fiber unless the needed bridge theorem is explicitly invoked.
+
+### persistent wake ambiguity
+
+Terminology declaration: Persistent wake ambiguity is a structured obstruction candidate extracted from persistent non-separation when unresolved wake-side evidence appears cofinally.
+
+Genealogy: It comes from wake decompositions in parameter-space combinatorics and the project’s finite side-assignment witnesses.
+
+Bridge claim: Proof-route abstraction, not an established field term or theorem.
+
+Known leaks: Wake ambiguity may be an artifact of incomplete catalogues, missing landing tags, or inadequate side-witness extraction. It must not be treated as a classical obstruction until those alternatives are discharged.
+
+Use discipline: Use only inside F1 obstruction extraction and WakeAmbiguityElimination documents.
+
+## Banned rank-2 locus language
+
+At rank 2, do not use the following as primitives:
+
+- circle
+- unit circle
+- disk
+- arc
+- circumference
+- point locus
+- angular coordinate
+- polar coordinate
+
+Allowed replacement language:
+
+- polynomial constraint
+- quadrance equation
+- finite incidence carrier
+- higher-rank constraint object
+- rational address interval
+
+## Novel bridge checklist
+
+Any new term claiming to connect two fields must include the five headings:
+
+1. `Terminology declaration`
+2. `Genealogy`
+3. `Bridge claim`
+4. `Known leaks`
+5. `Use discipline`
+
+Any phrase such as `isomorphic to`, `equivalent to`, `same as`, `analogue of`, or `bridge between` must state whether it is:
+
+- theorem-backed;
+- conditional on named lemmas;
+- definition-only;
+- analogy/metaphor.

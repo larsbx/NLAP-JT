@@ -18,6 +18,7 @@ The goal is to keep the project readable to mathematicians already working near 
 4. If a bridge term claims an isomorphism or exact correspondence, the text must name the theorem/proof obligation that justifies it.
 5. Every novel bridge term must list known leaks.
 6. At rank 2, circle language is undefined. Use quadrance or polynomial constraint language instead.
+7. Mojo is the first-class finite proof-object theorem kernel, but external analytic theorems remain theorem-tag imports.
 
 ## Registered project terms currently allowed
 
@@ -26,8 +27,10 @@ The following terms may appear without a full local declaration only because the
 - `PointVertex`
 - `rank-2 coordinate record`
 - `finite rational-ray nest`
+- `SeparatorCatalogueAdequacy`
 - `persistent non-separation`
 - `persistent wake ambiguity`
+- `Mojo theorem kernel`
 
 ## Terms requiring local declaration outside C1 files
 
@@ -37,9 +40,15 @@ These terms are allowed freely only inside files whose path begins with `docs/C1
 - `persistent non-separation`
 - `persistent wake ambiguity`
 - `wake ambiguity`
-- `catalogue extensionality`
+- `SeparatorCatalogueAdequacy`
+- `SeparatorCatalogueSoundness`
+- `SeparatorCatalogueCompleteness`
 - `side-assignment witness`
 - `separator code`
+
+Deprecated migration-only term:
+
+- `catalogue extensionality` — use only when explicitly marked deprecated or legacy; new claims must use `SeparatorCatalogueAdequacy`, `SeparatorCatalogueSoundness`, or `SeparatorCatalogueCompleteness`.
 
 ## Terms requiring theorem-tag status
 
@@ -52,6 +61,7 @@ The following phrases must be accompanied by a theorem tag, local proof obligati
 - `separation line`
 - `wake membership`
 - `classical separation`
+- `imported theorem tag`
 
 ## High-risk bridge phrases
 

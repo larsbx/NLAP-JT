@@ -1,7 +1,8 @@
-# Alignment-audit status and Mojo-first trust boundary.
+# Alignment-audit status and Mojo theorem-kernel trust boundary.
 #
-# This module records repository status semantics. It intentionally separates
-# executable Mojo certificate checks from theorem truth.
+# This module records repository status semantics. Mojo is the first-class
+# execution language and the finite proof-object theorem kernel. It still does
+# not re-prove imported analytic complex-dynamics theorems.
 
 struct TheoremStatus:
     var name: String
@@ -28,7 +29,7 @@ fn c1_separator_catalogue_adequacy_status() -> TheoremStatus:
         True,   # proof skeleton exists
         True,   # local obligations are listed
         False,  # local obligations are not yet proved
-        False,  # adequacy itself is tractable bridge work, not the residual frontier
+        False,  # adequacy itself is bridge work, not the residual frontier
         False,
         False,
     )
@@ -50,8 +51,16 @@ fn mojo_is_first_class_execution_language() -> Bool:
     return True
 
 
-fn mojo_is_trusted_theorem_kernel() -> Bool:
+fn mojo_is_finite_theorem_kernel() -> Bool:
+    return True
+
+
+fn mojo_reproves_imported_analytic_theorems() -> Bool:
     return False
+
+
+fn theorem_tags_require_import_validation() -> Bool:
+    return True
 
 
 fn bounded_search_proves_global_termination() -> Bool:

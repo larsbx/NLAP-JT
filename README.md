@@ -4,6 +4,22 @@ This repository develops a finite, certificate-carrying formulation of Mandelbro
 
 The project goal is not to replace the classical analytic Mandelbrot set with a false finite exact object. Instead, it formalizes a hierarchy of finite algebraic certificates that reproduce the observable content available at finite resolution while isolating the single generic-boundary obstruction as MLC / fiber triviality.
 
+## Priority-zero conjecture
+
+The source of truth for what would prove C1 is:
+
+```text
+docs/C1_proof_definition_and_priority.md
+```
+
+C1 proof work is `PRIORITY_ZERO`. A completion claim must establish every required proof block in that document and supply a finite proof object checked by the Mojo theorem kernel. The current highest-priority open block is:
+
+```text
+ResidualClosureNoMissingLinks
+```
+
+A final C1 proof may not leave a `MissingTheoremCatalogueLink` exit open.
+
 ## Core thesis
 
 A Mandelbrot generator can be specified without primitive reliance on real numbers, analytic complex-number objects, limits, transcendental functions, trigonometric functions, circles as rank-2 primitives, or infinite series by using:
@@ -17,9 +33,9 @@ A Mandelbrot generator can be specified without primitive reliance on real numbe
 - finite incidence objects instead of analytic point primitives;
 - named external theorem dependencies for analytic landing/fiber results.
 
-## Mojo-first implementation policy
+## Mojo-first implementation and theorem-kernel policy
 
-Mojo is the default first-class language for executable finite computations and certificate encodings in this repository. Python remains acceptable for CI linting, reference oracles, and migration scaffolds, but Mojo owns the primary certificate kernels once a Mojo implementation exists.
+Mojo is the default first-class language for executable finite computations, certificate encodings, and finite proof-object checking in this repository. Python remains acceptable for CI linting, reference oracles, and migration scaffolds, but Mojo owns the primary certificate kernels once a Mojo implementation exists.
 
 Mojo code should prioritize:
 
@@ -31,7 +47,7 @@ Mojo code should prioritize:
 - explicit backend boundaries for arbitrary-precision integers;
 - separation of debug/demo paths from proof-grade paths.
 
-Mojo is not itself the trusted theorem kernel. A Mojo function may check finite witnesses; classical analytic conclusions require explicit external theorem dependencies and adapter lemmas.
+Mojo is the trusted finite theorem kernel for repository proof objects. Classical analytic conclusions require explicit theorem-tag imports and adapter lemmas; Mojo does not silently reprove imported analytic theorems.
 
 ## Current mathematical focus
 
@@ -74,6 +90,7 @@ Such concepts require an explicit higher-layer adapter and cannot be imported me
 README.md
 ROADMAP.md
 docs/
+  C1_proof_definition_and_priority.md
   alignment_audit_deep_research_findings.md
   mojo_first_execution_policy.md
   terminology-governance.md
@@ -101,4 +118,4 @@ No finite bounded search, renderer, numerical picture, local carrier refinement,
 
 ## Status
 
-Research scaffold with enforced terminology, rank-2 ontology, C1 proof-status gates, and Mojo-first executable certificate policy.
+Research scaffold with enforced terminology, rank-2 ontology, C1 proof-status gates, Mojo-first executable certificate policy, and a Mojo finite theorem-kernel boundary.

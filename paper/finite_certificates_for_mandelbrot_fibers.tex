@@ -1,0 +1,256 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Problem}
+
+\title[Finite Certificates for Mandelbrot Fibers]{Finite Certificates for Mandelbrot Fibers: A Separator-Catalogue Program}
+
+\author{Lars Bendixen}
+\address{NLAP-JT Research Program}
+\email{}
+
+\date{September 2026}
+
+\begin{document}
+
+\begin{abstract}
+We formulate a finite certificate program for a class of questions about the parameter plane of the quadratic family \(f_c(z)=z^2+c\).  The program does not attempt to replace the analytic Mandelbrot set by a finite object.  Instead it separates three layers: finite algebraic computation over integer and rational data; finite proof objects checked by a Mojo theorem kernel; and named imports from complex dynamics such as rational parameter-ray landing, fiber theory, and known local-connectivity theorems.  The central object is a separator catalogue: a finite enumeration, by prefix, of rational-ray separation certificates equipped with landing tags and side witnesses.  We state a precise adequacy criterion for such catalogues and isolate the remaining obstruction to a proof of the highest-priority conjecture, namely residual persistent non-separation with no missing imported theorem, no boundary identification, and no accepted trivial-fiber tag.  The resulting paper is not a proof of Mandelbrot local connectivity.  It is a proof-object specification and reduction: any successful closure of the residual case would have fiber-triviality strength on the covered domain.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+
+The Mandelbrot set \(M\) is traditionally studied as a compact subset of the complex plane associated with the quadratic family
+\[
+        f_c(z)=z^2+c.
+\]
+Questions about its local connectivity, parameter rays, wakes, orbit portraits, and renormalization have generated a large body of work beginning with Douady and Hubbard and continuing through Yoccoz, Milnor, Schleicher, Lyubich, and many others.  In this paper we describe a finite certificate program whose purpose is narrower than proving every analytic theorem in this literature.  The program asks which parts of the standard combinatorial and algebraic structure can be represented by finite, checkable certificates, and exactly where the remaining analytic difficulty enters.
+
+The guiding principle is conservative.  A finite computation may certify a finite algebraic statement: a polynomial identity, an interval enclosure, a squarefree-root localization, an exact critical-orbit collision type, a rational-address relation, or a finite side witness for an accepted separator.  It may not, merely by being finite, certify a global topological assertion such as local connectivity or triviality of all fibers.  Those conclusions require either named imported theorems or a new proof.
+
+The program is implemented around a first-class Mojo layer.  Mojo is used both as the primary executable language for finite arithmetic kernels and as the finite theorem kernel for proof-object replay.  This should be understood in a proof-carrying sense: Mojo checks derivations whose rules are finite and explicitly listed.  Imported theorems from complex dynamics appear as theorem tags with assumption checks.  Mojo does not silently reprove Yoccoz puzzle shrinkage, rational parameter-ray landing, a priori bounds, or Mandelbrot local connectivity.
+
+The main mathematical ambition is the following separator formulation of fiber triviality.
+
+\begin{conjecture}[C1, separator form]
+For admissible boundary representatives \(A,B\), if \(A\) and \(B\) are distinct in the accepted boundary-identification adapter, then there exists a finite catalogue prefix \(k\) and an accepted separator certificate witnessing
+\[
+        \operatorname{Separated}_k(A,B).
+\]
+Equivalently, persistent non-separation by all finite prefixes implies boundary equality or an accepted trivial-fiber theorem tag.
+\end{conjecture}
+
+This conjecture is deliberately stated in terms of finite separator certificates and an explicit adapter to the usual analytic fiber relation.  With global coverage, it has the strength of the statement that all relevant Mandelbrot fibers are trivial.  Accordingly, it is treated here as an open frontier, not as a theorem.
+
+\section{Relation to the literature}
+
+We recall only the literature needed to place the certificate program.  The external-ray approach to \(M\), including parameter rays and their landing behavior, originates in the Douady--Hubbard theory.  Schleicher gave a combinatorial proof that rational parameter rays of Multibrot sets land and related their angles to the dynamics at the landing points \cite{SchleicherRationalParameterRays}.  Milnor's account of orbit portraits provides a standard language for periodic external rays and combinatorial portraits in quadratic dynamics \cite{MilnorOrbitPortraits}.  Schleicher's work on fibers recasts local-connectivity questions in terms of triviality of fibers and establishes triviality in important classes, including Misiurewicz parameters and points on boundaries of hyperbolic components \cite{SchleicherFibersLC,SchleicherFibersRenormalization}.  Yoccoz puzzle and parapuzzle methods supply the classical route to local connectivity at non-renormalizable and many finitely renormalizable parameters; modern treatments often formulate this through principal nests and a priori bounds \cite{LyubichMilnorSullivan,AKLSUnicriticalLC}.  Computability work, including Hertling's results and Braverman--Yampolsky's work on Julia sets, clarifies that effective descriptions of complex-dynamical sets require attention to the representation and to the boundary information used by an algorithm \cite{HertlingMandelbrotComputable,BravermanYampolskyJuliaComputability}.
+
+The present program does not introduce a new model of the analytic Mandelbrot set.  It introduces a finite proof-object discipline for statements that are already meaningful in the standard setting.  The closest classical ancestor is the use of rational external rays and fibers: two points are in the same fiber when rational-ray separation data fails to separate them, with conventions for the on-separator cases.  The certificate contribution is to make the finite part of this relation explicit, checkable, and auditable.
+
+\section{Finite algebraic substrate}
+
+The certificate layer uses rank-two coordinate records rather than analytic complex-number objects.  A coordinate record is a pair
+\[
+        (x,y)
+\]
+with the multiplication rule
+\[
+        (x,y)\star(u,v)=(xu-yv,xv+yu).
+\]
+The quadratic recurrence is expressed by polynomial operations on such records:
+\[
+        (x,y)^2=(x^2-y^2,2xy),\qquad
+        (x,y)\mapsto (x,y)^2+(a,b).
+\]
+All finite computations in this layer are integer or rational polynomial computations, possibly with interval certificates over dyadic rational boxes.
+
+This is a representation discipline, not a denial of the classical complex plane.  The analytic plane appears only in adapter theorems.  Inside the finite core, one uses coordinate records, polynomial constraints, quadrance scalars, rational addresses, and incidence carriers.  Topological or conformal notions require a named higher-level adapter.
+
+\begin{definition}[finite incidence representative]
+An admissible finite representative is a finite record containing the data needed to refer to a parameter candidate at the certificate layer.  Typical fields include a root handle, a dyadic box, a squarefree polynomial factor, rational-address data, theorem-tag dependencies, and finite side-witness obligations.
+\end{definition}
+
+For Misiurewicz candidates the algebraic starting point is the critical orbit recurrence
+\[
+        Q_0(C)=0,\qquad Q_{n+1}(C)=Q_n(C)^2+C,
+\]
+where \(C\) denotes the parameter.  A preperiod-period pair \((\ell,k)\) gives the collision polynomial
+\[
+        R_{\ell,k}(C)=Q_{\ell+k}(C)-Q_\ell(C).
+\]
+The project uses the squarefree part of \(R_{\ell,k}\) for root localization, and exact type is checked by pointwise exclusion of unintended orbit collisions at the required finite horizon.  This avoids the unsafe practice of discarding factors by a global greatest-common-divisor rule that might delete a genuine root with a different collision history.
+
+\section{Separator certificates}
+
+The central finite object is an accepted separator certificate.
+
+\begin{definition}[separator certificate]
+A separator certificate for \(A,B\) at prefix \(k\) consists of:
+\begin{enumerate}[label=(\roman*)]
+\item a normalized finite code for a rational-ray separator appearing in prefix \(k\);
+\item theorem-tag evidence that the rays used by the separator have the required landing properties;
+\item finite side witnesses for \(A\) and \(B\) relative to the separator;
+\item a check that the two side witnesses are on opposite open sides;
+\item adapter assumptions connecting the finite representatives to the classical parameter-plane objects being discussed.
+\end{enumerate}
+If all checks pass, the finite predicate \(\operatorname{Separated}_k(A,B)\) is accepted.
+\end{definition}
+
+The separator code is purely finite: it is built from rational addresses, cyclic-order data, kneading or orbit-portrait constraints where needed, and finite references to theorem tags.  Generic landing assertions are not theorem tags.  A theorem tag must name a known theorem family, its scope, and the assumptions under which the finite representatives satisfy that scope.
+
+\begin{definition}[separator-catalogue adequacy]
+A separator catalogue is adequate on a class \(\mathcal C\) of representatives when, for all \(A,B\in\mathcal C\),
+\[
+        \exists k\,\operatorname{Separated}_k(A,B)
+\]
+holds precisely when the corresponding classical representatives are separated by an admitted rational-ray separator in the fiber definition used by the adapter.
+\end{definition}
+
+We split adequacy into two directions.
+
+\begin{proposition}[soundness target]
+If \(\operatorname{Separated}_k(A,B)\) is accepted, then the corresponding classical representatives are separated by the rational-ray separator named by the certificate.
+\end{proposition}
+
+\begin{proof}[Proof obligation]
+The proof is finite except for the theorem-tag import.  One verifies that the separator code is well-formed, the landing tag is accepted, side witnesses refer to the same separator, on-separator cases are excluded or routed to boundary identification, and the side labels are opposite.  The imported theorem supplies the interpretation of the rational rays and their landing behavior in the classical parameter plane.
+\end{proof}
+
+\begin{proposition}[completeness target]
+If two representatives are separated by an admitted rational-ray separator in the chosen fiber definition, then some finite prefix contains a normalized code and side witnesses for that separator.
+\end{proposition}
+
+\begin{proof}[Proof obligation]
+One needs a normalization theorem for rational separator data, a fair enumeration theorem for normalized separator codes, and side-witness extraction from the classical opposite-side relation.  Completeness fails if the catalogue omits a separator family used by the fiber definition, omits an allowed landing theorem tag, or fails to encode the on-separator convention.
+\end{proof}
+
+These two propositions are the first priority below the final C1 statement.  They are not the local-connectivity problem.  They ensure that the finite relation being checked is the intended rational-ray separation relation.
+
+\section{Persistent non-separation and the residual frontier}
+
+Define persistent non-separation by
+\[
+        \operatorname{PNS}(A,B):=\forall k\,\neg\operatorname{Separated}_k(A,B).
+\]
+Under separator-catalogue adequacy and the fiber adapter, \(\operatorname{PNS}(A,B)\) presents membership in the same fiber on the covered domain.  A proof of C1 must show that such non-separation is trivial: it either identifies the boundary representatives or falls under an accepted theorem tag for a known trivial-fiber class.
+
+The repository decomposes the residual case into finite exits.  A residual state may exit by producing a finite separator, by producing a boundary-identification certificate, by invoking an accepted trivial-fiber theorem tag, or by exposing a missing theorem/catalogue link.  The last exit is allowed during development but forbidden in a final proof of C1.
+
+\begin{definition}[residual closure with no missing links]
+Residual closure with no missing links is the statement that every persistent non-separation case on the covered domain exits through finite separation, boundary identification, or an accepted trivial-fiber theorem tag.  No residual case may remain whose only explanation is a missing theorem or missing catalogue family.
+\end{definition}
+
+\begin{theorem}[C1 proof criterion]
+Assume the following for a class \(\mathcal C\):
+\begin{enumerate}[label=(\alph*)]
+\item separator-catalogue soundness on \(\mathcal C\);
+\item separator-catalogue completeness on \(\mathcal C\);
+\item an adapter identifying persistent non-separation with the classical fiber relation used on \(\mathcal C\);
+\item residual closure with no missing links on \(\mathcal C\);
+\item soundness of the boundary-identification certificates and accepted trivial-fiber theorem tags.
+\end{enumerate}
+Then for \(A,B\in\mathcal C\), persistent non-separation implies accepted boundary equality or an accepted trivial-fiber theorem tag.  Consequently every distinct pair in \(\mathcal C\) is separated by some finite catalogue prefix.
+\end{theorem}
+
+\begin{proof}
+Let \(A,B\in\mathcal C\) and suppose no finite prefix separates them.  By separator-catalogue adequacy and the adapter, the corresponding representatives lie in the same classical fiber.  Residual closure with no missing links rules out a persistent non-separation state whose only explanation is missing data.  Therefore the case exits by boundary identification or by a trivial-fiber theorem tag.  The assumed soundness of these exits gives accepted boundary equality.  Contrapositively, if \(A\) and \(B\) are distinct in the accepted boundary-identification adapter, some prefix \(k\) accepts \(\operatorname{Separated}_k(A,B)\).
+\end{proof}
+
+The theorem is useful because every hypothesis is independently auditable.  The hard part is not hidden.  On a domain large enough to include all boundary representatives, hypothesis (d) has fiber-triviality strength.
+
+\section{Carrier refinement and descent}
+
+The internal proof strategy for residual closure uses finite carriers.  A carrier is a finite incidence object recording unresolved separator, side, boundary, and theorem-tag obligations.  Carrier refinement is strict only when canonical finite content changes: an obligation is discharged, a separator-side ambiguity is split into more informative finite cases, a boundary candidate is identified or removed, or a missing theorem/catalogue link is exposed.
+
+Renaming, reordering, or changing prose labels is not a refinement.  This is essential because a finite descent argument is valid only when the measure decreases in a well-founded order.  The current finite measure is lexicographic over unresolved wake slots, carrier atoms, boundary candidates, and missing-link counts.  A final proof must show that every strict refinement step either decreases such a measure or exits through a closed case.
+
+The intended residual contradiction has the form
+\[
+\operatorname{PNS}(A,B)\wedge
+\operatorname{NoMissingLink}(A,B)\wedge
+\operatorname{NoBoundaryIdentification}(A,B)
+        \Longrightarrow
+\operatorname{StrictCarrierRefinement}(A,B),
+\]
+combined with well-foundedness of strict refinement.  This produces a contradiction to infinite residual persistence.  However, this route is only legitimate if the forcing lemma does not import local connectivity, puzzle shrinkage, compactness of impressions, or a priori bounds without naming them as theorem tags.  This is the principal audit point.
+
+\section{Mojo theorem kernel}
+
+The finite theorem kernel is designed to check proof objects, not to make analytic assumptions invisible.  A proof object has premises, finite rules, imported theorem tags, and a conclusion.  The kernel accepts the proof only if every rule application is declared, every finite dependency is present, every imported theorem tag has an assumption payload, and the conclusion lies inside the finite theorem language.
+
+Typical finite conclusions include:
+\begin{itemize}
+\item polynomial equality or divisibility statements;
+\item squarefree-root localization with interval evidence;
+\item exact critical-orbit collision type after finite exclusions;
+\item normalized rational-address and separator-code statements;
+\item side-witness and opposite-side certificates;
+\item carrier-refinement and residual-exit certificates.
+\end{itemize}
+
+Typical imported conclusions include:
+\begin{itemize}
+\item landing of rational parameter rays;
+\item the interpretation of rational-ray separators in the parameter plane;
+\item triviality of fibers at Misiurewicz parameters and on hyperbolic-component boundaries;
+\item Yoccoz-type local-connectivity results under their proper hypotheses;
+\item a priori-bound results in renormalization regimes.
+\end{itemize}
+
+A final C1 proof object must therefore contain both finite derivation data and validated theorem-tag imports.  It must not contain a missing-link exit.
+
+\section{Examples}
+
+The landing point \(c=-2\) provides a basic Misiurewicz test.  The critical orbit is
+\[
+        0\mapsto -2\mapsto 2\mapsto 2,
+\]
+with critical type \((\ell,k)=(2,1)\).  The collision polynomial is
+\[
+        R_{2,1}(C)=C^3(C+2),
+\]
+and its squarefree part retains both factors.  The point \(C=-2\) is selected by a dyadic isolating box and exact-type exclusions, not by globally deleting the factor \(C\).  The rational-address and landing statements then enter through theorem tags appropriate to the Misiurewicz class.
+
+A more demanding stress test is a candidate of type \((4,1)\), where ray-address data, orbit collision type, and factor selection interact.  Such examples are useful precisely because they expose mistakes in factor stripping, ray-period versus orbit-period matching, and side-witness extraction.
+
+\section{Open problems and priority order}
+
+The priority order is as follows.
+
+\begin{enumerate}[label=\textbf{P\arabic*.}]
+\item \textbf{Separator-catalogue proof objects.}  Define the exact finite proof-object format checked by Mojo for separator-catalogue soundness, completeness, and adequacy.
+\item \textbf{Residual closure with no missing links.}  Remove the missing-link exit from the final C1 proof route by proving that every such exit is either unnecessary, already covered by an accepted theorem tag, or convertible into a finite separator or boundary-identification certificate.
+\item \textbf{Carrier descent soundness.}  Prove that the residual refinement step is not assuming local connectivity, puzzle shrinkage, or compactness of impressions.
+\item \textbf{Domain stratification.}  Separate Misiurewicz, parabolic, hyperbolic-boundary, finitely renormalizable, infinitely renormalizable, Siegel, Cremer, and generic boundary cases.  Each class needs its own theorem-tag policy.
+\item \textbf{Final proof object.}  Assemble a single Mojo-checkable proof object for any domain on which all preceding blocks are closed.
+\end{enumerate}
+
+\section{Conclusion}
+
+The separator-catalogue program gives a precise way to state what a finite proof of the conjectural fiber-triviality statement would need to contain.  Its value is not that it evades classical complex dynamics.  Its value is that it makes the finite part of the argument explicit, executable, and auditable, while forcing every analytic import to appear as a named theorem dependency.  The current highest-priority task is to define and check separator-catalogue proof objects and then close residual persistent non-separation without a missing-link exit.
+
+\bibliographystyle{amsalpha}
+\bibliography{finite_certificates_for_mandelbrot_fibers}
+
+\end{document}

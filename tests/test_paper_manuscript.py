@@ -13,36 +13,44 @@ def test_manuscript_exists_and_has_standard_structure():
     text = body(PAPER)
     assert "\\begin{abstract}" in text
     assert "\\section{Introduction}" in text
-    assert "\\section{Relation to the literature}" in text
+    assert "\\section{Background from complex dynamics}" in text
     assert "\\section{Conclusion}" in text
     assert "\\bibliography{finite_certificates_for_mandelbrot_fibers}" in text
 
 
-def test_manuscript_states_c1_as_open_separator_program():
+def test_manuscript_uses_field_legible_problem_statement():
     text = body(PAPER)
-    assert "Conjecture" in text
-    assert "C1, separator form" in text
-    assert "open frontier" in text
-    assert "not as a theorem" in text
-    assert "Residual closure with no missing links" in text
+    assert "finite separation formulation of fiber triviality" in text
+    assert "conditional proof criterion" in text
+    assert "not a proof of Mandelbrot local connectivity" in text
+    assert "persistent non-separation" in text
+    assert "fiber triviality" in text
 
 
-def test_manuscript_uses_audit_correct_terms():
+def test_manuscript_has_no_project_internal_terminology():
     text = body(PAPER)
-    assert "separator-catalogue adequacy" in text
-    assert "separator-catalogue soundness" in text
-    assert "separator-catalogue completeness" in text
-    assert "finite theorem kernel" in text
-    assert "Mojo" in text
-    assert "catalogue extensionality" not in text.lower()
+    forbidden = [
+        "C1",
+        "Mojo",
+        "theorem kernel",
+        "separator-catalogue",
+        "carrier",
+        "ResidualClosureNoMissingLinks",
+        "ExitClosureForC1",
+        "PRIORITY_ZERO",
+        "NLAP-JT",
+        "catalogue extensionality",
+    ]
+    for term in forbidden:
+        assert term not in text
 
 
-def test_manuscript_exposes_analytic_import_boundary():
+def test_manuscript_exposes_analytic_import_boundary_without_internal_names():
     text = body(PAPER)
-    assert "theorem tags" in text
-    assert "assumption checks" in text
-    assert "does not silently reprove" in text
-    assert "rational parameter-ray landing" in text or "rational parameter rays" in text
+    assert "imported theorems from complex dynamics" in text
+    assert "known theorem" in text
+    assert "assumptions" in text
+    assert "rational parameter-ray landing" in text or "Rational parameter rays" in text
     assert "fiber" in text
 
 

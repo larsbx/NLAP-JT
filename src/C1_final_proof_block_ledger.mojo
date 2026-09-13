@@ -49,6 +49,14 @@ fn theorem_tag_import_soundness_status() -> ProofBlockStatus:
     return ProofBlockStatus("TheoremTagImportSoundness", False, True, False, False, True)
 
 
+fn theorem_tag_import_ledger_status() -> ProofBlockStatus:
+    return ProofBlockStatus("TheoremTagImportLedger", True, False, False, False, False)
+
+
+fn theorem_tag_assumption_payloads_status() -> ProofBlockStatus:
+    return ProofBlockStatus("TheoremTagAssumptionPayloads", False, True, False, False, True)
+
+
 fn block_ready_for_final(block: ProofBlockStatus) -> Bool:
     if not block.required_for_final:
         return True
@@ -63,7 +71,8 @@ fn final_ledger_ready_for_c1() -> Bool:
         block_ready_for_final(residual_closure_no_missing_links_status()) and
         block_ready_for_final(exit_closure_for_c1_status()) and
         block_ready_for_final(boundary_equality_soundness_status()) and
-        block_ready_for_final(theorem_tag_import_soundness_status())
+        block_ready_for_final(theorem_tag_import_soundness_status()) and
+        block_ready_for_final(theorem_tag_assumption_payloads_status())
     )
 
 
@@ -72,7 +81,11 @@ fn current_priority_block() -> String:
 
 
 fn next_immediate_block() -> String:
-    return "TheoremTagImportLedger"
+    return "TheoremTagAssumptionPayloads"
+
+
+fn import_ledger_created() -> Bool:
+    return True
 
 
 fn missing_link_exit_allowed_in_final() -> Bool:

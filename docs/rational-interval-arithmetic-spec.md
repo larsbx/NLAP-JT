@@ -232,6 +232,7 @@ The binding table lists every module that instantiates a layer, its conformance 
 | Spec item | Module | Class | Notes |
 | --- | --- | --- | --- |
 | 1.1–1.3 ℚ | `src/rat_q.mojo` (`Q`) | DEMO | `Int64` unchecked; `backend.toml` declares `Int64DemoBackend`, `proof_grade = false`; migration contract in `src/rat_backend_plan.mojo` |
+| 1.1–1.5 ℚ, checked transition | `src/checked_q.mojo` (`CheckedQResult`) | CONFORMS-CHECKED | normalized accepted results; zero denominator, division by zero, unrepresentable magnitude, arithmetic overflow, and unsafe comparison all return explicit rejected no-results; not yet used by interval consumers |
 | 2.1–2.5 I_Q, complex boxes | `src/interval_q.mojo` (`IQ`, `ComplexIQ`) | DEMO | algebra conformant (J1 is a caller contract, not enforced: fails C4); inherits `Q` backend |
 | 2.3 natural extension, Horner | `src/poly_interval_eval.mojo` | DEMO | ascending-coefficient Horner over `ComplexIQ` |
 | 2.4 strict inclusion witness | `src/krawczyk_witness.mojo` | DEMO | Krawczyk contraction on `P_{2,1}`; `P_{4,1}` pending |

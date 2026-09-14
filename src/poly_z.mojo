@@ -15,103 +15,102 @@
 # representation and implement a fully checked Euclidean gcd witness.
 
 
-alias MAX_DEGREE = 256
+comptime MAX_DEGREE = 256
 
 
-@value
-struct PolyZ:
-    var coeffs: StaticTuple[Int, MAX_DEGREE + 1]
+struct PolyZ(Copyable):
+    var coeffs: List[Int]
     var degree: Int
 
-    fn __init__(inout self):
-        var xs = StaticTuple[Int, MAX_DEGREE + 1]()
-        for i in range(MAX_DEGREE + 1):
-            xs[i] = 0
-        self.coeffs = xs
+    def __init__(out self):
+        var xs = List[Int](capacity=MAX_DEGREE + 1)
+        for _ in range(MAX_DEGREE + 1):
+            xs.append(0)
+        self.coeffs = xs^
         self.degree = 0
 
-    fn normalize(inout self):
+    def normalize(mut self):
         var d = MAX_DEGREE
         while d > 0 and self.coeffs[d] == 0:
             d -= 1
         self.degree = d
 
-    fn coefficient(self, i: Int) -> Int:
+    def coefficient(self, i: Int) -> Int:
         if i < 0 or i > MAX_DEGREE:
             return 0
         return self.coeffs[i]
 
-    fn set_coefficient(inout self, i: Int, value: Int):
+    def set_coefficient(mut self, i: Int, value: Int):
         if i >= 0 and i <= MAX_DEGREE:
             self.coeffs[i] = value
             self.normalize()
 
-    fn is_zero(self) -> Bool:
+    def is_zero(self) -> Bool:
         return self.degree == 0 and self.coeffs[0] == 0
 
 
-fn constant(value: Int) -> PolyZ:
+def constant(value: Int) -> PolyZ:
     var p = PolyZ()
     p.coeffs[0] = value
     p.normalize()
-    return p
+    return p^
 
 
-fn variable() -> PolyZ:
+def variable() -> PolyZ:
     var p = PolyZ()
     p.coeffs[1] = 1
     p.degree = 1
-    return p
+    return p^
 
 
-fn add(a: PolyZ, b: PolyZ) -> PolyZ:
+def add(a: PolyZ, b: PolyZ) -> PolyZ:
     var r = PolyZ()
     for i in range(MAX_DEGREE + 1):
         r.coeffs[i] = a.coefficient(i) + b.coefficient(i)
     r.normalize()
-    return r
+    return r^
 
 
-fn sub(a: PolyZ, b: PolyZ) -> PolyZ:
+def sub(a: PolyZ, b: PolyZ) -> PolyZ:
     var r = PolyZ()
     for i in range(MAX_DEGREE + 1):
         r.coeffs[i] = a.coefficient(i) - b.coefficient(i)
     r.normalize()
-    return r
+    return r^
 
 
-fn mul(a: PolyZ, b: PolyZ) -> PolyZ:
+def mul(a: PolyZ, b: PolyZ) -> PolyZ:
     var r = PolyZ()
     for i in range(a.degree + 1):
         for j in range(b.degree + 1):
-            let k = i + j
+            var k = i + j
             if k <= MAX_DEGREE:
                 r.coeffs[k] += a.coefficient(i) * b.coefficient(j)
     r.normalize()
-    return r
+    return r^
 
 
-fn derivative(a: PolyZ) -> PolyZ:
+def derivative(a: PolyZ) -> PolyZ:
     var r = PolyZ()
     if a.degree == 0:
-        return r
+        return r^
     for i in range(1, a.degree + 1):
         r.coeffs[i - 1] = a.coefficient(i) * i
     r.normalize()
-    return r
+    return r^
 
 
-fn monic_linear(root_negated: Int) -> PolyZ:
+def monic_linear(root_negated: Int) -> PolyZ:
     # Returns C + root_negated.
     var p = variable()
     p.coeffs[0] = root_negated
     p.normalize()
-    return p
+    return p^
 
 
-fn pow_poly(base: PolyZ, exponent: Int) -> PolyZ:
+def pow_poly(base: PolyZ, exponent: Int) -> PolyZ:
     var r = constant(1)
-    var b = base
+    var b = base.copy()
     var e = exponent
     while e > 0:
         if e % 2 == 1:
@@ -119,23 +118,23 @@ fn pow_poly(base: PolyZ, exponent: Int) -> PolyZ:
         e = e // 2
         if e > 0:
             b = mul(b, b)
-    return r
+    return r^
 
 
-fn critical_orbit_poly(n: Int) -> PolyZ:
+def critical_orbit_poly(n: Int) -> PolyZ:
     # Q_0 = 0, Q_{n+1} = Q_n^2 + C.
     var q = constant(0)
-    let c = variable()
+    var c = variable()
     for _ in range(n):
         q = add(mul(q, q), c)
-    return q
+    return q^
 
 
-fn raw_return_poly(l: Int, k: Int) -> PolyZ:
+def raw_return_poly(l: Int, k: Int) -> PolyZ:
     return sub(critical_orbit_poly(l + k), critical_orbit_poly(l))
 
 
-fn equal_poly(a: PolyZ, b: PolyZ) -> Bool:
+def equal_poly(a: PolyZ, b: PolyZ) -> Bool:
     if a.degree != b.degree:
         return False
     for i in range(MAX_DEGREE + 1):
@@ -144,21 +143,21 @@ fn equal_poly(a: PolyZ, b: PolyZ) -> Bool:
     return True
 
 
-fn factor_c_minus_zero_power(power: Int) -> PolyZ:
+def factor_c_minus_zero_power(power: Int) -> PolyZ:
     return pow_poly(variable(), power)
 
 
-fn expected_R_2_1() -> PolyZ:
+def expected_R_2_1() -> PolyZ:
     # R_{2,1}(C) = C^3(C+2).
     return mul(pow_poly(variable(), 3), monic_linear(2))
 
 
-fn expected_P_2_1_squarefree() -> PolyZ:
+def expected_P_2_1_squarefree() -> PolyZ:
     # P_{2,1}(C) = sqfree(C^3(C+2)) = C(C+2).
     return mul(variable(), monic_linear(2))
 
 
-fn expected_F7_M41() -> PolyZ:
+def expected_F7_M41() -> PolyZ:
     # F_7(C) = C^7 + 4C^6 + 6C^5 + 6C^4 + 6C^3 + 4C^2 + 2C + 2.
     var p = PolyZ()
     p.coeffs[0] = 2
@@ -170,12 +169,12 @@ fn expected_F7_M41() -> PolyZ:
     p.coeffs[6] = 4
     p.coeffs[7] = 1
     p.normalize()
-    return p
+    return p^
 
 
-fn expected_R_4_1_factorized() -> PolyZ:
+def expected_R_4_1_factorized() -> PolyZ:
     # R_{4,1} = C^5(C+2)(C^3+2C^2+2C+2)F_7.
-    let c = variable()
+    var c = variable()
     var cubic = PolyZ()
     cubic.coeffs[0] = 2
     cubic.coeffs[1] = 2
@@ -185,9 +184,9 @@ fn expected_R_4_1_factorized() -> PolyZ:
     return mul(mul(mul(pow_poly(c, 5), monic_linear(2)), cubic), expected_F7_M41())
 
 
-fn expected_P_4_1_squarefree() -> PolyZ:
+def expected_P_4_1_squarefree() -> PolyZ:
     # P_{4,1} = C(C+2)(C^3+2C^2+2C+2)F_7.
-    let c = variable()
+    var c = variable()
     var cubic = PolyZ()
     cubic.coeffs[0] = 2
     cubic.coeffs[1] = 2
@@ -197,13 +196,13 @@ fn expected_P_4_1_squarefree() -> PolyZ:
     return mul(mul(mul(c, monic_linear(2)), cubic), expected_F7_M41())
 
 
-fn smoke_poly_identities() -> Bool:
+def smoke_poly_identities() -> Bool:
     # These are preservation checks for computations used in the spec.
-    let r21 = raw_return_poly(2, 1)
+    var r21 = raw_return_poly(2, 1)
     if not equal_poly(r21, expected_R_2_1()):
         return False
 
-    let r41 = raw_return_poly(4, 1)
+    var r41 = raw_return_poly(4, 1)
     if not equal_poly(r41, expected_R_4_1_factorized()):
         return False
 

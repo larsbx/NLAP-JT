@@ -81,9 +81,9 @@ def checked_collision_excludes_zero(a: CheckedComplexIQResult, b: CheckedComplex
     return CheckedQBoolResult(not re_contains.value or not im_contains.value, False)
 
 
-def checked_p21_exact_type_exclusions(radius_den_power: Int) -> CheckedExactTypeExclusionResult:
+def checked_p21_exact_type_exclusions(half_width_den_power: Int) -> CheckedExactTypeExclusionResult:
     var box_name = "beta_c_minus_2"
-    var orbit = build_checked_interval_orbit_h3(checked_c_minus_2_box(radius_den_power))
+    var orbit = build_checked_interval_orbit_h3(checked_c_minus_2_box(half_width_den_power))
     if orbit.rejected:
         return CheckedExactTypeExclusionResult(box_name, 0, 5, True)
 

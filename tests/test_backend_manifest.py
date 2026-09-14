@@ -86,8 +86,8 @@ def test_checked_krawczyk_layer_is_compiler_wired():
     smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
     assert "struct CheckedKrawczykResult(ImplicitlyCopyable)" in src
     assert "if beta.rejected or image.rejected:" in src
-    assert "invalid_radius.rejected" in src
-    assert "overflow_radius.rejected" in src
+    assert "invalid_half_width.rejected" in src
+    assert "overflow_half_width.rejected" in src
     assert "from checked_krawczyk_witness import checked_krawczyk_smoke" in smoke
     assert "if not checked_krawczyk_smoke():" in smoke
 

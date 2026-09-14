@@ -12,7 +12,7 @@ from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
 from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order
 from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
-from krawczyk_witness import verify_p21_krawczyk_c_minus_2
+from krawczyk_witness import verify_p21_krawczyk_c_minus_2, bigq_krawczyk_replay_smoke
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
 from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_exit, rejected_final_exit
 from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, PayloadStrengthClass, allowed_payload_kind, allowed_payload_conclusion, allowed_payload_strength, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
@@ -270,6 +270,8 @@ def run_smoke_tests() -> Bool:
     if not test_interval_polynomial_evaluation():
         return False
     if not verify_p21_krawczyk_c_minus_2(8):
+        return False
+    if not bigq_krawczyk_replay_smoke():
         return False
     if not test_final_proof_ledger_policy():
         return False

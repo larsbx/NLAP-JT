@@ -48,7 +48,8 @@ def test_bigq_krawczyk_replay_is_typed_and_fail_closed():
     assert "return BigQKrawczykResult(False, True)" in src
     assert "def arithmetic_replay_accepted(self) -> Bool:" in src
     assert "q_backend_blocks_proof_acceptance(backend)" in src
-    assert "var wide_radius = verify_bigq_p21_krawczyk_c_minus_2(80)" in src
+    assert "half_width_den_power" in src
+    assert "var narrow_box = verify_bigq_p21_krawczyk_c_minus_2(80)" in src
     assert "if not bigq_krawczyk_replay_smoke():" in smoke
 
 

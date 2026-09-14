@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from source_tokens import mask_comments_and_strings
+from audit_no_trig import TOKEN_RE
 
 
 def test_mask_preserves_code_and_line_numbers():
@@ -33,3 +34,10 @@ def test_mask_handles_escaped_quotes():
     masked = mask_comments_and_strings(source)
     assert "cos" not in masked
     assert "tan(x)" in masked
+
+
+def test_no_trig_pattern_covers_general_transcendentals():
+    for expression in ["sin(x)", "exp(x)", "log(x)", "sqrt(x)", "unit circle"]:
+        assert TOKEN_RE.search(expression)
+    assert TOKEN_RE.search("# sqrt(x)")
+    assert not TOKEN_RE.search(mask_comments_and_strings("# sqrt(x)\nvar q = x * x\n"))

@@ -22,11 +22,11 @@ struct CheckedKrawczykResult(ImplicitlyCopyable):
         return self.contraction_verified and not self.rejected
 
 
-def checked_c_minus_2_box(radius_den_power: Int) -> CheckedComplexIQResult:
-    if radius_den_power < 0:
+def checked_c_minus_2_box(half_width_den_power: Int) -> CheckedComplexIQResult:
+    if half_width_den_power < 0:
         return rejected_complex_iq()
     var den = Int64(1)
-    for _ in range(radius_den_power):
+    for _ in range(half_width_den_power):
         var doubled = checked_mul_i64(den, 2)
         if doubled.overflowed:
             return rejected_complex_iq()
@@ -55,8 +55,8 @@ def checked_p21_krawczyk_image(beta: CheckedComplexIQResult) -> CheckedComplexIQ
     )
 
 
-def verify_checked_p21_krawczyk(radius_den_power: Int) -> CheckedKrawczykResult:
-    var beta = checked_c_minus_2_box(radius_den_power)
+def verify_checked_p21_krawczyk(half_width_den_power: Int) -> CheckedKrawczykResult:
+    var beta = checked_c_minus_2_box(half_width_den_power)
     var image = checked_p21_krawczyk_image(beta)
     if beta.rejected or image.rejected:
         return CheckedKrawczykResult(False, True)
@@ -68,13 +68,13 @@ def verify_checked_p21_krawczyk(radius_den_power: Int) -> CheckedKrawczykResult:
 
 def checked_krawczyk_smoke() -> Bool:
     var witness = verify_checked_p21_krawczyk(8)
-    var invalid_radius = verify_checked_p21_krawczyk(-1)
-    var overflow_radius = verify_checked_p21_krawczyk(63)
+    var invalid_half_width = verify_checked_p21_krawczyk(-1)
+    var overflow_half_width = verify_checked_p21_krawczyk(63)
     var beta = checked_c_minus_2_box(8)
     var self_strict = checked_complex_strict_subset_of(beta, beta)
     return (
         witness.accepted() and
-        invalid_radius.rejected and not invalid_radius.accepted() and
-        overflow_radius.rejected and not overflow_radius.accepted() and
+        invalid_half_width.rejected and not invalid_half_width.accepted() and
+        overflow_half_width.rejected and not overflow_half_width.accepted() and
         not self_strict.rejected and not self_strict.value
     )

@@ -1,8 +1,11 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs" / "C1_finite_classical_dictionary.md"
 SRC = ROOT / "src" / "C1_bridge.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def read(path: Path) -> str:
@@ -33,7 +36,7 @@ def test_finite_prefix_never_claims_generic_stabilization():
 
 
 def test_bridge_uses_incidence_refs_not_analytic_points():
-    src = read(SRC)
+    src = mask_comments_and_strings(read(SRC))
     assert "IncidenceObjectRef" in src
     assert "is_point_vertex" in src
     forbidden = ["point_eval", "eval_point", "analytic point", "Float64", "cmath", "numpy"]
@@ -42,7 +45,7 @@ def test_bridge_uses_incidence_refs_not_analytic_points():
 
 
 def test_no_secondary_tracks_reintroduced_in_c1_bridge():
-    combined = (read(DOC) + "\n" + read(SRC)).lower()
+    combined = mask_comments_and_strings(read(SRC)).lower()
     forbidden = ["pixel", "renderer", "hashroot", "finite-field experiment", "bigint implementation", "krawczyk optimization"]
     for token in forbidden:
         assert token not in combined

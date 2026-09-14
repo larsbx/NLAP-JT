@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 import tomllib
 
 
@@ -19,6 +20,20 @@ def test_ci_executes_both_mojo_compile_paths():
     )
     assert "pixi run mojo-build" in workflow
     assert "pixi run mojo-smoke" in workflow
+
+
+def test_smoke_failure_exits_nonzero():
+    result = subprocess.run(
+        ["mojo", "src/smoke_failure_probe.mojo"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "finite-regime Mandelbrot smoke tests: FAIL" in (
+        result.stdout + result.stderr
+    )
 
 
 def test_compiler_checked_boundary_is_explicit():

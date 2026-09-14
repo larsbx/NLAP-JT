@@ -9,13 +9,20 @@ The compiler-checked dependency closure currently consists of:
 
 - `src/smoke_tests.mojo`;
 - `src/poly_z.mojo`;
-- `src/cert_types.mojo`.
+- `src/cert_types.mojo`;
+- `src/rat_q.mojo`;
+- `src/interval_q.mojo`;
+- `src/poly_interval_eval.mojo`;
+- `src/krawczyk_witness.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
-constraints, the same-box joint-witness gate, and imported-theorem-tag
-acceptance. Passing it does not imply that every `.mojo` file compiles, that the
-Int coefficient backend is proof-grade, or that any open C1 theorem obligation
-has been discharged.
+constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
+normalized rational arithmetic, rational ordering, interval multiplication,
+coordinate-record quadrance, and interval Horner evaluation of the squarefree
+localization polynomial, and the exact interval Krawczyk contraction for
+`P_{2,1}` at the dyadic box centered on -2. Passing it does not imply that
+every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
+or that any open C1 theorem obligation has been discharged.
 
 Remaining modules retain legacy syntax until they enter an explicitly listed,
 dependency-closed compile target. The compile frontier must expand by adding

@@ -4,9 +4,9 @@
 Three checks, all lexical and CI-cheap:
 
 1. the specification exists and carries every required section heading;
-2. every module named in this repository's binding table (spec section 6)
-   exists, cites the specification by path (criterion C7), and is listed in
-   the allowlist exactly when its class is QUARANTINED;
+2. every arithmetic module is named in this repository's binding table (spec
+   section 6), exists, cites the specification by path (criterion C7), and is
+   listed in the allowlist exactly when its class is QUARANTINED;
 3. no floating-point type or literal appears in executable kernel code
    outside the allowlist (criterion C1).
 """
@@ -46,9 +46,14 @@ REQUIRED_SECTIONS = [
 
 FLOAT_RE = re.compile(
     r"\b(?:Float16|Float32|Float64|BFloat16|FloatLiteral|Float|float)\b"
-    r"|(?<![\w.])\d+\.\d+(?![\w.])"
+    r"|(?<![\w.])(?:"
+    r"(?:\d(?:_?\d)*\.(?:\d(?:_?\d)*)?|\.\d(?:_?\d)*)"
+    r"(?:[eE][+-]?\d(?:_?\d)*)?"
+    r"|\d(?:_?\d)*[eE][+-]?\d(?:_?\d)*"
+    r")(?![\w.])"
 )
 PATH_RE = re.compile(r"`([\w./-]+\.(?:mojo|py))`")
+ARITHMETIC_IMPORT_RE = re.compile(r"^from\s+(?:rat_q|interval_q)\s+import\b", re.MULTILINE)
 
 
 def _section(text: str, heading: str) -> str:
@@ -87,6 +92,15 @@ def kernel_files() -> list[Path]:
     return files
 
 
+def arithmetic_consumers() -> set[str]:
+    """Return source modules that directly instantiate the Q/IQ layers."""
+    return {
+        path.relative_to(ROOT).as_posix()
+        for path in kernel_files()
+        if ARITHMETIC_IMPORT_RE.search(path.read_text(encoding="utf-8"))
+    }
+
+
 def audit() -> list[str]:
     errors: list[str] = []
     if not SPEC.exists():
@@ -98,17 +112,22 @@ def audit() -> list[str]:
 
     allow = allowlisted()
     quarantined: set[str] = set()
+    bound: set[str] = set()
     for cls, paths in binding_rows(spec):
         for rel in paths:
+            bound.add(rel)
             path = ROOT / rel
             if not path.exists():
                 errors.append(f"binding row names missing file {rel}")
                 continue
             if cls == "QUARANTINED":
                 quarantined.add(rel)
-                continue
             if SPEC_REL not in path.read_text(encoding="utf-8"):
                 errors.append(f"{rel} does not cite {SPEC_REL} (C7)")
+    errors += [
+        f"arithmetic consumer lacks binding row: {rel}"
+        for rel in sorted(arithmetic_consumers() - bound)
+    ]
     errors += [f"{rel} is QUARANTINED but not allowlisted" for rel in sorted(quarantined - allow)]
     errors += [f"{rel} is allowlisted but not a QUARANTINED binding row" for rel in sorted(allow - quarantined)]
 

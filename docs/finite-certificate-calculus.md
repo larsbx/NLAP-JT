@@ -33,11 +33,22 @@ P_{l,k}(C) = sqfree(R_{l,k}(C))
 
 The verifier localizes roots of `P_{l,k}`, not globally gcd-stripped exact-type factors.
 
-## 3. Why squarefree only
+## 3. Why squarefree remains canonical
 
-Exact type is a property of an isolated root, not a globally removable irreducible factor.
+Exact critical-orbit type is constant on each irreducible factor over `Q`.
+Indeed, for every fixed collision pair `(i,j)`, the equality
+`Q_i(c) = Q_j(c)` is a rational polynomial identity and is therefore constant
+on the Galois orbit of `c`. The complete collision pattern, and hence its
+minimal preperiod and period, is constant on that factor. See
+`docs/cross-program-bridge-psc-nlapjt-2026-09-12.md`, section C1, for the
+elementary proof and exact low-horizon checks.
 
-Do not strip lower-collision factors by gcd against forbidden polynomials. Galois conjugates can mix exact-type and lower-type roots inside the same irreducible factor over `Q`. Removing that factor can delete the genuine target root.
+Consequently, gcd filtering against strictly lower collision relations can be
+mathematically sound; the former contrary Galois rationale was false. This
+calculus nevertheless keeps squarefree localization followed by pointwise
+same-box exclusions as its canonical verifier policy. That route is
+conservative, directly witnesses the claimed isolated root's exact type, and
+does not require a separate factor-classification certificate.
 
 The sound method is:
 

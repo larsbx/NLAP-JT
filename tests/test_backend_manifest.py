@@ -81,6 +81,17 @@ def test_checked_complex_horner_layer_is_compiler_wired():
     assert "if not checked_complex_horner_smoke():" in smoke
 
 
+def test_checked_krawczyk_layer_is_compiler_wired():
+    src = (ROOT / "src" / "checked_krawczyk_witness.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    assert "struct CheckedKrawczykResult(ImplicitlyCopyable)" in src
+    assert "if beta.rejected or image.rejected:" in src
+    assert "invalid_radius.rejected" in src
+    assert "overflow_radius.rejected" in src
+    assert "from checked_krawczyk_witness import checked_krawczyk_smoke" in smoke
+    assert "if not checked_krawczyk_smoke():" in smoke
+
+
 def test_backend_manifest_audit_exists_and_checks_all_requirements():
     src = AUDIT.read_text(encoding="utf-8")
     for key in [

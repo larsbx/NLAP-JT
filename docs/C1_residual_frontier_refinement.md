@@ -6,11 +6,11 @@ This file moves the C1 program from guardrail construction to the core proof rou
 
 ## Terminology declaration: residual frontier refinement
 
-Genealogy: This term packages the remaining generic-boundary case after catalogue extensionality has been decomposed into finite separator coding, landing tags, side witnesses, finite-prefix existential separation, and classical-to-finite coding. It is tied to the classical fiber definition by rational-ray separation and to the project C1 finite catalogue grammar.
+Genealogy: This term packages the remaining generic-boundary case after `SeparatorCatalogueAdequacy` has been decomposed into finite separator coding, landing tags, side witnesses, finite-prefix existential separation, and classical-to-finite coding. It is tied to the classical fiber definition by rational-ray separation and to the project C1 finite catalogue grammar.
 
 Bridge claim: Definition-only project term plus conditional bridge theorem target. It is not a standard term in the field. Its role is to express that, once catalogue and side-witness links are unavailable as failure explanations, persistent non-separation must produce strict finite carrier refinement.
 
-Known leaks: The term does not prove MLC. It does not prove all fibers are trivial. It depends on the correctness of catalogue extensionality, side-assignment soundness, and the well-founded carrier refinement order. It also assumes incidence carriers are canonical finite presentations, not analytic singleton points.
+Known leaks: The term does not prove MLC. It does not prove all fibers are trivial. It depends on `SeparatorCatalogueAdequacy`, side-assignment soundness, and the well-founded carrier refinement order. It also assumes incidence carriers are canonical finite presentations, not analytic singleton points.
 
 Use discipline: Use only for the implication from persistent non-separation with no missing theorem/catalogue link and no boundary equality to strict carrier refinement. Do not use for bounded searches, renderers, metric diameter, or rank-2 circle/locus claims.
 

@@ -8,7 +8,7 @@ Genealogy: This term names the finite-regime descent argument assembled from the
 
 Bridge claim: Conditional bridge theorem. If residual persistent non-separation always forces strict canonical carrier refinement, and strict canonical carrier refinement is well-founded, then the residual case cannot persist indefinitely.
 
-Known leaks: This is not a proof of MLC by itself. It depends on the local residual-refinement lemma and on the adequacy of the canonical carrier content order. It also assumes catalogue extensionality has been discharged or separately theorem-tagged.
+Known leaks: This is not a proof of MLC by itself. It depends on the local residual-refinement lemma and on the adequacy of the canonical carrier content order. It also assumes `SeparatorCatalogueAdequacy` has been discharged or separately theorem-tagged.
 
 Use discipline: Use only for the contradiction step that rules out an infinite residual chain. Do not use it to claim finite-prefix non-separation proves same fiber, and do not replace classical fiber arguments with bounded search.
 
@@ -77,7 +77,7 @@ Therefore residual persistence must exit through one of the non-residual outcome
 
 This theorem does not directly prove C1. It reduces C1 to closing the remaining exits:
 
-1. catalogue extensionality;
+1. `SeparatorCatalogueAdequacy`;
 2. correctness of residual-frontier refinement;
 3. correctness of strict carrier well-foundedness;
 4. classification of boundary equality refinements;

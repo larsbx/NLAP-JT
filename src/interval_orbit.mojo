@@ -6,8 +6,9 @@
 # operations from interval_q.mojo. Arithmetic is BigZ-backed; this consumer
 # remains barred from certificate acceptance until its replay is complete.
 
-from interval_q import ComplexIQ, IQ
+from interval_q import ComplexIQ, IQ, IQBoolResult
 from rat_q import Q
+from krawczyk_witness import c_minus_2_box
 
 
 struct OrbitEvalConfig:
@@ -15,38 +16,41 @@ struct OrbitEvalConfig:
     var period: Int
     var horizon: Int
 
-    fn __init__(inout self, ell: Int, period: Int, horizon: Int):
+    def __init__(out self, ell: Int, period: Int, horizon: Int):
         self.ell = ell
         self.period = period
         self.horizon = horizon
 
-    fn valid(self) -> Bool:
+    def valid(self) -> Bool:
         return self.ell >= 1 and self.period >= 1 and self.horizon >= self.ell + self.period
 
 
-struct Orbit4:
+struct Orbit4(Copyable):
     var q0: ComplexIQ
     var q1: ComplexIQ
     var q2: ComplexIQ
     var q3: ComplexIQ
 
-    fn __init__(inout self, q0: ComplexIQ, q1: ComplexIQ, q2: ComplexIQ, q3: ComplexIQ):
-        self.q0 = q0
-        self.q1 = q1
-        self.q2 = q2
-        self.q3 = q3
+    def __init__(out self, q0: ComplexIQ, q1: ComplexIQ, q2: ComplexIQ, q3: ComplexIQ):
+        self.q0 = q0.copy()
+        self.q1 = q1.copy()
+        self.q2 = q2.copy()
+        self.q3 = q3.copy()
 
-    fn at(self, idx: Int) -> ComplexIQ:
+    def at(self, idx: Int) -> ComplexIQ:
         if idx == 0:
-            return self.q0
+            return self.q0.copy()
         if idx == 1:
-            return self.q1
+            return self.q1.copy()
         if idx == 2:
-            return self.q2
-        return self.q3
+            return self.q2.copy()
+        return self.q3.copy()
+
+    def accepted(self) -> Bool:
+        return self.q0.accepted() and self.q1.accepted() and self.q2.accepted() and self.q3.accepted()
 
 
-struct Orbit7:
+struct Orbit7(Copyable):
     var q0: ComplexIQ
     var q1: ComplexIQ
     var q2: ComplexIQ
@@ -55,29 +59,29 @@ struct Orbit7:
     var q5: ComplexIQ
     var q6: ComplexIQ
 
-    fn __init__(inout self, q0: ComplexIQ, q1: ComplexIQ, q2: ComplexIQ, q3: ComplexIQ, q4: ComplexIQ, q5: ComplexIQ, q6: ComplexIQ):
-        self.q0 = q0
-        self.q1 = q1
-        self.q2 = q2
-        self.q3 = q3
-        self.q4 = q4
-        self.q5 = q5
-        self.q6 = q6
+    def __init__(out self, q0: ComplexIQ, q1: ComplexIQ, q2: ComplexIQ, q3: ComplexIQ, q4: ComplexIQ, q5: ComplexIQ, q6: ComplexIQ):
+        self.q0 = q0.copy()
+        self.q1 = q1.copy()
+        self.q2 = q2.copy()
+        self.q3 = q3.copy()
+        self.q4 = q4.copy()
+        self.q5 = q5.copy()
+        self.q6 = q6.copy()
 
-    fn at(self, idx: Int) -> ComplexIQ:
+    def at(self, idx: Int) -> ComplexIQ:
         if idx == 0:
-            return self.q0
+            return self.q0.copy()
         if idx == 1:
-            return self.q1
+            return self.q1.copy()
         if idx == 2:
-            return self.q2
+            return self.q2.copy()
         if idx == 3:
-            return self.q3
+            return self.q3.copy()
         if idx == 4:
-            return self.q4
+            return self.q4.copy()
         if idx == 5:
-            return self.q5
-        return self.q6
+            return self.q5.copy()
+        return self.q6.copy()
 
 
 struct IntervalOrbitStatus:
@@ -87,14 +91,14 @@ struct IntervalOrbitStatus:
     var excluded_forbidden_count: Int
     var forbidden_count: Int
 
-    fn __init__(inout self, built_to_horizon: Bool, used_same_parameter_box: Bool, used_exact_rational_endpoints: Bool, excluded_forbidden_count: Int, forbidden_count: Int):
+    def __init__(out self, built_to_horizon: Bool, used_same_parameter_box: Bool, used_exact_rational_endpoints: Bool, excluded_forbidden_count: Int, forbidden_count: Int):
         self.built_to_horizon = built_to_horizon
         self.used_same_parameter_box = used_same_parameter_box
         self.used_exact_rational_endpoints = used_exact_rational_endpoints
         self.excluded_forbidden_count = excluded_forbidden_count
         self.forbidden_count = forbidden_count
 
-    fn accepted(self) -> Bool:
+    def accepted(self) -> Bool:
         return (
             self.built_to_horizon and
             self.used_same_parameter_box and
@@ -103,11 +107,32 @@ struct IntervalOrbitStatus:
         )
 
 
-fn intended_pair(ell: Int, period: Int, i: Int, j: Int) -> Bool:
+struct BigQExactTypeExclusionResult(Copyable):
+    var box_name: String
+    var half_width_den_power: Int
+    var excluded_count: Int
+    var required_count: Int
+    var arithmetic_rejected: Bool
+
+    def __init__(out self, box_name: String, half_width_den_power: Int, excluded_count: Int, required_count: Int, arithmetic_rejected: Bool):
+        self.box_name = box_name
+        self.half_width_den_power = half_width_den_power
+        self.excluded_count = excluded_count
+        self.required_count = required_count
+        self.arithmetic_rejected = arithmetic_rejected
+
+    def arithmetic_replay_accepted(self) -> Bool:
+        return not self.arithmetic_rejected and self.required_count > 0 and self.excluded_count == self.required_count
+
+    def ambiguous(self) -> Bool:
+        return not self.arithmetic_rejected and self.excluded_count < self.required_count
+
+
+def intended_pair(ell: Int, period: Int, i: Int, j: Int) -> Bool:
     return i >= ell and ((j - i) % period == 0)
 
 
-fn forbidden_count(ell: Int, period: Int, horizon: Int) -> Int:
+def forbidden_count(ell: Int, period: Int, horizon: Int) -> Int:
     var total = 0
     for i in range(horizon + 1):
         for j in range(i + 1, horizon + 1):
@@ -116,7 +141,7 @@ fn forbidden_count(ell: Int, period: Int, horizon: Int) -> Int:
     return total
 
 
-fn intended_count(ell: Int, period: Int, horizon: Int) -> Int:
+def intended_count(ell: Int, period: Int, horizon: Int) -> Int:
     var total = 0
     for i in range(horizon + 1):
         for j in range(i + 1, horizon + 1):
@@ -125,15 +150,15 @@ fn intended_count(ell: Int, period: Int, horizon: Int) -> Int:
     return total
 
 
-fn zero_box() -> ComplexIQ:
+def zero_box() -> ComplexIQ:
     return ComplexIQ.singleton(Q.zero(), Q.zero())
 
 
-fn next_orbit_value(z: ComplexIQ, c_box: ComplexIQ) -> ComplexIQ:
+def next_orbit_value(z: ComplexIQ, c_box: ComplexIQ) -> ComplexIQ:
     return z.square().add(c_box)
 
 
-fn build_interval_orbit_h3(c_box: ComplexIQ) -> Orbit4:
+def build_interval_orbit_h3(c_box: ComplexIQ) -> Orbit4:
     var q0 = zero_box()
     var q1 = next_orbit_value(q0, c_box)
     var q2 = next_orbit_value(q1, c_box)
@@ -141,7 +166,7 @@ fn build_interval_orbit_h3(c_box: ComplexIQ) -> Orbit4:
     return Orbit4(q0, q1, q2, q3)
 
 
-fn build_interval_orbit_h6(c_box: ComplexIQ) -> Orbit7:
+def build_interval_orbit_h6(c_box: ComplexIQ) -> Orbit7:
     var q0 = zero_box()
     var q1 = next_orbit_value(q0, c_box)
     var q2 = next_orbit_value(q1, c_box)
@@ -152,19 +177,45 @@ fn build_interval_orbit_h6(c_box: ComplexIQ) -> Orbit7:
     return Orbit7(q0, q1, q2, q3, q4, q5, q6)
 
 
-fn collision_interval(a: ComplexIQ, b: ComplexIQ) -> ComplexIQ:
+def collision_interval(a: ComplexIQ, b: ComplexIQ) -> ComplexIQ:
     return b.sub(a)
 
 
-fn excludes_zero(z: ComplexIQ) -> Bool:
+def complex_excludes_zero(z: ComplexIQ) -> IQBoolResult:
+    if not z.accepted():
+        return IQBoolResult(False, True)
     var re_result = z.re.excludes_zero()
     var im_result = z.im.excludes_zero()
     if re_result.rejected or im_result.rejected:
-        return False
-    return re_result.value or im_result.value
+        return IQBoolResult(False, True)
+    return IQBoolResult(re_result.value or im_result.value, False)
 
 
-fn verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
+def excludes_zero(z: ComplexIQ) -> Bool:
+    var result = complex_excludes_zero(z)
+    return not result.rejected and result.value
+
+
+def bigq_p21_exact_type_exclusions(half_width_den_power: Int) -> BigQExactTypeExclusionResult:
+    var box_name = "beta_c_minus_2"
+    var orbit = build_interval_orbit_h3(c_minus_2_box(half_width_den_power))
+    if not orbit.accepted():
+        return BigQExactTypeExclusionResult(box_name, half_width_den_power, 0, 5, True)
+    var pairs_i = List[Int]([0, 0, 0, 1, 1])
+    var pairs_j = List[Int]([1, 2, 3, 2, 3])
+    var excluded = 0
+    for pair_idx in range(5):
+        var exclusion = complex_excludes_zero(
+            collision_interval(orbit.at(pairs_i[pair_idx]), orbit.at(pairs_j[pair_idx]))
+        )
+        if exclusion.rejected:
+            return BigQExactTypeExclusionResult(box_name, half_width_den_power, excluded, 5, True)
+        if exclusion.value:
+            excluded += 1
+    return BigQExactTypeExclusionResult(box_name, half_width_den_power, excluded, 5, False)
+
+
+def verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
     var orbit = build_interval_orbit_h3(c_box)
     var excluded = 0
     var total = 0
@@ -178,7 +229,7 @@ fn verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> I
     return IntervalOrbitStatus(True, True, True, excluded, total)
 
 
-fn verify_exact_type_exclusions_h6(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
+def verify_exact_type_exclusions_h6(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
     var orbit = build_interval_orbit_h6(c_box)
     var excluded = 0
     var total = 0
@@ -192,16 +243,11 @@ fn verify_exact_type_exclusions_h6(c_box: ComplexIQ, ell: Int, period: Int) -> I
     return IntervalOrbitStatus(True, True, True, excluded, total)
 
 
-fn c_minus_2_box() -> ComplexIQ:
-    var h = Q(1, 1024)
-    return ComplexIQ(IQ(Q(-2049, 1024), Q(-2047, 1024)), IQ(h.neg(), h))
+def demo_c_minus_2_status() -> IntervalOrbitStatus:
+    return verify_exact_type_exclusions_h3(c_minus_2_box(8), 2, 1)
 
 
-fn demo_c_minus_2_status() -> IntervalOrbitStatus:
-    return verify_exact_type_exclusions_h3(c_minus_2_box(), 2, 1)
-
-
-fn demo_m41_status() -> IntervalOrbitStatus:
+def demo_m41_status() -> IntervalOrbitStatus:
     # Placeholder until a certificate-ready dyadic M_4,1 box is moved from the
     # Python reference oracle into normalized Q endpoints. The expected count is
     # preserved here as a contract check, not as a completed proof witness.
@@ -211,5 +257,18 @@ fn demo_m41_status() -> IntervalOrbitStatus:
     return IntervalOrbitStatus(True, True, True, 18, forbidden_count(ell, period, horizon))
 
 
-fn demo_native_c_minus_2_accepts() -> Bool:
+def demo_native_c_minus_2_accepts() -> Bool:
     return demo_c_minus_2_status().accepted()
+
+
+def bigq_exact_type_exclusion_replay_smoke() -> Bool:
+    var witness = bigq_p21_exact_type_exclusions(8)
+    var ambiguous = bigq_p21_exact_type_exclusions(0)
+    var invalid_half_width = bigq_p21_exact_type_exclusions(-1)
+    var narrow_box = bigq_p21_exact_type_exclusions(80)
+    return (
+        witness.arithmetic_replay_accepted() and witness.excluded_count == 5 and
+        ambiguous.ambiguous() and not ambiguous.arithmetic_replay_accepted() and
+        invalid_half_width.arithmetic_rejected and
+        narrow_box.arithmetic_replay_accepted()
+    )

@@ -3,7 +3,7 @@
 # This module is deliberately finite and syntactic. It records which checked
 # blocks must be present before the final theorem status may be accepted.
 
-struct C1FinalProofObject:
+struct C1FinalProofObject(ImplicitlyCopyable):
     var separator_catalogue_soundness_checked: Bool
     var separator_catalogue_completeness_checked: Bool
     var fiber_definition_adapter_checked: Bool
@@ -18,8 +18,8 @@ struct C1FinalProofObject:
     var no_rank2_locus_primitive_used: Bool
     var no_label_only_equality_used: Bool
 
-    fn __init__(
-        inout self,
+    def __init__(
+        out self,
         separator_catalogue_soundness_checked: Bool,
         separator_catalogue_completeness_checked: Bool,
         fiber_definition_adapter_checked: Bool,
@@ -49,7 +49,41 @@ struct C1FinalProofObject:
         self.no_label_only_equality_used = no_label_only_equality_used
 
 
-fn all_required_blocks_checked(proof: C1FinalProofObject) -> Bool:
+struct FinalProofAcceptancePolicy(ImplicitlyCopyable):
+    var rejects_missing_link_exit: Bool
+    var requires_covered_domain: Bool
+    var rejects_bounded_search_shortcut: Bool
+    var rejects_rank2_locus_primitive: Bool
+    var rejects_label_only_equality: Bool
+    var reproves_imported_analytic_theorems: Bool
+    var skeleton_alone_proves_c1: Bool
+
+    def __init__(out self, rejects_missing_link_exit: Bool, requires_covered_domain: Bool, rejects_bounded_search_shortcut: Bool, rejects_rank2_locus_primitive: Bool, rejects_label_only_equality: Bool, reproves_imported_analytic_theorems: Bool, skeleton_alone_proves_c1: Bool):
+        self.rejects_missing_link_exit = rejects_missing_link_exit
+        self.requires_covered_domain = requires_covered_domain
+        self.rejects_bounded_search_shortcut = rejects_bounded_search_shortcut
+        self.rejects_rank2_locus_primitive = rejects_rank2_locus_primitive
+        self.rejects_label_only_equality = rejects_label_only_equality
+        self.reproves_imported_analytic_theorems = reproves_imported_analytic_theorems
+        self.skeleton_alone_proves_c1 = skeleton_alone_proves_c1
+
+
+def canonical_final_proof_acceptance_policy() -> FinalProofAcceptancePolicy:
+    return FinalProofAcceptancePolicy(True, True, True, True, True, False, False)
+
+
+def final_proof_acceptance_policy_valid(policy: FinalProofAcceptancePolicy) -> Bool:
+    return (
+        policy.rejects_missing_link_exit and policy.requires_covered_domain and
+        policy.rejects_bounded_search_shortcut and
+        policy.rejects_rank2_locus_primitive and
+        policy.rejects_label_only_equality and
+        not policy.reproves_imported_analytic_theorems and
+        not policy.skeleton_alone_proves_c1
+    )
+
+
+def all_required_blocks_checked(proof: C1FinalProofObject) -> Bool:
     return (
         proof.separator_catalogue_soundness_checked and
         proof.separator_catalogue_completeness_checked and
@@ -61,7 +95,7 @@ fn all_required_blocks_checked(proof: C1FinalProofObject) -> Bool:
     )
 
 
-fn all_final_guards_checked(proof: C1FinalProofObject) -> Bool:
+def all_final_guards_checked(proof: C1FinalProofObject) -> Bool:
     return (
         proof.covered_domain_declared and
         proof.missing_link_exit_absent and
@@ -72,37 +106,37 @@ fn all_final_guards_checked(proof: C1FinalProofObject) -> Bool:
     )
 
 
-fn accepts_c1_final_proof_object(proof: C1FinalProofObject) -> Bool:
+def accepts_c1_final_proof_object(proof: C1FinalProofObject) -> Bool:
     return all_required_blocks_checked(proof) and all_final_guards_checked(proof)
 
 
-fn rejects_missing_link_final_exit() -> Bool:
-    return True
+def rejects_missing_link_final_exit(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.rejects_missing_link_exit
 
 
-fn final_proof_requires_covered_domain() -> Bool:
-    return True
+def final_proof_requires_covered_domain(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.requires_covered_domain
 
 
-fn final_proof_rejects_bounded_search_shortcut() -> Bool:
-    return True
+def final_proof_rejects_bounded_search_shortcut(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.rejects_bounded_search_shortcut
 
 
-fn final_proof_rejects_rank2_locus_primitive() -> Bool:
-    return True
+def final_proof_rejects_rank2_locus_primitive(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.rejects_rank2_locus_primitive
 
 
-fn final_proof_rejects_label_only_equality() -> Bool:
-    return True
+def final_proof_rejects_label_only_equality(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.rejects_label_only_equality
 
 
-fn final_proof_reproves_imported_analytic_theorems() -> Bool:
-    return False
+def final_proof_reproves_imported_analytic_theorems(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.reproves_imported_analytic_theorems
 
 
-fn skeleton_alone_proves_c1() -> Bool:
-    return False
+def skeleton_alone_proves_c1(policy: FinalProofAcceptancePolicy) -> Bool:
+    return policy.skeleton_alone_proves_c1
 
 
-fn next_priority_target() -> String:
+def next_priority_target() -> String:
     return "FinalProofBlockLedger"

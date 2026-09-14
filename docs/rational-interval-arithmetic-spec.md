@@ -1,6 +1,6 @@
 # Rational and interval arithmetic: canonical exactness specification
 
-**Status:** repository invariant and cross-program canonical hook. This file is mirrored byte-for-byte in `larsbx/NLAP-JT` and `larsbx/pisot-substitution-conjecture-research` under the same path, `docs/rational-interval-arithmetic-spec.md`. Sections 0 to 5 are repository-independent; section 6 carries the binding table of **both** repositories so that the two copies stay byte-identical. Each repository enforces the hook with its own audit script and regression tests (section 7).
+**Status:** repository invariant in `larsbx/NLAP-JT`; proposed cross-program canonical hook. The intended counterpart at `docs/rational-interval-arithmetic-spec.md` is not yet present on the default branch of `larsbx/pisot-substitution-conjecture-research`, so this revision is authoritative only for NLAP-JT. Sections 0 to 5 are repository-independent; section 6 retains the proposed binding table for both repositories so a future PSC import can be reviewed explicitly rather than assumed. NLAP-JT enforces its binding rows with the audit script and regression tests in section 7.
 
 Terminology in this file is field-recognizable (rational arithmetic, interval arithmetic, natural interval extension, dependency problem, floating-point filter). No novel bridge term is introduced. Where NLAP-JT terminology governance applies, every term here is Route A.
 
@@ -235,6 +235,7 @@ The binding table lists every module that instantiates a layer, its conformance 
 | 2.1–2.5 I_Q, complex boxes | `src/interval_q.mojo` (`IQ`, `ComplexIQ`) | DEMO | algebra conformant (J1 is a caller contract, not enforced: fails C4); inherits `Q` backend |
 | 2.3 natural extension, Horner | `src/poly_interval_eval.mojo` | DEMO | ascending-coefficient Horner over `ComplexIQ` |
 | 2.4 strict inclusion witness | `src/krawczyk_witness.mojo` | DEMO | Krawczyk contraction on `P_{2,1}`; `P_{4,1}` pending |
+| 1–2 direct arithmetic consumers | `src/complex_inverse.mojo`, `src/coord_record_eval.mojo`, `src/interval_orbit.mojo`, `src/rank2_operator.mojo`, `src/rational_trig.mojo`, `src/smoke_tests.mojo` | DEMO | direct `Q` or `IQ` consumers; inherit the unchecked `Int64` backend and are barred from certificate acceptance |
 | 2.4 exclusion oracle (secondary) | `tools/interval_exclusion_reference.py` | CONFORMS | Python `Fraction` endpoints; reference for `src/interval_orbit.mojo` |
 | — | `src/complex_box.mojo` (`C64`, `ComplexBox`), `src/finite_mandelbrot.mojo`, `src/run_examples.mojo` | QUARANTINED | `Float64` demo substrate; replacement target is dyadic-rational endpoints per `docs/interval-orbit-native-target.md` |
 
@@ -244,11 +245,11 @@ Promotion of any DEMO row to CONFORMS requires the unbounded backend gate in `ba
 
 The specification is a hook, not a note. Each repository wires it into its control surfaces as follows; the regression tests fail if any wire is removed.
 
-1. **Audit script** (`tools/audit_exact_arithmetic.py` in NLAP-JT, `scripts/audit_exact_arithmetic.py` in PSC). Lexically scans the executable kernel scope for floating-point type tokens outside comments and strings, fails on any hit not in the allowlist, and verifies that every module named in section 6 exists and cites this file (C7). Run in CI.
+1. **Audit script** (`tools/audit_exact_arithmetic.py` in NLAP-JT, `scripts/audit_exact_arithmetic.py` in PSC). Lexically scans the executable kernel scope for floating-point type tokens and decimal literal forms outside comments and strings, fails on any hit not in the allowlist, discovers direct arithmetic consumers and requires a binding row for each, and verifies that every module named in section 6 exists and cites this file (C7), including quarantined modules. Run in CI.
 2. **Allowlist** (`tools/exact_arithmetic_allowlist.md` in NLAP-JT, `scripts/exact_arithmetic_allowlist.md` in PSC). The only place QUARANTINED files may be named. Adding a file here requires a matching QUARANTINED row in section 6.
 3. **Law tests.** Executable checks of 1.3 (normalization, decidable equality, `1/10 + 2/10 = 3/10`, order-independence), 2.2 to 2.5 (inclusion, three-valued sign, `X − X ≠ [0,0]`, subdistributivity, fail-closed reciprocal and J1), and 3.2 (filter agrees with oracle; fallthrough on `0`). They exist in Mojo against the canonical kernels and in Python against the secondary oracle.
 4. **Policy pointers.** `README.md` and the implementation policy file (`AGENTS.md` in PSC, `docs/mojo_first_execution_policy.md` in NLAP-JT) name this file as the arithmetic policy; `backend.toml` in NLAP-JT carries `exact_arithmetic_spec` and `no_float_certificate_arithmetic = true`.
-5. **Sync rule.** Any change to this file is made in one repository and mirrored verbatim to the other in the same working session, binding tables included; the tests assert the required section headings and each repository's audit checks its own binding rows, so a partial mirror is caught.
+5. **Future sync rule.** Once the PSC counterpart is added and reviewed, changes to this file must be mirrored verbatim, binding tables included. Until then, no NLAP-JT check or document may claim that the cross-repository mirror exists.
 
 ## 8. Non-goals
 

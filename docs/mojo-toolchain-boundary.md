@@ -15,6 +15,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/ray_address.mojo`;
 - `src/rational_trig.mojo`;
 - `src/alignment_audit_status.mojo`;
+- `src/mojo_optimization_contract.mojo`;
 - `src/interval_q.mojo`;
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.
@@ -39,6 +40,8 @@ The import ledger separately checks typed conclusion, strength, and status
 vocabularies while retaining its scaffolded, non-final records.
 Repository alignment policy is checked from explicit data with an unsafe
 theorem-import negative control.
+Optimization policy is likewise checked from explicit data, including a
+negative control that attempts to mark a debug path proof-grade.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

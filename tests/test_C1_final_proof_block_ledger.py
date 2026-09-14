@@ -42,19 +42,29 @@ def test_final_readiness_requires_proved_checked_blocks_only():
 def test_forbidden_final_evidence_is_rejected():
     body = read(DOC) + "\n" + read(SRC)
     for hook in [
-        "missing_link_exit_allowed_in_final() -> Bool",
-        "bounded_search_allowed_as_final_evidence() -> Bool",
-        "label_only_equality_allowed_as_final_evidence() -> Bool",
-        "unchecked_theorem_tag_allowed_in_final() -> Bool",
-        "rank2_locus_primitive_allowed_in_final() -> Bool",
+        "missing_link_exit_allowed_in_final(policy: FinalEvidencePolicy) -> Bool",
+        "bounded_search_allowed_as_final_evidence(policy: FinalEvidencePolicy) -> Bool",
+        "label_only_equality_allowed_as_final_evidence(policy: FinalEvidencePolicy) -> Bool",
+        "unchecked_theorem_tag_allowed_in_final(policy: FinalEvidencePolicy) -> Bool",
+        "rank2_locus_primitive_allowed_in_final(policy: FinalEvidencePolicy) -> Bool",
     ]:
         assert hook in body
-    assert "return False" in body
+    assert "final_evidence_policy_valid(policy: FinalEvidencePolicy)" in body
+    assert "return policy.missing_link_exit" in body
 
 
 def test_priority_and_next_block_are_explicit():
     body = read(DOC) + "\n" + read(SRC)
     assert "current_priority_block() -> String" in body
-    assert 'return "ResidualClosureNoMissingLinks"' in body
+    assert "return residual_closure_no_missing_links_status().name" in body
     assert "next_immediate_block() -> String" in body
-    assert 'return "TheoremTagPayloadInstances"' in body
+    assert "return theorem_tag_payload_instances_status().name" in body
+
+
+def test_policy_and_priority_are_derived_from_ledger_data():
+    src = read(SRC)
+    assert "struct FinalEvidencePolicy" in src
+    assert "canonical_final_evidence_policy()" in src
+    assert "return FinalEvidencePolicy(False, False, False, False, False)" in src
+    assert "def import_ledger_created()" in src
+    assert "theorem_tag_import_ledger_status().proved_or_imported_checked" in src

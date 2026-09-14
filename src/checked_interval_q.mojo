@@ -159,6 +159,16 @@ def checked_iq_subset_of(a: CheckedIQResult, b: CheckedIQResult) -> CheckedQBool
     return CheckedQBoolResult(lower.value and upper.value, False)
 
 
+def checked_iq_strict_subset_of(a: CheckedIQResult, b: CheckedIQResult) -> CheckedQBoolResult:
+    if a.rejected or b.rejected:
+        return CheckedQBoolResult(False, True)
+    var lower = checked_q_lt(b.lo, a.lo)
+    var upper = checked_q_lt(a.hi, b.hi)
+    if lower.rejected or upper.rejected:
+        return CheckedQBoolResult(False, True)
+    return CheckedQBoolResult(lower.value and upper.value, False)
+
+
 def checked_iq_smoke() -> Bool:
     var x = make_checked_iq(normalize_checked_q(1, 1), normalize_checked_q(3, 1))
     var y = make_checked_iq(normalize_checked_q(-1, 1), normalize_checked_q(2, 1))

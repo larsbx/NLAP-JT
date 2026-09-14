@@ -5,7 +5,7 @@
 # interval operation rejects the whole result; no partial enclosure is emitted.
 
 from checked_q import CheckedQBoolResult, normalize_checked_q
-from checked_interval_q import CheckedIQResult, rejected_iq, make_checked_iq, checked_iq_point, checked_iq_add, checked_iq_sub, checked_iq_mul, checked_iq_square, checked_iq_subset_of
+from checked_interval_q import CheckedIQResult, rejected_iq, make_checked_iq, checked_iq_point, checked_iq_add, checked_iq_sub, checked_iq_mul, checked_iq_square, checked_iq_subset_of, checked_iq_strict_subset_of
 
 
 struct CheckedComplexIQResult(ImplicitlyCopyable):
@@ -74,6 +74,16 @@ def checked_complex_subset_of(a: CheckedComplexIQResult, b: CheckedComplexIQResu
         return CheckedQBoolResult(False, True)
     var re_subset = checked_iq_subset_of(a.re, b.re)
     var im_subset = checked_iq_subset_of(a.im, b.im)
+    if re_subset.rejected or im_subset.rejected:
+        return CheckedQBoolResult(False, True)
+    return CheckedQBoolResult(re_subset.value and im_subset.value, False)
+
+
+def checked_complex_strict_subset_of(a: CheckedComplexIQResult, b: CheckedComplexIQResult) -> CheckedQBoolResult:
+    if a.rejected or b.rejected:
+        return CheckedQBoolResult(False, True)
+    var re_subset = checked_iq_strict_subset_of(a.re, b.re)
+    var im_subset = checked_iq_strict_subset_of(a.im, b.im)
     if re_subset.rejected or im_subset.rejected:
         return CheckedQBoolResult(False, True)
     return CheckedQBoolResult(re_subset.value and im_subset.value, False)

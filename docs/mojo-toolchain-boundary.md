@@ -28,6 +28,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_q.mojo`.
 - `src/checked_interval_q.mojo`.
 - `src/checked_complex_interval.mojo`.
+- `src/checked_krawczyk_witness.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -63,6 +64,9 @@ queries. It is not yet connected to certificate consumers.
 The checked complex interval layer propagates component rejection through
 rank-2 arithmetic and Horner evaluation of `P_{2,1}` and its derivative. The
 checked Krawczyk acceptance path remains pending.
+The checked `P_{2,1}` Krawczyk path now distinguishes verified contraction,
+valid non-contraction, and arithmetic rejection. This bounded checked path does
+not satisfy the repository's unbounded proof-grade backend requirement.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

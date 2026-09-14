@@ -5,38 +5,10 @@
 # catalogue-extensionality bridge. It does not prove MLC, fibre triviality, or
 # generic boundary landing.
 
-from integer_gcd import gcd_int
+from ray_address import RayAddr, same_ray_addr, ray_addr_before
 
-struct RayAddrCode:
-    var num: Int
-    var den: Int
-
-    fn __init__(inout self, num: Int, den: Int):
-        self.num = num
-        self.den = den
-
-
-fn is_normalized_ray_addr(addr: RayAddrCode) -> Bool:
-    if addr.den <= 0:
-        return False
-    if addr.num < 0:
-        return False
-    if addr.num >= addr.den:
-        return False
-    return gcd_int(addr.num, addr.den) == 1
-
-
-fn same_ray_addr(a: RayAddrCode, b: RayAddrCode) -> Bool:
-    return a.num == b.num and a.den == b.den
-
-
-fn ray_addr_before(a: RayAddrCode, b: RayAddrCode) -> Bool:
-    # Canonical ordering is lexicographic by (den, num), not a measured angle.
-    if a.den < b.den:
-        return True
-    if a.den > b.den:
-        return False
-    return a.num < b.num
+fn is_normalized_ray_addr(addr: RayAddr) -> Bool:
+    return addr.normalized()
 
 
 struct CanonicalTwoRayCode:
@@ -95,8 +67,8 @@ fn nonempty_theorem_tag(tag: String) -> Bool:
 
 
 fn canonical_two_ray_code(
-    a: RayAddrCode,
-    b: RayAddrCode,
+    a: RayAddr,
+    b: RayAddr,
     landing_tag: String,
     theorem_tag: String,
 ) -> CanonicalTwoRayCode:
@@ -132,22 +104,22 @@ fn same_separator_identity(x: CanonicalTwoRayCode, y: CanonicalTwoRayCode) -> Bo
 
 
 fn demo_swap_invariant_identity() -> Bool:
-    let a = RayAddrCode(1, 3)
-    let b = RayAddrCode(1, 2)
+    let a = RayAddr(1, 3)
+    let b = RayAddr(1, 2)
     let x = canonical_two_ray_code(a, b, "RationalRayLanding", "SchleicherRationalRayLanding")
     let y = canonical_two_ray_code(b, a, "RationalRayLanding", "SchleicherRationalRayLanding")
     return same_separator_identity(x, y)
 
 
 fn demo_duplicate_rejected() -> Bool:
-    let a = RayAddrCode(1, 3)
+    let a = RayAddr(1, 3)
     let x = canonical_two_ray_code(a, a, "RationalRayLanding", "SchleicherRationalRayLanding")
     return not x.admissible
 
 
 fn demo_generic_landing_rejected() -> Bool:
-    let a = RayAddrCode(1, 3)
-    let b = RayAddrCode(1, 2)
+    let a = RayAddr(1, 3)
+    let b = RayAddr(1, 2)
     let x = canonical_two_ray_code(a, b, "GenericBoundaryLanding", "UnprovedGenericLanding")
     return not x.admissible
 

@@ -14,7 +14,7 @@ from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
 from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_exit, rejected_final_exit
-from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, allowed_payload_kind, allowed_payload_conclusion, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
+from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, PayloadStrengthClass, allowed_payload_kind, allowed_payload_conclusion, allowed_payload_strength, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -57,8 +57,13 @@ def test_typed_theorem_payload_kinds() -> Bool:
     return (
         allowed_payload_kind(AssumptionPayloadKind.rational_ray_landing()) and
         allowed_payload_conclusion(PayloadConclusionKind.ray_landing()) and
+        allowed_payload_strength(PayloadStrengthClass.adapter_only()) and
+        allowed_payload_strength(PayloadStrengthClass.local_landing()) and
+        allowed_payload_strength(PayloadStrengthClass.class_specific_fiber_triviality()) and
+        allowed_payload_strength(PayloadStrengthClass.class_specific_local_connectivity()) and
         not allowed_payload_kind(AssumptionPayloadKind(99)) and
         not allowed_payload_conclusion(PayloadConclusionKind(99)) and
+        not allowed_payload_strength(PayloadStrengthClass(99)) and
         theorem_tag_payload_admissible(rational_parameter_ray_landing_payload_scaffold()) and
         theorem_tag_payload_admissible(fiber_definition_payload_scaffold()) and
         generic_mlc_payload_rejected() and

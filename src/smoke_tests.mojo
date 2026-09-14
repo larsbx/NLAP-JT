@@ -35,6 +35,8 @@ from checked_ray_address import checked_ray_address_smoke
 from checked_finite_certificate_gate import checked_finite_certificate_gate_smoke
 from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
 from checked_landing_target_adapter import checked_landing_target_adapter_smoke
+from bigint_z import bigint_z_phase_one_smoke
+from bigint_adapter import bigint_adapter_phase_one_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -307,6 +309,10 @@ def run_smoke_tests() -> Bool:
     if not theorem_tag_payload_instances_smoke():
         return False
     if not checked_landing_target_adapter_smoke():
+        return False
+    if not bigint_z_phase_one_smoke():
+        return False
+    if not bigint_adapter_phase_one_smoke():
         return False
     return True
 

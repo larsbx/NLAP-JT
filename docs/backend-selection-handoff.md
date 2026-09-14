@@ -1,6 +1,7 @@
 # Backend Selection Handoff
 
-Status: blocking for proof-grade certificates.
+Status: Mojo-native dynamic-limb backend selected; phase one implemented;
+proof-grade certificates remain blocked.
 
 The repository now separates demo arithmetic from certificate arithmetic.
 
@@ -30,13 +31,17 @@ normalized_serialization = true
 
 Only then may `BackendGate.allows_certificate_acceptance` be true.
 
-## Candidate paths
+## Selected path
 
-1. Mojo-native bigint implementation.
-2. Bindings to a mature arbitrary-precision integer library.
-3. A two-layer path: reference Python `int`/`Fraction` oracle first, Mojo-native proof backend later.
+The repository uses a Mojo-native, little-endian dynamic-limb representation
+with base `10^9`. `src/bigint_z.mojo` phase one implements canonical signed
+storage, construction from every `Int64`, exact addition, subtraction,
+multiplication, equality, and order. Its dynamic `List[UInt64]` storage is not
+limited to an `Int64` magnitude.
 
-The third path is acceptable for development, but Python remains a reference oracle, not the finite certificate engine.
+The capability gate remains false because Euclidean gcd, exact division, and
+canonical serialization are not implemented yet. Python remains a reference
+oracle, not the finite certificate engine.
 
 ## Regression rules
 
@@ -49,7 +54,9 @@ Do not:
 
 ## Next implementation target
 
-Select the arbitrary-precision backend, then replace the `Q`/`Rat` storage layer with normalized backend integers while preserving existing public operations:
+Complete Euclidean gcd, exact division, and canonical serialization on `BigZ`,
+then replace the `Q`/`Rat` storage layer with normalized backend integers while
+preserving existing public operations:
 
 ```text
 add/sub/mul/div/square/eq/lt/le/gcd/normalize

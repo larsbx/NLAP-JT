@@ -23,7 +23,26 @@ def test_int64_demo_backend_is_not_proof_ready():
     src = read(BIG)
     assert '"Int64DemoBackend"' in src
     assert "False," in src
-    assert "fn bigint_backend_blocks_proof_acceptance" in src
+    assert "def bigint_backend_blocks_proof_acceptance" in src
+
+
+def test_dynamic_limb_phase_one_is_explicitly_incomplete():
+    src = read(BIG)
+    z = read(ROOT / "src" / "bigint_z.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "dynamic_limb_phase_one_backend_status" in src
+    assert '"MojoDynamicLimbBigZPhaseOne"' in src
+    assert "struct BigZ(Copyable)" in z
+    assert "var limbs: List[UInt64]" in z
+    for operation in ["bigz_add", "bigz_sub", "bigz_mul", "bigz_eq", "bigz_lt"]:
+        assert f"def {operation}" in z
+    assert "q7_square.limb(2) == 323" in z
+    assert "not status.has_euclidean_gcd" in src
+    assert "not status.has_exact_divisibility" in src
+    assert "not status.has_canonical_serialization" in src
+    assert "not status.allows_certificate_acceptance" in src
+    assert "if not bigint_z_phase_one_smoke():" in smoke
+    assert "if not bigint_adapter_phase_one_smoke():" in smoke
 
 
 def test_rational_backend_requires_normalization_and_safe_order():

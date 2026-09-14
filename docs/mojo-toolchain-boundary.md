@@ -36,6 +36,8 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_finite_certificate_gate.mojo`.
 - `src/C1_theorem_tag_payload_instances.mojo`.
 - `src/checked_landing_target_adapter.mojo`.
+- `src/bigint_z.mojo`.
+- `src/bigint_adapter.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -89,6 +91,11 @@ to the Schleicher landing and Misiurewicz-fiber source families. The landing
 adapter derives checked-width target uniqueness from `P_{2,1}=C(C+2)`, rejection
 of the lower-type `C=0` root, and the typed preperiod correspondence. Both
 imports remain rejected finally because the classification backend is bounded.
+The phase-one `BigZ` backend uses dynamic base-`10^9` limbs and executes exact
+signed construction, addition, subtraction, multiplication, equality, and
+order beyond `Int64` magnitude. Its capability record still rejects
+certificate acceptance because gcd, exact division, and canonical serialization
+are pending.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

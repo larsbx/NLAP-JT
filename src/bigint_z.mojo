@@ -3,8 +3,9 @@
 #
 # Limbs are little-endian in base 10^9. Dynamic List storage removes the fixed
 # Int64 magnitude bound. This phase implements exact construction, add, sub,
-# mul, equality, and order. GCD, exact division, and canonical serialization
-# remain separate blockers, so this module cannot enable certificate acceptance.
+# mul, equality, order, quotient/remainder, exact division, and Euclidean gcd.
+# Canonical serialization remains a separate blocker, so this module cannot
+# enable certificate acceptance.
 
 comptime BIGZ_BASE = UInt64(1000000000)
 
@@ -33,6 +34,26 @@ struct BigZ(Copyable):
         if index < 0 or index >= len(self.limbs):
             return 0
         return self.limbs[index]
+
+
+struct BigZDivModResult(Copyable):
+    var quotient: BigZ
+    var remainder: BigZ
+    var rejected: Bool
+
+    def __init__(out self):
+        self.quotient = BigZ()
+        self.remainder = BigZ()
+        self.rejected = False
+
+
+struct BigZExactDivisionResult(Copyable):
+    var quotient: BigZ
+    var rejected: Bool
+
+    def __init__(out self):
+        self.quotient = BigZ()
+        self.rejected = False
 
 
 def bigz_zero() -> BigZ:
@@ -112,6 +133,13 @@ def bigz_neg(a: BigZ) -> BigZ:
     return out^
 
 
+def bigz_abs(a: BigZ) -> BigZ:
+    var out = a.copy()
+    if out.sign < 0:
+        out.sign = 1
+    return out^
+
+
 def bigz_add(a: BigZ, b: BigZ) -> BigZ:
     if a.sign == 0:
         return b.copy()
@@ -181,6 +209,105 @@ def bigz_lt(a: BigZ, b: BigZ) -> Bool:
     return order > 0
 
 
+def bigz_abs_div_small(a: BigZ, divisor: UInt64) -> BigZ:
+    # Internal use requires divisor > 0 and a >= 0.
+    var out = BigZ()
+    if a.sign == 0 or divisor == 0:
+        return out^
+    out.sign = 1
+    for _ in range(len(a.limbs)):
+        out.limbs.append(0)
+    var carry = UInt64(0)
+    var idx = len(a.limbs) - 1
+    while idx >= 0:
+        var current = carry * BIGZ_BASE + a.limbs[idx]
+        out.limbs[idx] = current // divisor
+        carry = current % divisor
+        idx -= 1
+    out.normalize()
+    return out^
+
+
+def rejected_bigz_divmod() -> BigZDivModResult:
+    var out = BigZDivModResult()
+    out.rejected = True
+    return out^
+
+
+def bigz_abs_divmod(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
+    if divisor.sign == 0:
+        return rejected_bigz_divmod()
+    var out = BigZDivModResult()
+    var remainder = bigz_abs(dividend)
+    var positive_divisor = bigz_abs(divisor)
+    if bigz_abs_compare(remainder, positive_divisor) < 0:
+        out.remainder = remainder.copy()
+        return out^
+
+    var shifted = positive_divisor.copy()
+    var power = bigz_from_i64(1)
+    while bigz_abs_compare(shifted, remainder) <= 0:
+        shifted = bigz_abs_add(shifted, shifted)
+        power = bigz_abs_add(power, power)
+
+    var quotient = bigz_zero()
+    while not power.is_zero():
+        shifted = bigz_abs_div_small(shifted, 2)
+        power = bigz_abs_div_small(power, 2)
+        if not power.is_zero() and bigz_abs_compare(shifted, remainder) <= 0:
+            remainder = bigz_abs_sub(remainder, shifted)
+            quotient = bigz_abs_add(quotient, power)
+
+    out.quotient = quotient.copy()
+    out.remainder = remainder.copy()
+    return out^
+
+
+def bigz_divmod(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
+    var out = bigz_abs_divmod(dividend, divisor)
+    if out.rejected:
+        return out^
+    if not out.quotient.is_zero():
+        out.quotient.sign = dividend.sign * divisor.sign
+    if not out.remainder.is_zero():
+        out.remainder.sign = dividend.sign
+    return out^
+
+
+def bigz_div_exact(dividend: BigZ, divisor: BigZ) -> BigZExactDivisionResult:
+    var out = BigZExactDivisionResult()
+    var division = bigz_divmod(dividend, divisor)
+    if division.rejected or not division.remainder.is_zero():
+        out.rejected = True
+        return out^
+    out.quotient = division.quotient.copy()
+    return out^
+
+
+def bigz_gcd(a: BigZ, b: BigZ) -> BigZ:
+    var left = bigz_abs(a)
+    var right = bigz_abs(b)
+    while not right.is_zero():
+        var division = bigz_abs_divmod(left, right)
+        if division.rejected:
+            return bigz_zero()
+        left = right.copy()
+        right = division.remainder.copy()
+    return left^
+
+
+def bigz_divmod_identity_holds(dividend: BigZ, divisor: BigZ) -> Bool:
+    var division = bigz_divmod(dividend, divisor)
+    if division.rejected or divisor.is_zero():
+        return False
+    var reconstructed = bigz_add(bigz_mul(division.quotient, divisor), division.remainder)
+    return (
+        bigz_eq(reconstructed, dividend) and
+        bigz_abs_compare(bigz_abs(division.remainder), bigz_abs(divisor)) < 0 and
+        (division.remainder.is_zero() or division.remainder.sign == dividend.sign)
+    )
+
+
 def bigint_z_phase_one_smoke() -> Bool:
     var q7_max = bigz_from_i64(17999433372)
     var q7_square = bigz_mul(q7_max, q7_max)
@@ -195,4 +322,35 @@ def bigint_z_phase_one_smoke() -> Bool:
         bigz_eq(bigz_mul(bigz_from_i64(-7), bigz_from_i64(-9)), bigz_from_i64(63)) and
         bigz_lt(bigz_from_i64(-10), bigz_from_i64(-7)) and
         bigz_from_i64(-9223372036854775807 - 1).sign == -1
+    )
+
+
+def bigint_z_phase_two_smoke() -> Bool:
+    var q7_max = bigz_from_i64(17999433372)
+    var q7_square = bigz_mul(q7_max, q7_max)
+    var recovered = bigz_div_exact(q7_square, q7_max)
+    var negative = bigz_div_exact(bigz_from_i64(-63), bigz_from_i64(9))
+    var non_division = bigz_div_exact(bigz_from_i64(10), bigz_from_i64(3))
+    var zero_divisor = bigz_div_exact(bigz_from_i64(10), bigz_zero())
+    var beyond_i64 = bigz_add(bigz_from_i64(9223372036854775807), bigz_from_i64(1))
+    var common = bigz_mul(beyond_i64, bigz_from_i64(7))
+    var gcd_value = bigz_gcd(
+        bigz_mul(beyond_i64, bigz_from_i64(21)),
+        bigz_mul(beyond_i64, bigz_from_i64(14)),
+    )
+    var signed_remainder = bigz_divmod(bigz_from_i64(-10), bigz_from_i64(3))
+    var negative_divisor = bigz_div_exact(bigz_from_i64(63), bigz_from_i64(-9))
+    return (
+        not recovered.rejected and bigz_eq(recovered.quotient, q7_max) and
+        not negative.rejected and bigz_eq(negative.quotient, bigz_from_i64(-7)) and
+        non_division.rejected and zero_divisor.rejected and
+        not negative_divisor.rejected and bigz_eq(negative_divisor.quotient, bigz_from_i64(-7)) and
+        bigz_eq(gcd_value, common) and
+        not signed_remainder.rejected and
+        bigz_eq(signed_remainder.quotient, bigz_from_i64(-3)) and
+        bigz_eq(signed_remainder.remainder, bigz_from_i64(-1)) and
+        bigz_divmod_identity_holds(q7_square, q7_max) and
+        bigz_divmod_identity_holds(bigz_from_i64(10), bigz_from_i64(3)) and
+        bigz_divmod_identity_holds(bigz_from_i64(-10), bigz_from_i64(3)) and
+        bigz_divmod_identity_holds(bigz_from_i64(10), bigz_from_i64(-3))
     )

@@ -60,6 +60,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/C1_final_proof_object_skeleton.mojo",
         "src/checked_int64_backend.mojo",
         "src/checked_q.mojo",
+        "src/checked_interval_q.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

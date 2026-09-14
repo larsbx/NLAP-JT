@@ -11,13 +11,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Pixi
+        uses: prefix-dev/setup-pixi@d3f436a425481402e6a95a1d1fc10331c708cd9e # v0.10.2
         with:
-          python-version: "3.12"
+          cache: true
 
-      - name: Install test runner
-        run: python3 -m pip install pytest==8.3.5
+      - name: Compile Mojo smoke target
+        run: pixi run mojo-build
+
+      - name: Run Mojo smoke target
+        run: pixi run mojo-smoke
 
       - name: Run no-trig core audit
         run: python3 tools/audit_no_trig.py
@@ -26,7 +29,7 @@ jobs:
         run: python3 tools/audit_no_points.py
 
       - name: Run test suite
-        run: python3 -m pytest tests/
+        run: pixi run test
 
       - name: Run terminology governance audit
         run: python3 tools/audit_terminology.py

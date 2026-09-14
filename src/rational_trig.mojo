@@ -10,6 +10,8 @@
 # replace Int64 with arbitrary-precision integer/rational types once the repo
 # chooses its bigint backend.
 
+from ray_address import RayAddr64
+
 
 struct Rat:
     var num: Int64
@@ -103,21 +105,8 @@ fn rotate_by_rotor(v: Vec2Q, r: RotorQ) -> Vec2Q:
     return Vec2Q(v.x.mul(r.u).sub(v.y.mul(r.v)), v.x.mul(r.v).add(v.y.mul(r.u)))
 
 
-struct RayAddr:
-    var num: Int64
-    var den: Int64
-
-    fn __init__(inout self, num: Int64, den: Int64):
-        # Symbolic external-ray address in Q/Z. Normalization modulo den is
-        # deferred to bigint pass.
-        self.num = num
-        self.den = den
-
-
-fn double_ray_addr(theta: RayAddr) -> RayAddr:
-    var doubled = 2 * theta.num
-    var reduced = doubled % theta.den
-    return RayAddr(reduced, theta.den)
+fn double_ray_addr(theta: RayAddr64) -> RayAddr64:
+    return theta.doubled()
 
 
 fn demo_spread_orthogonal_axes() -> Rat:
@@ -126,5 +115,5 @@ fn demo_spread_orthogonal_axes() -> Rat:
     return spread(e1, e2)
 
 
-fn demo_ray_addr_doubling_half() -> RayAddr:
-    return double_ray_addr(RayAddr(1, 2))
+fn demo_ray_addr_doubling_half() -> RayAddr64:
+    return double_ray_addr(RayAddr64(1, 2))

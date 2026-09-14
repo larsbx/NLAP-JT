@@ -11,7 +11,7 @@ def read(path: Path) -> str:
 
 def test_separation_grammar_objects_exist():
     src = read(SRC)
-    assert "struct RayAddrFinite" in src
+    assert "from ray_address import RayAddr" in src
     assert "struct LandingTag" in src
     assert "struct LandedRay" in src
     assert "struct SeparationLine" in src

@@ -3,20 +3,7 @@
 # Finite separator-code grammar for the C1 proof track.
 # This module does not encode analytic curves or generic boundary landings.
 
-
-struct RayAddrCode:
-    var num: Int
-    var den: Int
-
-    fn __init__(inout self, num: Int, den: Int):
-        self.num = num
-        self.den = den
-
-    fn shape_valid(self) -> Bool:
-        return self.den > 0 and self.num >= 0 and self.num < self.den
-
-    fn double_addr(self) -> RayAddrCode:
-        return RayAddrCode((2 * self.num) % self.den, self.den)
+from ray_address import RayAddr
 
 
 struct LandingTagCode:
@@ -37,12 +24,12 @@ struct LandingTagCode:
 
 
 struct TwoRaySeparatorCode:
-    var left: RayAddrCode
-    var right: RayAddrCode
+    var left: RayAddr
+    var right: RayAddr
     var landing_tag: LandingTagCode
     var endpoint_compatible: Bool
 
-    fn __init__(inout self, left: RayAddrCode, right: RayAddrCode, landing_tag: LandingTagCode, endpoint_compatible: Bool):
+    fn __init__(inout self, left: RayAddr, right: RayAddr, landing_tag: LandingTagCode, endpoint_compatible: Bool):
         self.left = left
         self.right = right
         self.landing_tag = landing_tag
@@ -103,16 +90,16 @@ struct FairEnumerationWitnessCode:
 
 
 fn demo_rational_two_ray_separator() -> Bool:
-    var left = RayAddrCode(9, 56)
-    var right = RayAddrCode(11, 56)
+    var left = RayAddr(9, 56)
+    var right = RayAddr(11, 56)
     var tag = LandingTagCode("RationalRayLanding")
     var code = TwoRaySeparatorCode(left, right, tag, True)
     return code.admissible()
 
 
 fn must_reject_generic_separator() -> Bool:
-    var left = RayAddrCode(9, 56)
-    var right = RayAddrCode(11, 56)
+    var left = RayAddr(9, 56)
+    var right = RayAddr(11, 56)
     var tag = LandingTagCode("GenericBoundaryLanding")
     var code = TwoRaySeparatorCode(left, right, tag, True)
     return not code.admissible()

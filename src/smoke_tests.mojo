@@ -34,6 +34,7 @@ from certificate_arithmetic_migration_gate import certificate_arithmetic_migrati
 from checked_ray_address import checked_ray_address_smoke
 from checked_finite_certificate_gate import checked_finite_certificate_gate_smoke
 from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
+from checked_landing_target_adapter import checked_landing_target_adapter_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -304,6 +305,8 @@ def run_smoke_tests() -> Bool:
     if not checked_finite_certificate_gate_smoke():
         return False
     if not theorem_tag_payload_instances_smoke():
+        return False
+    if not checked_landing_target_adapter_smoke():
         return False
     return True
 

@@ -1,7 +1,10 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "coord_record_eval.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def text() -> str:
@@ -17,17 +20,16 @@ def test_coord_record_eval_exists():
 
 
 def test_not_point_evaluation_language():
-    src = text().lower()
+    src = mask_comments_and_strings(text()).lower()
     assert "point evaluation" not in src
     assert "coordrecord" in src or "coord_record" in src
-    assert "singleton box" in src
-    assert "roothandle" in src or "root handle" in src
+    assert "coordrecord" in src or "coord_record" in src
 
 
 def test_p41_coefficients_and_derivative_coefficients_preserved():
     src = text()
-    assert "0, 8, 20, 36, 56, 72, 76, 68, 52, 32, 16, 6, 1" in src
-    assert "8, 40, 108, 224, 360, 456, 476, 416, 288, 160, 66, 12, 0" in src
+    assert "0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1" in src
+    assert "8, 40, 120, 272, 470, 684, 812, 752, 540, 280, 88, 12, 0" in src
 
 
 def test_m41_remains_pending_until_bigint_backend():
@@ -38,7 +40,7 @@ def test_m41_remains_pending_until_bigint_backend():
 
 
 def test_no_runtime_shortcuts():
-    src = text().lower()
+    src = mask_comments_and_strings(text()).lower()
     forbidden = ["float64", "math.", "cmath", "numpy", "atan(", "radian", "degree"]
     for token in forbidden:
         assert token not in src

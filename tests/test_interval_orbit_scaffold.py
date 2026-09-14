@@ -26,7 +26,8 @@ def test_native_interval_recurrence_exists():
     assert "fn collision_interval" in src
     assert "return b.sub(a)" in src
     assert "fn excludes_zero" in src
-    assert "z.re.excludes_zero() or z.im.excludes_zero()" in src
+    assert "if re_result.rejected or im_result.rejected:" in src
+    assert "return re_result.value or im_result.value" in src
 
 
 def test_intended_pair_has_clean_semantics():

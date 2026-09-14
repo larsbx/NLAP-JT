@@ -56,7 +56,7 @@ def complex_minus_two_point() -> ComplexIQ:
 
 def c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
     # Dyadic box centered at -2 with half-width 2^{-radius_den_power} in each coordinate.
-    # Current Int64 rational backend only supports small powers safely.
+    # Keep this demo input compact even though rational storage is unbounded.
     var den = 1
     for _ in range(radius_den_power):
         den *= 2
@@ -78,13 +78,13 @@ def p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
 def verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
     var beta = c_minus_2_box(radius_den_power)
     var image = p21_krawczyk_image(beta)
-    return image.strict_subset_of(beta)
+    var inclusion = image.strict_subset_of(beta)
+    return not inclusion.rejected and inclusion.value
 
 
 def demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
     # Computed native interval witness for beta centered at -2.
-    # The default radius 2^-8 is intentionally small enough for the current
-    # Int64 rational scaffold and still large enough for readable debugging.
+    # The default radius 2^-8 keeps the witness readable during debugging.
     var ok = verify_p21_krawczyk_c_minus_2(8)
     return KrawczykWitnessStatus("P_2_1", True, True, True, ok, "beta_c_minus_2")
 
@@ -102,7 +102,13 @@ def p41_evaluation_available_on_box(beta: ComplexIQ) -> Bool:
     # general Horner evaluator, but does not yet certify a Krawczyk inclusion.
     var p_beta = eval_p41(beta)
     var dp_beta = eval_p41_derivative(beta)
-    return not p_beta.re.contains_zero() or dp_beta.re.contains_zero() or dp_beta.im.contains_zero() or not p_beta.im.contains_zero()
+    var p_re = p_beta.re.contains_zero()
+    var dp_re = dp_beta.re.contains_zero()
+    var dp_im = dp_beta.im.contains_zero()
+    var p_im = p_beta.im.contains_zero()
+    if p_re.rejected or dp_re.rejected or dp_im.rejected or p_im.rejected:
+        return False
+    return not p_re.value or dp_re.value or dp_im.value or not p_im.value
 
 
 def demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:

@@ -3,8 +3,8 @@
 # Native Mojo target for interval critical-orbit evaluation.
 # Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 # This mirrors tools/interval_exclusion_reference.py using only rational interval
-# operations from interval_q.mojo. It remains Int64-backed until rat_q.mojo is
-# replaced by a certificate-ready arbitrary-precision integer backend.
+# operations from interval_q.mojo. Arithmetic is BigZ-backed; this consumer
+# remains barred from certificate acceptance until its replay is complete.
 
 from interval_q import ComplexIQ, IQ
 from rat_q import Q
@@ -157,7 +157,11 @@ fn collision_interval(a: ComplexIQ, b: ComplexIQ) -> ComplexIQ:
 
 
 fn excludes_zero(z: ComplexIQ) -> Bool:
-    return z.re.excludes_zero() or z.im.excludes_zero()
+    var re_result = z.re.excludes_zero()
+    var im_result = z.im.excludes_zero()
+    if re_result.rejected or im_result.rejected:
+        return False
+    return re_result.value or im_result.value
 
 
 fn verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:

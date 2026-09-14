@@ -9,8 +9,8 @@
 
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
-from rat_q import Q, demo_q_normalization, demo_q_order
-from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
+from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order
+from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
@@ -37,6 +37,7 @@ from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
 from checked_landing_target_adapter import checked_landing_target_adapter_smoke
 from bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke
 from bigint_adapter import bigint_adapter_phase_one_smoke, bigint_adapter_phase_two_smoke, bigint_adapter_complete_smoke
+from rat_backend_plan import q_backend_migration_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -64,10 +65,10 @@ def test_interval_enclosure_laws() -> Bool:
     var lhs = x.mul(y.add(z))
     var rhs = x.mul(y).add(x.mul(z))
     return (
-        d.lo.eq(Q(-2, 1)) and d.hi.eq(Q(2, 1)) and d.contains_zero() and
-        lhs.subset_of(rhs) and
-        y.square().subset_of(y.mul(y)) and not y.mul(y).subset_of(y.square()) and
-        x.excludes_zero() and not y.excludes_zero()
+        d.lo.eq(Q(-2, 1)) and d.hi.eq(Q(2, 1)) and d.contains_zero().value and
+        lhs.subset_of(rhs).value and
+        y.square().subset_of(y.mul(y)).value and not y.mul(y).subset_of(y.square()).value and
+        x.excludes_zero().value and not y.excludes_zero().value
     )
 
 
@@ -246,6 +247,10 @@ def test_theorem_tags() -> Bool:
 
 
 def run_smoke_tests() -> Bool:
+    if not bigq_storage_smoke():
+        return False
+    if not q_backend_migration_smoke():
+        return False
     if not smoke_poly_identities():
         return False
     if not test_headers():
@@ -256,7 +261,7 @@ def run_smoke_tests() -> Bool:
         return False
     if not demo_q_normalization() or not demo_q_order():
         return False
-    if not demo_interval_mul() or not demo_complex_quadrance_point():
+    if not demo_interval_mul() or not demo_complex_quadrance_point() or not bigq_interval_conformance_smoke():
         return False
     if not test_rational_field_laws():
         return False

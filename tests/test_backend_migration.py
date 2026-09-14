@@ -102,12 +102,61 @@ def test_rational_backend_requires_normalization_and_safe_order():
     assert "canonical_fraction_serialization" in src
 
 
-def test_current_q_backend_blocks_proof_acceptance():
+def test_current_q_uses_bigz_but_blocks_proof_acceptance():
     src = read(RAT)
     assert "current_q_backend_status" in src
-    assert "int64_demo_backend_status()" in src
+    assert "dynamic_limb_bigz_backend_status()" in src
     assert "q_backend_blocks_proof_acceptance" in src
-    assert "Int64 implementation must not be proof-grade" in src
+    assert "acceptance flag remains false" in src
+    assert "not status.backend.allows_certificate_acceptance" in src
+    assert "q_backend_blocks_proof_acceptance(status)" in src
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "if not q_backend_migration_smoke():" in smoke
+
+
+def test_q_storage_is_normalized_bigz_and_fail_closed():
+    src = read(ROOT / "src" / "rat_q.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "struct Q(Copyable)" in src
+    assert "var num: BigZ" in src
+    assert "var den: BigZ" in src
+    assert "var rejected: Bool" in src
+    assert "def q_normalize_bigz" in src
+    assert "if not bigz_is_canonical(n) or not bigz_is_canonical(d):" in src
+    assert "if d.is_zero():" in src
+    assert "other.num.is_zero()" in src
+    assert "var common = bigz_gcd(nn, dd)" in src
+    assert "bigz_div_exact" in src
+    assert "def q_canonical_bytes" in src
+    assert "beyond_i64" in src
+    assert "malformed.sign = 2" in src
+    assert "if not bigq_storage_smoke():" in smoke
+
+
+def test_bigz_interval_layer_enforces_spec_fail_closed_contracts():
+    src = read(ROOT / "src" / "interval_q.mojo")
+    rat = read(ROOT / "src" / "rat_q.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "var rejected: Bool" in src
+    assert "if not self.rejected and not lo.le(hi):" in src
+    assert "struct IQBoolResult(Copyable)" in src
+    assert "struct IQSignResult(Copyable)" in src
+    assert "def sign(self) -> IQSignResult:" in src
+    assert "def reciprocal(self) -> IQ:" in src
+    assert "if contains.rejected or contains.value:" in src
+    assert src.count("if self.rejected or other.rejected:") >= 5
+    assert "def bigq_interval_conformance_smoke()" in src
+    assert "if a.rejected or b.rejected:" in rat.split("def q_min", 1)[1]
+    assert "bigq_interval_conformance_smoke" in smoke
+
+
+def test_interval_migration_does_not_enable_certificate_or_c1_acceptance():
+    adapter = read(ROOT / "src" / "bigint_adapter.mojo")
+    gate = read(ROOT / "src" / "certificate_arithmetic_migration_gate.mojo")
+    ledger = read(ROOT / "src" / "C1_final_proof_block_ledger.mojo")
+    assert "not status.allows_certificate_acceptance" in adapter
+    assert "checked.checked_width_accepted() and not checked.proof_grade_accepted()" in gate
+    assert 'ProofBlockStatus("ResidualClosureNoMissingLinks", False, False, True, False, True)' in ledger
 
 
 def test_no_bad_numeric_or_analytic_shortcuts_in_backend_contracts():

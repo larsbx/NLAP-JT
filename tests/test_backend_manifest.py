@@ -61,6 +61,16 @@ def test_checked_rational_transition_layer_is_compiler_wired():
     assert "if not checked_q_smoke():" in smoke
 
 
+def test_checked_interval_transition_layer_is_compiler_wired():
+    src = (ROOT / "src" / "checked_interval_q.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    for operation in ["checked_iq_add", "checked_iq_sub", "checked_iq_mul", "checked_iq_reciprocal", "checked_iq_sign"]:
+        assert f"def {operation}" in src
+    assert "if ordered.rejected or not ordered.value" in src
+    assert "from checked_interval_q import checked_iq_smoke" in smoke
+    assert "if not checked_iq_smoke():" in smoke
+
+
 def test_backend_manifest_audit_exists_and_checks_all_requirements():
     src = AUDIT.read_text(encoding="utf-8")
     for key in [

@@ -70,8 +70,10 @@ Every constructor and operation must normalize. Equality and order may use cross
    c=-2 association from exact-type uniqueness; theorem-tag instances now fail
    only at proof-grade classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
-1. Choose a Mojo-compatible bigint source.
-2. Implement `Z` behind `bigint_adapter.mojo`.
+1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/bigint_z.mojo`.
+2. **In progress:** phase one implements unbounded signed storage and exact
+   add/sub/mul/order. Complete gcd, exact division, and canonical serialization
+   before enabling the backend gate.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.
 4. Re-run interval arithmetic against bigint-backed `Q`.
 5. Promote coordinate-record polynomial evaluation from pending to certificate-ready.

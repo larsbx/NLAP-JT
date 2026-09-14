@@ -1,7 +1,7 @@
 # Backend Selection Handoff
 
-Status: Mojo-native dynamic-limb backend selected; phase two implemented;
-proof-grade certificates remain blocked.
+Status: Mojo-native dynamic-limb integer backend complete; proof-grade
+certificates remain blocked pending rational and consumer migration.
 
 The repository now separates demo arithmetic from certificate arithmetic.
 
@@ -36,12 +36,16 @@ Only then may `BackendGate.allows_certificate_acceptance` be true.
 The repository uses a Mojo-native, little-endian dynamic-limb representation
 with base `10^9`. `src/bigint_z.mojo` implements canonical signed storage,
 construction from every `Int64`, exact addition, subtraction, multiplication,
-equality, order, quotient/remainder, rejected non-divisions, and Euclidean gcd.
-Its dynamic `List[UInt64]` storage is not limited to an `Int64` magnitude.
+equality, order, quotient/remainder, rejected non-divisions, Euclidean gcd, and
+canonical integer serialization. The byte encoding is a sign code (`0`, `1`,
+or `2`), an unsigned 8-byte big-endian magnitude length, and a minimal
+big-endian magnitude. Its dynamic `List[UInt64]` storage is not limited to an
+`Int64` magnitude.
 
-The capability gate remains false because canonical serialization is not
-implemented yet. Python remains a reference oracle, not the finite certificate
-engine.
+The integer capability record is ready for rational migration. Repository
+certificate acceptance remains false because `Q`, interval consumers, and
+composite serialization do not yet use this backend. Python remains a reference
+oracle, not the finite certificate engine.
 
 ## Regression rules
 
@@ -54,8 +58,7 @@ Do not:
 
 ## Next implementation target
 
-Complete canonical serialization on `BigZ`, then replace the `Q`/`Rat` storage
-layer with normalized backend integers while
+Replace the `Q`/`Rat` storage layer with normalized `BigZ` integers while
 preserving existing public operations:
 
 ```text

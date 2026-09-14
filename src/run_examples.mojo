@@ -1,6 +1,7 @@
 # run_examples.mojo
 #
 # Example runner for the finite-regime Mandelbrot computation scaffold.
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2, QUARANTINED).
 #
 # This is intentionally numeric at this stage. It preserves the computations
 # used in the notes and gives future exact/dyadic code a behavioral target.

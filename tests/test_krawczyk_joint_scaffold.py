@@ -14,10 +14,10 @@ def test_krawczyk_scaffold_has_required_policies():
     assert "struct KrawczykWitnessStatus" in src
     assert "eval_p21" in src
     assert "eval_p21_derivative" in src
-    assert "fn p21_krawczyk_image" in src
-    assert "fn verify_p21_krawczyk_c_minus_2" in src
-    assert "fn demo_krawczyk_p21_c_minus_2" in src
-    assert "fn demo_krawczyk_p41_m41_placeholder" in src
+    assert "def p21_krawczyk_image" in src
+    assert "def verify_p21_krawczyk_c_minus_2" in src
+    assert "def demo_krawczyk_p21_c_minus_2" in src
+    assert "def demo_krawczyk_p41_m41_placeholder" in src
     assert "final inclusion witness remains pending" in src
 
 
@@ -31,8 +31,8 @@ def test_p21_polynomial_derivative_and_inverse_preserved():
 
 def test_p21_demo_is_computed_not_status_asserted():
     src = read(KRAW)
-    demo_start = src.index("fn demo_krawczyk_p21_c_minus_2")
-    demo_src = src[demo_start:src.index("fn f7_name")]
+    demo_start = src.index("def demo_krawczyk_p21_c_minus_2")
+    demo_src = src[demo_start:src.index("def f7_name")]
     assert "verify_p21_krawczyk_c_minus_2(8)" in demo_src
     assert "var ok" in demo_src
     assert "KrawczykWitnessStatus(\"P_2_1\", True, True, True, ok" in demo_src
@@ -47,7 +47,7 @@ def test_krawczyk_formula_is_present():
     assert "image.strict_subset_of(beta)" in src
 
 
-def test_p41_remains_not_accepted_until_interval_eval_lands():
+def test_p41_remains_not_accepted_until_final_inclusion_lands():
     src = read(KRAW)
     assert "P_4_1" in src
     assert "False, \"beta_m41_pending\"" in src

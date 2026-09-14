@@ -55,14 +55,17 @@ def test_mojo_checker_has_allowed_payload_predicates():
     assert "theorem_tag_payload_admissible" in text
 
 
-def test_payload_and_conclusion_kinds_are_typed():
+def test_payload_conclusion_and_strength_kinds_are_typed():
     text = body(SRC)
     assert "struct AssumptionPayloadKind" in text
     assert "struct PayloadConclusionKind" in text
+    assert "struct PayloadStrengthClass" in text
     assert "var payload_kind: AssumptionPayloadKind" in text
     assert "var conclusion_kind: PayloadConclusionKind" in text
+    assert "var strength_class: PayloadStrengthClass" in text
     assert "payload_kind: String" not in text
     assert "conclusion_kind: String" not in text
+    assert "strength_class: String" not in text
 
 
 def test_mojo_checker_blocks_forbidden_imports():
@@ -83,8 +86,8 @@ def test_initial_payload_scaffolds_are_not_generic_imports():
     text = body(SRC)
     assert "rational_parameter_ray_landing_payload_scaffold" in text
     assert "fiber_definition_payload_scaffold" in text
-    assert "LocalLanding" in text
-    assert "AdapterOnly" in text
+    assert "PayloadStrengthClass.local_landing()" in text
+    assert "PayloadStrengthClass.adapter_only()" in text
     assert "uses_generic_mlc" in text
     assert "uses_bounded_search_only" in text
 

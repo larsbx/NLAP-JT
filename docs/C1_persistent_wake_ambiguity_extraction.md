@@ -15,7 +15,7 @@ The next goal is not to infer same fiber immediately.  The goal is to force pers
 ```text
 PersistentNonSeparation(A,B)
   and declared boundary carriers for A and B
-  and catalogue extensionality for admissible separators
+  and `SeparatorCatalogueAdequacy` for admissible separators
   and shrinking nest discipline
 => PersistentWakeAmbiguity(A,B)
    or UndeclaredBoundaryCarrier(A,B)

@@ -1,6 +1,6 @@
 # C1 — ClassicalSeparationToFiniteWitness
 
-Status: proof skeleton for the hard direction of catalogue extensionality.
+Status: proof skeleton for the completeness direction of `SeparatorCatalogueAdequacy`.
 
 This note isolates the direction
 

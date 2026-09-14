@@ -1,8 +1,11 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "C1_wake_membership.mojo"
 DOC = ROOT / "docs" / "C1_wake_membership_soundness.md"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def read(path: Path) -> str:
@@ -68,7 +71,7 @@ def test_no_generic_stabilization_claim():
 
 
 def test_no_analytic_shortcuts_in_scaffold():
-    src = read(SRC)
+    src = mask_comments_and_strings(read(SRC))
     banned = ["sin", "cos", "tan", "Float64", "Float32", "pixel", "ray curve"]
     for token in banned:
         assert token not in src

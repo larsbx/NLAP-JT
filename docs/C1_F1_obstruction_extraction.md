@@ -39,7 +39,7 @@ PersistentWakeAmbiguity(A,B)
   => not enough admissible wake refinements exist
 ```
 
-This would contradict catalogue extensionality if the classical fiber definition admits rational separators for all distinct fibers.
+This would contradict `SeparatorCatalogueAdequacy` if the classical fiber definition admits rational separators for all distinct fibers.
 
 ### F1-b: undeclared boundary carrier
 

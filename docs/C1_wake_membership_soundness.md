@@ -78,7 +78,7 @@ WakeMembershipSoundness:
 
 This is a one-way soundness lemma.
 
-The converse is not part of this local lemma. Completeness belongs to catalogue extensionality and fair enumeration.
+The converse is not part of this local lemma. Completeness belongs to `SeparatorCatalogueAdequacy` and fair enumeration.
 
 ## Strict interval condition
 

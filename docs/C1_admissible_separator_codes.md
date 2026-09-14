@@ -4,7 +4,7 @@ Status: C1 proof-track artifact. This document supports the highest-priority con
 
 ## Purpose
 
-Catalogue extensionality requires a finite grammar whose codes enumerate exactly the rational-ray separation lines used by the fiber definition. This document defines the admissible separator-code boundary.
+`SeparatorCatalogueAdequacy` requires a finite grammar whose codes enumerate exactly the rational-ray separation lines used by the fiber definition. This document defines the admissible separator-code boundary.
 
 The project-owned task is not to prove analytic ray landing inside the finite core. The finite core verifies that a code has the correct finite shape and then attaches theorem tags for the classical landing/separation facts.
 

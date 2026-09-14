@@ -14,7 +14,7 @@ This file records what can be proved from the finite grammar already introduced,
 
 ## What is now reducible to local finite lemmas
 
-The repository has decomposed catalogue extensionality into local obligations:
+The repository has decomposed `SeparatorCatalogueAdequacy` into local obligations:
 
 1. admissible rational separator coding;
 2. landing-tag coverage for allowed rational-ray separators;
@@ -34,11 +34,11 @@ ClassicallySeparated(A,B)
   <=> exists k. Separated_k(A,B)
 ```
 
-This is catalogue extensionality. It is not yet the global solution.
+This is `SeparatorCatalogueAdequacy`. It is not yet the global solution.
 
 ## Conditional theorem C1-global
 
-Assuming catalogue extensionality and using the classical fiber definition by rational-ray separation:
+Assuming `SeparatorCatalogueAdequacy` and using the classical fiber definition by rational-ray separation:
 
 ```text
 SameFiberStream(A,B)
@@ -109,7 +109,7 @@ No file may claim:
 The current conjecture is unsolved in the repository, but it remains the active solvable target:
 
 ```text
-C1 is reduced to catalogue extensionality plus the generic fiber-triviality frontier.
+C1 is reduced to `SeparatorCatalogueAdequacy` plus the generic fiber-triviality frontier.
 ```
 
 The next productive move is to finish local catalogue-extensionality, then attack the generic case through obstruction extraction and nest-shrinkage forcing rather than treating the frontier as closed.

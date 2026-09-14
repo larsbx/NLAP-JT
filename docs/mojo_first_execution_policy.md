@@ -2,6 +2,8 @@
 
 Status: repository policy.
 
+Terminology used here is governed by `docs/terminology-registry.md`.
+
 Mojo is the default first-class language for executable finite-regime computations **and** for the finite proof-object theorem kernel in NLAP-JT.
 
 This does not mean Mojo re-proves the analytic literature. It means the repository’s trusted internal checker for finite algebraic, combinatorial, separator-catalogue, witness, and carrier-refinement derivations is written in Mojo.

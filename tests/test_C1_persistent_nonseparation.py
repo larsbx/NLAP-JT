@@ -13,7 +13,7 @@ def test_persistent_nonseparation_is_universal_prefix_statement_not_bounded_sear
     body = read(DOC)
     assert "forall k. not Separated_k(A,B)" in body
     assert "meta-level universal statement" in body
-    assert "not a single finite search" in body
+    assert "single finite search unless an independent theorem gives a finite bound" in body.replace("\n", " ")
 
 
 def test_persistent_nonseparation_does_not_imply_same_fiber_or_mlc():

@@ -66,7 +66,7 @@ EstablishedTrivialFiberTag
 The next immediate block is:
 
 ```text
-TheoremTagImportLedger
+TheoremTagPayloadInstances
 ```
 
-Reason: residual closure cannot eliminate missing links unless the repository knows exactly which classical theorem tags are accepted, what assumptions they require, and which parameter classes remain uncovered.
+Reason: the import ledger and assumption schemas now exist; the repository must instantiate their payloads before theorem-tag imports can discharge final-proof obligations.

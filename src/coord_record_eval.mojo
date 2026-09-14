@@ -69,14 +69,14 @@ fn eval_poly13_ascending(coeff0: Int64, coeff1: Int64, coeff2: Int64, coeff3: In
 
 fn eval_p41_coord_record(z: ComplexQ) -> ComplexQ:
     # P41 coefficients ascending:
-    # [0,8,20,36,56,72,76,68,52,32,16,6,1]
-    return eval_poly13_ascending(0, 8, 20, 36, 56, 72, 76, 68, 52, 32, 16, 6, 1, z)
+    # [0,8,20,40,68,94,114,116,94,60,28,8,1]
+    return eval_poly13_ascending(0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1, z)
 
 
 fn eval_p41_derivative_coord_record(z: ComplexQ) -> ComplexQ:
     # dP41 coefficients ascending:
-    # [8,40,108,224,360,456,476,416,288,160,66,12,0]
-    return eval_poly13_ascending(8, 40, 108, 224, 360, 456, 476, 416, 288, 160, 66, 12, 0, z)
+    # [8,40,120,272,470,684,812,752,540,280,88,12,0]
+    return eval_poly13_ascending(8, 40, 120, 272, 470, 684, 812, 752, 540, 280, 88, 12, 0, z)
 
 
 fn m41_coord_eval_status_pending_backend() -> CoordEvalStatus:

@@ -55,7 +55,7 @@ This object must not imply by itself:
 - local connectivity;
 - absence of a classical separator.
 
-Those require catalogue extensionality plus the relevant classical/fiber theorem
+Those require `SeparatorCatalogueAdequacy` plus the relevant classical/fiber theorem
 bridge.
 
 ## Frontier use

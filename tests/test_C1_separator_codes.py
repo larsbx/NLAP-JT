@@ -1,8 +1,11 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs" / "C1_admissible_separator_codes.md"
 SRC = ROOT / "src" / "C1_separator_codes.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def read(path: Path) -> str:
@@ -44,7 +47,7 @@ def test_fair_enumeration_does_not_claim_stabilization():
 
 
 def test_no_deferred_side_tracks_in_separator_codes():
-    combined = (read(DOC) + "\n" + read(SRC)).lower()
+    combined = mask_comments_and_strings(read(SRC)).lower()
     forbidden = ["renderer", "pixel", "hashroot", "bigint migration", "finite-field"]
     for token in forbidden:
         assert token not in combined

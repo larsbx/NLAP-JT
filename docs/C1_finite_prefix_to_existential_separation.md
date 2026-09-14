@@ -75,7 +75,7 @@ The hard remaining direction is still:
 classical separation => eventually enumerated finite separator code
 ```
 
-which belongs to catalogue extensionality / fair enumeration.
+which belongs to `SeparatorCatalogueAdequacy` / fair enumeration.
 
 ## Proof sketch
 

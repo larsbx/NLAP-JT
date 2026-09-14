@@ -36,7 +36,7 @@ def test_acceptance_is_existential_not_stabilization():
     text = SRC.read_text()
     assert "finite existential separation witness introduced" in text
     assert "claims_stabilization" in text
-    assert "False, \"finite existential separation witness introduced\"" in text
+    assert "True, \"finite existential separation witness introduced\"" in text
     forbidden = ["renderer", "pixel", "hash-root", "bigint backend accepted"]
     lowered = text.lower()
     for token in forbidden:

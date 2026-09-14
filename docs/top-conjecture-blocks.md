@@ -95,7 +95,7 @@ The repo must preserve three regions:
 ```text
 Misiurewicz: established trivial fiber, finite certificate target.
 Hyperbolic boundary: established trivial fiber, finite certificate target.
-Generic boundary: open, equivalent to global fiber triviality / MLC.
+Generic boundary: open, with global fiber-triviality / MLC strength.
 ```
 
 Any statement implying unconditional generic co-landing or generic singleton fibers is invalid.

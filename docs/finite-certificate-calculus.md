@@ -213,4 +213,4 @@ Fib(c0) = {c0}
 
 This certificate does not decide generic boundary landing.
 
-For generic boundary points, the honest object is an infinite stream of finite nested certificates. Singleton stabilization of all such nests is equivalent to Mandelbrot fiber triviality everywhere, hence to MLC under Schleicher's fiber framework.
+For generic boundary vertices, the honest object is an infinite stream of finite nested certificates. Singleton stabilization of all such nests holds if and only if every Mandelbrot fiber is trivial and, under Schleicher's fiber framework, if and only if MLC holds.

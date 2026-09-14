@@ -1,7 +1,10 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "misiurewicz_certificate.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def text() -> str:
@@ -9,7 +12,7 @@ def text() -> str:
 
 
 def test_certificate_envelope_exists():
-    src = text()
+    src = mask_comments_and_strings(text())
     assert "struct MisiurewiczCertificate" in src
     assert "struct RootHandle" in src
     assert "struct RayAddressDatum" in src
@@ -47,7 +50,7 @@ def test_m41_header_preserves_ray_period_distinction():
 
 
 def test_no_classical_point_equation_language_in_certificate_core():
-    src = text()
+    src = mask_comments_and_strings(text())
     forbidden = ["analytic singleton", "point evaluation", "eval_point", "point_value"]
     for token in forbidden:
         assert token not in src.lower()

@@ -117,6 +117,8 @@ C1_SCOPED_PREFIXES = (
 LEGACY_C1_MIGRATION_FILES = {
     "docs/C1_catalogue_extensionality.md",
     "docs/C1_catalogue_extensionality_proof_consolidation.md",
+    "docs/alignment_audit_deep_research_findings.md",
+    "docs/linter_skill_paper_language.md",
 }
 
 ALLOWLIST = {

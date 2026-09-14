@@ -37,8 +37,8 @@ def test_p41_expanded_coefficients_match_factors():
     f3 = [2, 2, 2, 1]
     f7 = [2, 2, 4, 6, 6, 6, 4, 1]
     expected = conv(conv(conv(c, c_plus_2), f3), f7)
-    assert expected == [0, 8, 20, 36, 56, 72, 76, 68, 52, 32, 16, 6, 1]
-    assert "return List[Int64](0, 8, 20, 36, 56, 72, 76, 68, 52, 32, 16, 6, 1)" in read()
+    assert expected == [0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1]
+    assert "return List[Int64](0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1)" in read()
 
 
 def test_derivative_path_is_generated_not_hand_copied():

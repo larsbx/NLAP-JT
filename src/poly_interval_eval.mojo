@@ -77,7 +77,7 @@ fn p41_coeffs_ascending() -> List[Int64]:
     # P_{4,1}=C(C+2)(C^3+2C^2+2C+2)F7.
     # Expanded ascending coefficients, computed from the preserved factorization.
     # Degree 12.
-    return List[Int64](0, 8, 20, 36, 56, 72, 76, 68, 52, 32, 16, 6, 1)
+    return List[Int64](0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1)
 
 
 fn p41_derivative_coeffs_ascending() -> List[Int64]:

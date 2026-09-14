@@ -55,7 +55,7 @@ The proof target is not to solve MLC. It is to prove the equivalence of formulat
 ```text
 C1-A. The finite catalogue relation is extensionally the same as fiber separation.
 C1-B. A finite nest stabilizes exactly when the corresponding fiber is trivial.
-C1-C. Triviality of all fibers is equivalent to MLC by the cited fiber theorem.
+C1-C. Triviality of all fibers holds if and only if MLC holds, by the cited fiber theorem.
 ```
 
 `C1-A` is the project-owned grammar adequacy theorem. `C1-B` is mostly unpacking definitions once C1-A is correct. `C1-C` is a theorem-tag bridge to the literature.

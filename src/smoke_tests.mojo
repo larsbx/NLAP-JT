@@ -17,6 +17,7 @@ from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_e
 from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, PayloadStrengthClass, allowed_payload_kind, allowed_payload_conclusion, allowed_payload_strength, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
 from C1_theorem_tag_import_ledger import ImportConclusionKind, ImportStrengthClass, ImportStatus, allowed_conclusion_kind, allowed_strength_class, forbidden_strength_class, rational_parameter_ray_landing_tag_ready, fiber_definition_equivalence_tag_ready, known_trivial_fiber_class_tag_ready, theorem_tag_admissible_for_final
 from integer_gcd import gcd_int, gcd_i64, gcd_i64_or_one
+from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -97,6 +98,21 @@ def test_canonical_gcd_helpers() -> Bool:
     )
 
 
+def test_canonical_ray_addresses() -> Bool:
+    var one_third = RayAddr(1, 3)
+    var one_half = RayAddr(1, 2)
+    var doubled = one_third.doubled()
+    var doubled64 = RayAddr64(1, 2).doubled()
+    return (
+        one_third.normalized() and
+        not RayAddr(2, 4).normalized() and
+        doubled.num == 2 and doubled.den == 3 and
+        ray_addr_before(one_half, one_third) and
+        same_ray_addr(one_third, RayAddr(1, 3)) and
+        doubled64.num == 0 and doubled64.den == 2
+    )
+
+
 def test_headers() -> Bool:
     # c = -2: critical type (ell,k)=(2,1), angle preperiod lambda=1, ray period n=1.
     var c_minus_2 = MisCertHeader(2, 1, 3, 1)
@@ -168,6 +184,8 @@ def run_smoke_tests() -> Bool:
     if not test_typed_theorem_import_kinds():
         return False
     if not test_canonical_gcd_helpers():
+        return False
+    if not test_canonical_ray_addresses():
         return False
     return True
 

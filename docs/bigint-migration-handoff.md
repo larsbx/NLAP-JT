@@ -71,10 +71,10 @@ Every constructor and operation must normalize. Equality and order may use cross
    only at proof-grade classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
 1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/bigint_z.mojo`.
-2. **In progress:** phase two implements unbounded signed storage, exact
-   add/sub/mul/order, quotient/remainder, rejected non-divisions, and Euclidean
-   gcd. Complete canonical serialization before enabling the backend gate.
-3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.
+2. **Complete:** the integer layer implements unbounded signed storage, exact
+   add/sub/mul/order, quotient/remainder, rejected non-divisions, Euclidean gcd,
+   and canonical `Z(sign, byte_len, big_endian_magnitude)` serialization.
+3. **Next:** replace `Q(Int64, Int64)` internals with `Q(BigZ, BigZ)` while preserving public arithmetic names.
 4. Re-run interval arithmetic against bigint-backed `Q`.
 5. Promote coordinate-record polynomial evaluation from pending to certificate-ready.
 6. Only then allow `ProofGradeCertificateStatus.accepted()` to return true.

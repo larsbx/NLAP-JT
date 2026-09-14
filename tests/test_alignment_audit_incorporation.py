@@ -5,6 +5,7 @@ AUDIT = ROOT / "docs" / "alignment_audit_deep_research_findings.md"
 MOJO_POLICY = ROOT / "docs" / "mojo_first_execution_policy.md"
 STATUS = ROOT / "src" / "alignment_audit_status.mojo"
 KERNEL = ROOT / "src" / "mojo_theorem_kernel.mojo"
+CALCULUS = ROOT / "docs" / "finite-certificate-calculus.md"
 
 
 def text(path: Path) -> str:
@@ -68,3 +69,12 @@ def test_rank2_layer_restriction_not_absolute_ontology_claim():
     assert "rank2_circle_primitive_available() -> Bool" in body
     assert "rank2_higher_layer_adapter_required() -> Bool" in body
     assert "rank2_circle_primitive_available_in_kernel() -> Bool" in body
+
+
+def test_exact_type_galois_invariance_correction_is_incorporated():
+    body = text(CALCULUS)
+    assert "Exact critical-orbit type is constant on each irreducible factor" in body
+    assert "section C1" in body
+    assert "Galois conjugates can mix exact-type and lower-type roots" not in body
+    assert "pointwise" in body
+    assert "same-box exclusions as its canonical verifier policy" in body

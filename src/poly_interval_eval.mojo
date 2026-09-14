@@ -6,8 +6,8 @@
 #
 # Coefficients are stored in ascending order: coeffs[d] is the coefficient of C^d.
 # This module evaluates polynomials over ComplexIQ using Horner's rule.
-# It is still Int64-backed through Q, so it is implementation-grade scaffold,
-# not certificate-ready until the bigint boundary is discharged.
+# It uses BigZ-backed Q and fail-closed intervals, but remains an
+# implementation-grade scaffold until its acceptance-bearing replay is done.
 
 from interval_q import ComplexIQ
 from rat_q import Q

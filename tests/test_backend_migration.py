@@ -131,6 +131,32 @@ def test_q_storage_is_normalized_bigz_and_fail_closed():
     assert "if not bigq_storage_smoke():" in smoke
 
 
+def test_bigz_interval_layer_enforces_spec_fail_closed_contracts():
+    src = read(ROOT / "src" / "interval_q.mojo")
+    rat = read(ROOT / "src" / "rat_q.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "var rejected: Bool" in src
+    assert "if not self.rejected and not lo.le(hi):" in src
+    assert "struct IQBoolResult(Copyable)" in src
+    assert "struct IQSignResult(Copyable)" in src
+    assert "def sign(self) -> IQSignResult:" in src
+    assert "def reciprocal(self) -> IQ:" in src
+    assert "if contains.rejected or contains.value:" in src
+    assert src.count("if self.rejected or other.rejected:") >= 5
+    assert "def bigq_interval_conformance_smoke()" in src
+    assert "if a.rejected or b.rejected:" in rat.split("def q_min", 1)[1]
+    assert "bigq_interval_conformance_smoke" in smoke
+
+
+def test_interval_migration_does_not_enable_certificate_or_c1_acceptance():
+    adapter = read(ROOT / "src" / "bigint_adapter.mojo")
+    gate = read(ROOT / "src" / "certificate_arithmetic_migration_gate.mojo")
+    ledger = read(ROOT / "src" / "C1_final_proof_block_ledger.mojo")
+    assert "not status.allows_certificate_acceptance" in adapter
+    assert "checked.checked_width_accepted() and not checked.proof_grade_accepted()" in gate
+    assert 'ProofBlockStatus("ResidualClosureNoMissingLinks", False, False, True, False, True)' in ledger
+
+
 def test_no_bad_numeric_or_analytic_shortcuts_in_backend_contracts():
     combined = (read(BIG) + "\n" + read(RAT)).lower()
     forbidden = ["float64", "math.", "cmath", "numpy", "atan(", "radian", "degree"]

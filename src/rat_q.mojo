@@ -155,12 +155,16 @@ def q_abs(x: Q) -> Q:
 
 
 def q_min(a: Q, b: Q) -> Q:
+    if a.rejected or b.rejected:
+        return q_rejected()
     if a.le(b):
         return a.copy()
     return b.copy()
 
 
 def q_max(a: Q, b: Q) -> Q:
+    if a.rejected or b.rejected:
+        return q_rejected()
     if a.le(b):
         return b.copy()
     return a.copy()

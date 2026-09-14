@@ -60,8 +60,8 @@ def test_binding_table_covers_the_kernels_and_quarantines_floats():
     by_class = {}
     for cls, paths in rows:
         by_class.setdefault(cls, set()).update(paths)
-    assert {"src/interval_q.mojo", "src/poly_interval_eval.mojo"} <= by_class["DEMO"]
-    assert "src/rat_q.mojo" in by_class["CONFORMS"]
+    assert "src/poly_interval_eval.mojo" in by_class["DEMO"]
+    assert {"src/rat_q.mojo", "src/interval_q.mojo"} <= by_class["CONFORMS"]
     assert "src/complex_box.mojo" in by_class["QUARANTINED"]
     assert by_class["QUARANTINED"] == allowlisted()
     assert ALLOWLIST.exists()

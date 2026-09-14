@@ -10,7 +10,7 @@
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
 from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order
-from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
+from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
@@ -65,10 +65,10 @@ def test_interval_enclosure_laws() -> Bool:
     var lhs = x.mul(y.add(z))
     var rhs = x.mul(y).add(x.mul(z))
     return (
-        d.lo.eq(Q(-2, 1)) and d.hi.eq(Q(2, 1)) and d.contains_zero() and
-        lhs.subset_of(rhs) and
-        y.square().subset_of(y.mul(y)) and not y.mul(y).subset_of(y.square()) and
-        x.excludes_zero() and not y.excludes_zero()
+        d.lo.eq(Q(-2, 1)) and d.hi.eq(Q(2, 1)) and d.contains_zero().value and
+        lhs.subset_of(rhs).value and
+        y.square().subset_of(y.mul(y)).value and not y.mul(y).subset_of(y.square()).value and
+        x.excludes_zero().value and not y.excludes_zero().value
     )
 
 
@@ -261,7 +261,7 @@ def run_smoke_tests() -> Bool:
         return False
     if not demo_q_normalization() or not demo_q_order():
         return False
-    if not demo_interval_mul() or not demo_complex_quadrance_point():
+    if not demo_interval_mul() or not demo_complex_quadrance_point() or not bigq_interval_conformance_smoke():
         return False
     if not test_rational_field_laws():
         return False

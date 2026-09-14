@@ -50,9 +50,11 @@ Every constructor and operation must normalize. Equality and order may use cross
    certificate acceptance and `Q` has not yet been migrated to it.
    `src/checked_q.mojo` now supplies the normalized, rejection-aware rational
    API over that transition layer. `src/checked_interval_q.mojo` now propagates
-   rejection through the real rational-interval operations. The next slice is
-   checked complex intervals and Horner evaluation; do not replace `Q` until
-   every downstream predicate propagates failure.
+   rejection through the real rational-interval operations.
+   `src/checked_complex_interval.mojo` now carries rejection through rank-2
+   interval arithmetic and `P_{2,1}` Horner evaluation. The next slice is the
+   checked Krawczyk witness; do not replace `Q` until every downstream predicate
+   propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.

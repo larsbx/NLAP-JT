@@ -25,6 +25,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/C1_theorem_tag_import_ledger.mojo`.
 - `src/C1_final_proof_object_skeleton.mojo`.
 - `src/checked_int64_backend.mojo`.
+- `src/checked_q.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -50,6 +51,10 @@ negative control that attempts to mark a debug path proof-grade.
 The checked Int64 transition layer rejects boundary overflows, invalid
 denominators, and the known Q_8 coefficient-growth case. It is not a bigint
 backend and is not wired into `Q`, so proof-grade acceptance remains disabled.
+The checked rational transition layer normalizes accepted values and explicitly
+rejects unsafe construction, arithmetic, division, and comparison. Existing
+`Q` and interval consumers remain on the demo path pending rejection-aware
+migration.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

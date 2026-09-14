@@ -12,6 +12,7 @@ from rat_q import Q, demo_q_normalization, demo_q_order
 from interval_q import ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
+from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -22,6 +23,18 @@ def test_interval_polynomial_evaluation() -> Bool:
         value.re.lo.eq(Q.zero()) and value.re.hi.eq(Q.zero()) and
         value.im.lo.eq(Q.zero()) and value.im.hi.eq(Q.zero()) and
         status.scaffold_accepted() and not status.certificate_ready()
+    )
+
+
+def test_final_proof_ledger_policy() -> Bool:
+    var canonical = canonical_final_evidence_policy()
+    var unsafe = FinalEvidencePolicy(True, False, False, False, False)
+    return (
+        final_evidence_policy_valid(canonical) and
+        not final_evidence_policy_valid(unsafe) and
+        not final_ledger_ready_for_c1() and
+        current_priority_block() == "ResidualClosureNoMissingLinks" and
+        next_immediate_block() == "TheoremTagPayloadInstances"
     )
 
 
@@ -86,6 +99,8 @@ def run_smoke_tests() -> Bool:
     if not test_interval_polynomial_evaluation():
         return False
     if not verify_p21_krawczyk_c_minus_2(8):
+        return False
+    if not test_final_proof_ledger_policy():
         return False
     return True
 

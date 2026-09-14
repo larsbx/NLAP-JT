@@ -66,6 +66,8 @@ def test_compiler_checked_boundary_is_explicit():
         "src/checked_interval_exclusion.mojo",
         "src/cert_backend.mojo",
         "src/certificate_arithmetic_migration_gate.mojo",
+        "src/checked_ray_address.mojo",
+        "src/checked_finite_certificate_gate.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

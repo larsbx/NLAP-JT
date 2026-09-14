@@ -5,21 +5,7 @@
 # layer for the top conjecture.
 
 from vertex_incidence import Vertex, VertexSet, PointVertex
-
-
-struct RayAddrFinite:
-    var num: Int
-    var den: Int
-
-    fn __init__(inout self, num: Int, den: Int):
-        self.num = num
-        self.den = den
-
-    fn valid(self) -> Bool:
-        return self.den > 0 and self.num >= 0 and self.num < self.den
-
-    fn doubled(self) -> RayAddrFinite:
-        return RayAddrFinite((2 * self.num) % self.den, self.den)
+from ray_address import RayAddr
 
 
 struct LandingTag:
@@ -35,10 +21,10 @@ struct LandingTag:
 
 
 struct LandedRay:
-    var addr: RayAddrFinite
+    var addr: RayAddr
     var tag: LandingTag
 
-    fn __init__(inout self, addr: RayAddrFinite, tag: LandingTag):
+    fn __init__(inout self, addr: RayAddr, tag: LandingTag):
         self.addr = addr
         self.tag = tag
 

@@ -6,6 +6,7 @@
 
 from certificate_arithmetic_migration_gate import CheckedLocalizationEnvelope, c_minus_2_checked_localization
 from checked_ray_address import CheckedRayOrbitStatus, verify_checked_one_half_orbit
+from checked_landing_target_adapter import LandingTargetAssociation, verify_c_minus_2_landing_target_association
 
 
 struct TheoremSourceRef(ImplicitlyCopyable):
@@ -28,16 +29,16 @@ struct RationalRayLandingInstance(ImplicitlyCopyable):
     var address_num: Int64
     var address_den: Int64
     var landing_box_name: String
-    var landing_target_association_checked: Bool
+    var landing_target_association: LandingTargetAssociation
     var excludes_generic_boundary_use: Bool
 
-    def __init__(out self, source: TheoremSourceRef, rays: CheckedRayOrbitStatus, address_num: Int64, address_den: Int64, landing_box_name: String, landing_target_association_checked: Bool, excludes_generic_boundary_use: Bool):
+    def __init__(out self, source: TheoremSourceRef, rays: CheckedRayOrbitStatus, address_num: Int64, address_den: Int64, landing_box_name: String, landing_target_association: LandingTargetAssociation, excludes_generic_boundary_use: Bool):
         self.source = source
         self.rays = rays
         self.address_num = address_num
         self.address_den = address_den
         self.landing_box_name = landing_box_name
-        self.landing_target_association_checked = landing_target_association_checked
+        self.landing_target_association = landing_target_association
         self.excludes_generic_boundary_use = excludes_generic_boundary_use
 
     def source_scope_checked(self) -> Bool:
@@ -46,11 +47,12 @@ struct RationalRayLandingInstance(ImplicitlyCopyable):
             self.source.covered_class == "preperiodic rational parameter rays" and
             self.rays.accepted() and self.rays.preperiod == 1 and self.rays.period == 1 and
             self.address_num == 1 and self.address_den == 2 and
-            self.landing_box_name == "beta_c_minus_2" and self.excludes_generic_boundary_use
+            self.landing_box_name == "beta_c_minus_2" and self.excludes_generic_boundary_use and
+            self.landing_target_association.checked_width_associated()
         )
 
     def final_import_admissible(self) -> Bool:
-        return self.source_scope_checked() and self.landing_target_association_checked
+        return self.source_scope_checked() and self.landing_target_association.proof_grade_associated()
 
 
 struct MisiurewiczTrivialFiberInstance(ImplicitlyCopyable):
@@ -97,15 +99,13 @@ def schleicher_misiurewicz_fiber_source() -> TheoremSourceRef:
 
 
 def c_minus_2_landing_instance() -> RationalRayLandingInstance:
-    # The finite orbit and source scope are checked. A separate combinatorial
-    # adapter must still associate this ray's landing target with the box.
     return RationalRayLandingInstance(
         schleicher_rational_parameter_ray_source(),
         verify_checked_one_half_orbit(),
         1,
         2,
         "beta_c_minus_2",
-        False,
+        verify_c_minus_2_landing_target_association(),
         True,
     )
 

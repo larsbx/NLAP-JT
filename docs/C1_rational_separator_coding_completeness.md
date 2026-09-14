@@ -1,6 +1,6 @@
 # C1 — RationalSeparatorCodingCompleteness
 
-Status: proof target for the hard direction of catalogue extensionality.
+Status: proof target for the completeness direction of `SeparatorCatalogueAdequacy`.
 
 This note isolates the finite coding problem for classical rational-ray separators used in the fiber definition. It does not prove local connectivity, generic ray landing, or fiber triviality.
 

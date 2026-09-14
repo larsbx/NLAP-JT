@@ -3,10 +3,44 @@
 # Internal C1 proof infrastructure. This module makes theorem-tag imports depend
 # on finite assumption payloads rather than names alone.
 
-struct TheoremTagPayload:
+struct AssumptionPayloadKind(ImplicitlyCopyable):
+    var code: Int
+
+    def __init__(out self, code: Int): self.code = code
+
+    @staticmethod
+    def rational_ray_landing() -> Self: return Self(0)
+    @staticmethod
+    def fiber_definition() -> Self: return Self(1)
+    @staticmethod
+    def known_trivial_fiber() -> Self: return Self(2)
+    @staticmethod
+    def yoccoz_puzzle() -> Self: return Self(3)
+    @staticmethod
+    def apriori_bounds() -> Self: return Self(4)
+
+
+struct PayloadConclusionKind(ImplicitlyCopyable):
+    var code: Int
+
+    def __init__(out self, code: Int): self.code = code
+
+    @staticmethod
+    def ray_landing() -> Self: return Self(0)
+    @staticmethod
+    def separator_interpretation() -> Self: return Self(1)
+    @staticmethod
+    def fiber_definition_adapter() -> Self: return Self(2)
+    @staticmethod
+    def class_specific_trivial_fiber() -> Self: return Self(3)
+    @staticmethod
+    def boundary_equality_adapter() -> Self: return Self(4)
+
+
+struct TheoremTagPayload(ImplicitlyCopyable):
     var tag_name: String
-    var payload_kind: String
-    var conclusion_kind: String
+    var payload_kind: AssumptionPayloadKind
+    var conclusion_kind: PayloadConclusionKind
     var strength_class: String
     var has_finite_witness_payload: Bool
     var has_adapter_payload: Bool
@@ -16,11 +50,11 @@ struct TheoremTagPayload:
     var uses_generic_mlc: Bool
     var uses_bounded_search_only: Bool
 
-    fn __init__(
-        inout self,
+    def __init__(
+        out self,
         tag_name: String,
-        payload_kind: String,
-        conclusion_kind: String,
+        payload_kind: AssumptionPayloadKind,
+        conclusion_kind: PayloadConclusionKind,
         strength_class: String,
         has_finite_witness_payload: Bool,
         has_adapter_payload: Bool,
@@ -43,27 +77,15 @@ struct TheoremTagPayload:
         self.uses_bounded_search_only = uses_bounded_search_only
 
 
-fn allowed_payload_kind(kind: String) -> Bool:
-    return (
-        kind == "RationalParameterRayLandingPayload" or
-        kind == "FiberDefinitionPayload" or
-        kind == "KnownTrivialFiberPayload" or
-        kind == "YoccozPuzzlePayload" or
-        kind == "AprioriBoundsPayload"
-    )
+def allowed_payload_kind(kind: AssumptionPayloadKind) -> Bool:
+    return kind.code >= 0 and kind.code <= 4
 
 
-fn allowed_payload_conclusion(kind: String) -> Bool:
-    return (
-        kind == "RayLanding" or
-        kind == "SeparatorInterpretation" or
-        kind == "FiberDefinitionAdapter" or
-        kind == "ClassSpecificTrivialFiber" or
-        kind == "BoundaryEqualityAdapter"
-    )
+def allowed_payload_conclusion(kind: PayloadConclusionKind) -> Bool:
+    return kind.code >= 0 and kind.code <= 4
 
 
-fn allowed_payload_strength(strength: String) -> Bool:
+def allowed_payload_strength(strength: String) -> Bool:
     return (
         strength == "AdapterOnly" or
         strength == "LocalLanding" or
@@ -72,7 +94,7 @@ fn allowed_payload_strength(strength: String) -> Bool:
     )
 
 
-fn forbidden_payload_tag(name: String) -> Bool:
+def forbidden_payload_tag(name: String) -> Bool:
     return (
         name == "GenericMLC" or
         name == "AllFibersTrivial" or
@@ -82,7 +104,7 @@ fn forbidden_payload_tag(name: String) -> Bool:
     )
 
 
-fn payload_has_required_core_fields(payload: TheoremTagPayload) -> Bool:
+def payload_has_required_core_fields(payload: TheoremTagPayload) -> Bool:
     return (
         payload.has_finite_witness_payload and
         payload.has_adapter_payload and
@@ -92,7 +114,7 @@ fn payload_has_required_core_fields(payload: TheoremTagPayload) -> Bool:
     )
 
 
-fn theorem_tag_payload_admissible(payload: TheoremTagPayload) -> Bool:
+def theorem_tag_payload_admissible(payload: TheoremTagPayload) -> Bool:
     if forbidden_payload_tag(payload.tag_name):
         return False
     if not allowed_payload_kind(payload.payload_kind):
@@ -108,11 +130,11 @@ fn theorem_tag_payload_admissible(payload: TheoremTagPayload) -> Bool:
     return payload_has_required_core_fields(payload)
 
 
-fn rational_parameter_ray_landing_payload_scaffold() -> TheoremTagPayload:
+def rational_parameter_ray_landing_payload_scaffold() -> TheoremTagPayload:
     return TheoremTagPayload(
         "RationalParameterRayLanding",
-        "RationalParameterRayLandingPayload",
-        "RayLanding",
+        AssumptionPayloadKind.rational_ray_landing(),
+        PayloadConclusionKind.ray_landing(),
         "LocalLanding",
         True,
         True,
@@ -124,11 +146,11 @@ fn rational_parameter_ray_landing_payload_scaffold() -> TheoremTagPayload:
     )
 
 
-fn fiber_definition_payload_scaffold() -> TheoremTagPayload:
+def fiber_definition_payload_scaffold() -> TheoremTagPayload:
     return TheoremTagPayload(
         "FiberDefinitionEquivalence",
-        "FiberDefinitionPayload",
-        "FiberDefinitionAdapter",
+        AssumptionPayloadKind.fiber_definition(),
+        PayloadConclusionKind.fiber_definition_adapter(),
         "AdapterOnly",
         True,
         True,
@@ -140,11 +162,11 @@ fn fiber_definition_payload_scaffold() -> TheoremTagPayload:
     )
 
 
-fn generic_mlc_payload_rejected() -> Bool:
+def generic_mlc_payload_rejected() -> Bool:
     var payload = TheoremTagPayload(
         "GenericMLC",
-        "KnownTrivialFiberPayload",
-        "ClassSpecificTrivialFiber",
+        AssumptionPayloadKind.known_trivial_fiber(),
+        PayloadConclusionKind.class_specific_trivial_fiber(),
         "ClassSpecificFiberTriviality",
         True,
         True,
@@ -157,11 +179,11 @@ fn generic_mlc_payload_rejected() -> Bool:
     return not theorem_tag_payload_admissible(payload)
 
 
-fn bounded_search_payload_rejected() -> Bool:
+def bounded_search_payload_rejected() -> Bool:
     var payload = TheoremTagPayload(
         "BoundedSearchTermination",
-        "KnownTrivialFiberPayload",
-        "ClassSpecificTrivialFiber",
+        AssumptionPayloadKind.known_trivial_fiber(),
+        PayloadConclusionKind.class_specific_trivial_fiber(),
         "ClassSpecificFiberTriviality",
         True,
         True,
@@ -174,5 +196,5 @@ fn bounded_search_payload_rejected() -> Bool:
     return not theorem_tag_payload_admissible(payload)
 
 
-fn next_priority_block() -> String:
+def next_priority_block() -> String:
     return "TheoremTagPayloadInstances"

@@ -110,6 +110,7 @@ def test_checked_ray_and_finite_certificate_boundary_are_compiler_wired():
     ray = (ROOT / "src" / "checked_ray_address.mojo").read_text(encoding="utf-8")
     gate = (ROOT / "src" / "checked_finite_certificate_gate.mojo").read_text(encoding="utf-8")
     tags = (ROOT / "src" / "C1_theorem_tag_payload_instances.mojo").read_text(encoding="utf-8")
+    association = (ROOT / "src" / "checked_landing_target_adapter.mojo").read_text(encoding="utf-8")
     smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
     assert "checked_mul_i64(address.num, 2)" in ray
     assert "if doubled.overflowed:" in ray
@@ -119,13 +120,19 @@ def test_checked_ray_and_finite_certificate_boundary_are_compiler_wired():
     assert "not status.theorem_tags_accepted()" in gate
     assert '"SchleicherRationalParameterRays"' in tags
     assert '"SchleicherFibersLC"' in tags
-    assert "landing_target_association_checked" in tags
+    assert "landing_target_association.proof_grade_associated()" in tags
     assert "self.localization.proof_grade_accepted()" in tags
     assert "not landing.final_import_admissible()" in tags
     assert "not fiber.final_import_admissible()" in tags
+    assert "equal_poly(relation, expected_R_2_1())" in association
+    assert "squarefree.coefficient(1) == 2" in association
+    assert "eval_poly_at_int(q0, 0) == eval_poly_at_int(q1, 0)" in association
+    assert "self.rays.preperiod + self.correspondence.critical_orbit_preperiod_offset == self.ell" in association
+    assert "not association.proof_grade_associated()" in association
     assert "if not checked_ray_address_smoke():" in smoke
     assert "if not checked_finite_certificate_gate_smoke():" in smoke
     assert "if not theorem_tag_payload_instances_smoke():" in smoke
+    assert "if not checked_landing_target_adapter_smoke():" in smoke
 
 
 def test_backend_manifest_audit_exists_and_checks_all_requirements():

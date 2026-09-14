@@ -35,6 +35,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_ray_address.mojo`.
 - `src/checked_finite_certificate_gate.mojo`.
 - `src/C1_theorem_tag_payload_instances.mojo`.
+- `src/checked_landing_target_adapter.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -84,8 +85,10 @@ The checked ray-address path computes the finite `1/2 -> 0 -> 0` doubling orbit
 and rejects malformed or overflowing fixed-width inputs. The checked finite
 certificate gate composes that result with localization but rejects full
 acceptance. Source-specific theorem-tag instances match the checked finite data
-to the Schleicher landing and Misiurewicz-fiber source families, while rejecting
-the missing landing-target adapter and bounded-width classification.
+to the Schleicher landing and Misiurewicz-fiber source families. The landing
+adapter derives checked-width target uniqueness from `P_{2,1}=C(C+2)`, rejection
+of the lower-type `C=0` root, and the typed preperiod correspondence. Both
+imports remain rejected finally because the classification backend is bounded.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

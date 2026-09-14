@@ -157,13 +157,16 @@ No generic boundary tag is allowed as an instance.
 to two explicit bibliography records:
 
 - `SchleicherRationalParameterRays`, covering preperiodic rational parameter
-  rays. The `1/2` address has checked preperiod 1 and period 1, but the finite
-  adapter has not yet associated its landing target with `beta_c_minus_2`, so
-  this import remains inadmissible.
+  rays. The `1/2` address has checked preperiod 1 and period 1. The finite
+  adapter verifies `R_{2,1}=C^3(C+2)`, the squarefree factorization
+  `P_{2,1}=C(C+2)`, and that `C=0` is lower type, leaving the localized `C=-2`
+  root as the unique exact-type target. The association is accepted at checked
+  width but remains inadmissible as a final import until replayed on a
+  proof-grade backend.
 - `SchleicherFibersLC`, covering trivial fibers at Misiurewicz parameters. The
   checked-width `(ell, period) = (2, 1)` classification matches the source
   scope, but final import remains inadmissible until localization is replayed
   on a proof-grade unbounded backend.
 
-These are payload instances, not completed theorem imports. The
+These are checked-width payload instances, not completed theorem imports. The
 `TheoremTagPayloadInstances` proof block therefore remains open.

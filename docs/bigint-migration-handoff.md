@@ -65,9 +65,10 @@ Every constructor and operation must normalize. Equality and order may use cross
    `docs/certificate-predicate-migration-inventory.md`.
    `src/checked_ray_address.mojo` computes the c=-2 rational ray orbit with
    fixed-width overflow rejection, and `src/checked_finite_certificate_gate.mojo`
-   now proves that checked finite inputs are insufficient while theorem-tag
-   instances still lack landing-target association or proof-grade
-   classification. Do not replace `Q` until every downstream
+   now proves that checked finite inputs are insufficient for proof-grade use.
+   `src/checked_landing_target_adapter.mojo` derives the bounded-width `1/2` to
+   c=-2 association from exact-type uniqueness; theorem-tag instances now fail
+   only at proof-grade classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.

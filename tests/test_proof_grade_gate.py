@@ -34,6 +34,8 @@ def test_checked_width_and_proof_grade_are_separate_gates():
     assert "self.backend.certificate_ready()" in src
     assert "not checked.proof_grade_accepted()" in src
     assert "not demo.checked_width_accepted()" in src
+    assert "checked_p21_exact_type_exclusions(8)" in src
+    assert "ExactTypeExclusionEvidence(box_name, 5, 5, False)" not in src
 
 
 def test_proof_grade_gate_composes_certificate_and_backend():

@@ -92,6 +92,20 @@ def test_checked_krawczyk_layer_is_compiler_wired():
     assert "if not checked_krawczyk_smoke():" in smoke
 
 
+def test_checked_interval_exclusion_is_computed_and_compiler_wired():
+    src = (ROOT / "src" / "checked_interval_exclusion.mojo").read_text(encoding="utf-8")
+    gate = (ROOT / "src" / "certificate_arithmetic_migration_gate.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    assert "def build_checked_interval_orbit_h3" in src
+    assert "def checked_collision_excludes_zero" in src
+    assert "for pair_idx in range(5):" in src
+    assert "if exclusion.rejected:" in src
+    assert "checked_p21_exact_type_exclusions(8)" in gate
+    assert "ExactTypeExclusionEvidence(box_name, 5, 5, False)" not in gate
+    assert "from checked_interval_exclusion import checked_interval_exclusion_smoke" in smoke
+    assert "if not checked_interval_exclusion_smoke():" in smoke
+
+
 def test_backend_manifest_audit_exists_and_checks_all_requirements():
     src = AUDIT.read_text(encoding="utf-8")
     for key in [

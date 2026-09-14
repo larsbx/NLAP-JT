@@ -27,6 +27,7 @@ from checked_int64_backend import checked_i64_boundary_smoke
 from checked_q import checked_q_smoke
 from checked_interval_q import checked_iq_smoke
 from checked_complex_interval import checked_complex_horner_smoke
+from checked_interval_exclusion import checked_interval_exclusion_smoke
 from checked_krawczyk_witness import checked_krawczyk_smoke
 from cert_backend import cert_backend_smoke
 from certificate_arithmetic_migration_gate import certificate_arithmetic_migration_smoke
@@ -286,6 +287,8 @@ def run_smoke_tests() -> Bool:
     if not checked_iq_smoke():
         return False
     if not checked_complex_horner_smoke():
+        return False
+    if not checked_interval_exclusion_smoke():
         return False
     if not checked_krawczyk_smoke():
         return False

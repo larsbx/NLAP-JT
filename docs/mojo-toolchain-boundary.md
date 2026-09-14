@@ -32,6 +32,8 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_interval_exclusion.mojo`.
 - `src/cert_backend.mojo`.
 - `src/certificate_arithmetic_migration_gate.mojo`.
+- `src/checked_ray_address.mojo`.
+- `src/checked_finite_certificate_gate.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -77,6 +79,10 @@ The arithmetic migration gate accepts the checked-width `P_{2,1}` localization
 only when the contraction, computed exact-type exclusions, same-box identity, and
 checked backend all agree. It separately rejects proof-grade acceptance because
 the backend is bounded.
+The checked ray-address path computes the finite `1/2 -> 0 -> 0` doubling orbit
+and rejects malformed or overflowing fixed-width inputs. The checked finite
+certificate gate composes that result with localization but rejects full
+acceptance because the required theorem-tag import records remain scaffolded.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

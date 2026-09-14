@@ -61,8 +61,13 @@ Every constructor and operation must normalize. Equality and order may use cross
    `src/certificate_arithmetic_migration_gate.mojo` separates checked-width
    localization acceptance from proof-grade acceptance and binds the checked
    contraction to that computed exact-type result on the same box. The next
-   slice is to inventory and migrate the remaining downstream certificate
-   predicates; do not replace `Q` until every such predicate propagates failure.
+   slice inventories the remaining downstream predicates in
+   `docs/certificate-predicate-migration-inventory.md`.
+   `src/checked_ray_address.mojo` computes the c=-2 rational ray orbit with
+   fixed-width overflow rejection, and `src/checked_finite_certificate_gate.mojo`
+   now proves that checked finite inputs are insufficient while theorem-tag
+   records remain scaffolded. Do not replace `Q` until every downstream
+   arithmetic predicate propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.

@@ -31,6 +31,8 @@ from checked_interval_exclusion import checked_interval_exclusion_smoke
 from checked_krawczyk_witness import checked_krawczyk_smoke
 from cert_backend import cert_backend_smoke
 from certificate_arithmetic_migration_gate import certificate_arithmetic_migration_smoke
+from checked_ray_address import checked_ray_address_smoke
+from checked_finite_certificate_gate import checked_finite_certificate_gate_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -295,6 +297,10 @@ def run_smoke_tests() -> Bool:
     if not cert_backend_smoke():
         return False
     if not certificate_arithmetic_migration_smoke():
+        return False
+    if not checked_ray_address_smoke():
+        return False
+    if not checked_finite_certificate_gate_smoke():
         return False
     return True
 

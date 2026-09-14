@@ -90,8 +90,11 @@ def run_smoke_tests() -> Bool:
     return True
 
 
-def main():
-    if run_smoke_tests():
-        print("finite-regime Mandelbrot smoke tests: PASS")
-    else:
-        print("finite-regime Mandelbrot smoke tests: FAIL")
+def require_smoke_success(ok: Bool) raises:
+    if not ok:
+        raise Error("finite-regime Mandelbrot smoke tests: FAIL")
+
+
+def main() raises:
+    require_smoke_success(run_smoke_tests())
+    print("finite-regime Mandelbrot smoke tests: PASS")

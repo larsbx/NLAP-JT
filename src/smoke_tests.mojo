@@ -18,6 +18,7 @@ from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadCon
 from C1_theorem_tag_import_ledger import ImportConclusionKind, ImportStrengthClass, ImportStatus, allowed_conclusion_kind, allowed_strength_class, forbidden_strength_class, rational_parameter_ray_landing_tag_ready, fiber_definition_equivalence_tag_ready, known_trivial_fiber_class_tag_ready, theorem_tag_admissible_for_final
 from integer_gcd import gcd_int, gcd_i64, gcd_i64_or_one
 from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
+from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_half
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -113,6 +114,15 @@ def test_canonical_ray_addresses() -> Bool:
     )
 
 
+def test_canonical_rational_geometry() -> Bool:
+    var spread_value = demo_spread_orthogonal_axes()
+    var doubled_half = demo_ray_addr_doubling_half()
+    return (
+        spread_value.eq(Q.one()) and
+        doubled_half.num == 0 and doubled_half.den == 2
+    )
+
+
 def test_headers() -> Bool:
     # c = -2: critical type (ell,k)=(2,1), angle preperiod lambda=1, ray period n=1.
     var c_minus_2 = MisCertHeader(2, 1, 3, 1)
@@ -186,6 +196,8 @@ def run_smoke_tests() -> Bool:
     if not test_canonical_gcd_helpers():
         return False
     if not test_canonical_ray_addresses():
+        return False
+    if not test_canonical_rational_geometry():
         return False
     return True
 

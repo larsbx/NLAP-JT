@@ -9,6 +9,7 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 | Predicate | Current executable source | State | Acceptance consequence |
 | --- | --- | --- | --- |
 | Squarefree `P_{2,1}` evaluation and strict localization | `src/krawczyk_witness.mojo` | replayed on unbounded BigZ rational intervals; rejection distinct from non-contraction | accepts the finite arithmetic replay only; proof-grade acceptance is explicitly false |
+| Same-box forbidden collisions | `src/interval_orbit.mojo` | replayed 5/5 on the same parameterized BigZ box constructor as localization; rejection distinct from ambiguity | accepts the finite exact-type arithmetic replay only |
 | Squarefree `P_{2,1}` evaluation and strict localization | `src/checked_krawczyk_witness.mojo` | computed, checked-width | accepts bounded localization only |
 | Same-box forbidden collisions | `src/checked_interval_exclusion.mojo` | computed 5/5, checked-width | accepts bounded exact-type evidence only |
 | Joint arithmetic localization | `src/certificate_arithmetic_migration_gate.mojo` | computed, same-box, checked-width | proof-grade acceptance remains false |
@@ -23,8 +24,8 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 
 ## Next obligations
 
-1. Replay exact-type uniqueness and landing association on the normalized
-   `BigZ`-backed `Q` layer; the c=-2 localization replay is complete.
+1. Replay landing association on the normalized `BigZ`-backed `Q` layer; the
+   c=-2 localization and exact-type exclusion replays are complete.
 2. Re-run the remaining certificate predicates on that
    backend; bounded-width success remains transitional evidence only.
 3. Port incidence packaging only after items 1 and 2, preserving the rule that

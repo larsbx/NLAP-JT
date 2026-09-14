@@ -10,6 +10,8 @@
 # Hard invariant: no analytic functions enter this layer. This is signed integer
 # arithmetic plus order, divisibility, and Euclidean gcd only.
 
+from integer_gcd import gcd_i64
+
 
 struct BigIntLike:
     var small: Int64
@@ -54,20 +56,6 @@ struct BigIntLike:
 
     fn le(self, other: BigIntLike) -> Bool:
         return self.small <= other.small
-
-
-fn gcd_i64(a0: Int64, b0: Int64) -> Int64:
-    var a = a0
-    var b = b0
-    if a < 0:
-        a = -a
-    if b < 0:
-        b = -b
-    while b != 0:
-        var t = a % b
-        a = b
-        b = t
-    return a
 
 
 fn gcd_bigint_stub(a: BigIntLike, b: BigIntLike) -> BigIntLike:

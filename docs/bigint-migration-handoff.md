@@ -44,6 +44,10 @@ Every constructor and operation must normalize. Equality and order may use cross
 
 ## Migration sequence
 
+0. Use `src/checked_int64_backend.mojo` to fail closed during migration. Its
+   compiled Q_8 growth control confirms the present bounded backend cannot
+   complete the intended recurrence. This layer does not itself permit
+   certificate acceptance and `Q` has not yet been migrated to it.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.

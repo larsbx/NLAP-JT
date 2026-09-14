@@ -33,10 +33,22 @@ def test_manifest_keeps_finite_regime_invariants_true():
 def test_manifest_blocks_proof_grade_requirements_on_demo_backend():
     reqs = manifest()["requirements"]
     assert reqs["unbounded_storage"] is False
+    assert reqs["exact_add_sub_mul"] is False
     assert reqs["euclidean_gcd"] is False
     assert reqs["exact_divisibility"] is False
     assert reqs["normalized_serialization"] is False
     assert reqs["canonical_hash_encoding"] is False
+
+
+def test_checked_int64_transition_layer_is_compiler_wired():
+    src = (ROOT / "src" / "checked_int64_backend.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    for operation in ["checked_add_i64", "checked_sub_i64", "checked_mul_i64", "checked_neg_i64"]:
+        assert f"def {operation}" in src
+    assert "denominator_is_valid_i64" in src
+    assert "q8_growth_must_overflow_i64" in src
+    assert "from checked_int64_backend import checked_i64_boundary_smoke" in smoke
+    assert "if not checked_i64_boundary_smoke():" in smoke
 
 
 def test_backend_manifest_audit_exists_and_checks_all_requirements():

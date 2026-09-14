@@ -58,6 +58,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/C1_theorem_tag_assumption_payloads.mojo",
         "src/C1_theorem_tag_import_ledger.mojo",
         "src/C1_final_proof_object_skeleton.mojo",
+        "src/checked_int64_backend.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

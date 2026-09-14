@@ -13,7 +13,7 @@ proof_grade = false
 
 [requirements]
 unbounded_storage = false
-exact_add_sub_mul = true
+exact_add_sub_mul = false
 exact_order = true
 euclidean_gcd = false
 exact_divisibility = false

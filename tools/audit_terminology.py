@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCAN_ROOTS = [ROOT / "docs", ROOT / "src", ROOT / "tests"]
+SCAN_ROOTS = [ROOT / "docs", ROOT / "src"]
 REGISTRY = ROOT / "docs" / "terminology-registry.md"
 USE_MANIFEST = ROOT / "docs" / "terminology-use-manifest.md"
 

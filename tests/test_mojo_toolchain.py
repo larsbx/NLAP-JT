@@ -63,6 +63,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/checked_interval_q.mojo",
         "src/checked_complex_interval.mojo",
         "src/checked_krawczyk_witness.mojo",
+        "src/checked_interval_exclusion.mojo",
         "src/cert_backend.mojo",
         "src/certificate_arithmetic_migration_gate.mojo",
     ]:

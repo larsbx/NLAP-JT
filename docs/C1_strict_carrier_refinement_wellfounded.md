@@ -8,7 +8,7 @@ Genealogy: This term is a project-local proof obligation built from standard fin
 
 Bridge claim: Definition-only project term. It packages the claim that repeated accepted strict refinements of a finite incidence carrier must make progress in a finite combinatorial measure unless the process exposes separation, boundary equality, or a missing theorem/catalogue link.
 
-Known leaks: A finite descent measure is not by itself a proof of fiber triviality. It only controls the project carrier language. The bridge to classical fibers still depends on catalogue extensionality and theorem-tagged rational-ray separation.
+Known leaks: A finite descent measure is not by itself a proof of fiber triviality. It only controls the project carrier language. The bridge to classical fibers still depends on `SeparatorCatalogueAdequacy` and theorem-tagged rational-ray separation.
 
 Use discipline: Use only for finite carrier objects. Do not identify it with MLC, local connectivity, analytic shrinking, metric diameter, or any rank-2 circle/locus primitive.
 

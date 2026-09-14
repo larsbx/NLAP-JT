@@ -54,7 +54,11 @@ fn theorem_tag_import_ledger_status() -> ProofBlockStatus:
 
 
 fn theorem_tag_assumption_payloads_status() -> ProofBlockStatus:
-    return ProofBlockStatus("TheoremTagAssumptionPayloads", False, True, False, False, True)
+    return ProofBlockStatus("TheoremTagAssumptionPayloads", True, False, False, False, False)
+
+
+fn theorem_tag_payload_instances_status() -> ProofBlockStatus:
+    return ProofBlockStatus("TheoremTagPayloadInstances", False, True, False, False, True)
 
 
 fn block_ready_for_final(block: ProofBlockStatus) -> Bool:
@@ -72,7 +76,7 @@ fn final_ledger_ready_for_c1() -> Bool:
         block_ready_for_final(exit_closure_for_c1_status()) and
         block_ready_for_final(boundary_equality_soundness_status()) and
         block_ready_for_final(theorem_tag_import_soundness_status()) and
-        block_ready_for_final(theorem_tag_assumption_payloads_status())
+        block_ready_for_final(theorem_tag_payload_instances_status())
     )
 
 
@@ -81,10 +85,14 @@ fn current_priority_block() -> String:
 
 
 fn next_immediate_block() -> String:
-    return "TheoremTagAssumptionPayloads"
+    return "TheoremTagPayloadInstances"
 
 
 fn import_ledger_created() -> Bool:
+    return True
+
+
+fn assumption_payload_schema_created() -> Bool:
     return True
 
 

@@ -71,6 +71,16 @@ def test_checked_interval_transition_layer_is_compiler_wired():
     assert "if not checked_iq_smoke():" in smoke
 
 
+def test_checked_complex_horner_layer_is_compiler_wired():
+    src = (ROOT / "src" / "checked_complex_interval.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    for operation in ["checked_complex_add", "checked_complex_mul", "eval_checked_poly_ascending_horner", "eval_checked_p21"]:
+        assert f"def {operation}" in src
+    assert "if acc.rejected:" in src
+    assert "from checked_complex_interval import checked_complex_horner_smoke" in smoke
+    assert "if not checked_complex_horner_smoke():" in smoke
+
+
 def test_backend_manifest_audit_exists_and_checks_all_requirements():
     src = AUDIT.read_text(encoding="utf-8")
     for key in [

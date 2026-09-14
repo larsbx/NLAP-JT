@@ -48,6 +48,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/interval_q.mojo",
         "src/poly_interval_eval.mojo",
         "src/krawczyk_witness.mojo",
+        "src/C1_final_proof_block_ledger.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

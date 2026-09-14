@@ -11,8 +11,10 @@ def text(path):
 
 def test_catalogue_extensionality_has_real_two_direction_proof_skeleton():
     body = text(DOC)
-    assert "Proof: finite to classical" in body
-    assert "Proof: classical to finite" in body
+    assert "## Direction 1: SeparatorCatalogueSoundness" in body
+    assert "## Direction 2: SeparatorCatalogueCompleteness" in body
+    assert "## Proof: soundness direction" in body
+    assert "## Proof: completeness direction" in body
     assert "ClassicallySeparated(A,B)" in body
     assert "exists k. Separated_k(A,B)" in body
 

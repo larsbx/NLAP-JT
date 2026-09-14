@@ -74,8 +74,8 @@ Every constructor and operation must normalize. Equality and order may use cross
 2. **Complete:** the integer layer implements unbounded signed storage, exact
    add/sub/mul/order, quotient/remainder, rejected non-divisions, Euclidean gcd,
    and canonical `Z(sign, byte_len, big_endian_magnitude)` serialization.
-3. **Next:** replace `Q(Int64, Int64)` internals with `Q(BigZ, BigZ)` while preserving public arithmetic names.
-4. Re-run interval arithmetic against bigint-backed `Q`.
+3. **Complete:** `Q` stores normalized `BigZ` numerator and denominator values while preserving its public arithmetic names; invalid denominators and division by zero propagate rejection.
+4. **Next:** replay interval arithmetic and certificate predicates against bigint-backed `Q`.
 5. Promote coordinate-record polynomial evaluation from pending to certificate-ready.
 6. Only then allow `ProofGradeCertificateStatus.accepted()` to return true.
 

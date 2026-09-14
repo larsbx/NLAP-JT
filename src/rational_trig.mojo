@@ -6,22 +6,19 @@
 # Core arithmetic uses quadrance, spread, dot/cross determinants, algebraic
 # rotor coordinates, and symbolic Q/Z ray-address doubling.
 #
-# NOTE: This file is intentionally Mojo-shaped scaffolding. It preserves the
-# exact computations and API boundary for coding agents. The next pass should
-# replace Int64 with arbitrary-precision integer/rational types once the repo
-# chooses its bigint backend.
+# The rational coordinates use the selected dynamic-limb BigZ backend.
 
 from ray_address import RayAddr64
 from rat_q import Q
 
 
-struct Vec2Q(ImplicitlyCopyable):
+struct Vec2Q(Copyable):
     var x: Q
     var y: Q
 
     def __init__(out self, x: Q, y: Q):
-        self.x = x
-        self.y = y
+        self.x = x.copy()
+        self.y = y.copy()
 
 
 def dot(a: Vec2Q, b: Vec2Q) -> Q:
@@ -51,14 +48,14 @@ def dot_ratio(a: Vec2Q, b: Vec2Q) -> Q:
     return d.square().div(quadrance(a).mul(quadrance(b)))
 
 
-struct RotorQ(ImplicitlyCopyable):
+struct RotorQ(Copyable):
     var u: Q
     var v: Q
 
     def __init__(out self, u: Q, v: Q):
         # A valid rotor satisfies u^2 + v^2 = 1, checked by valid_rotor().
-        self.u = u
-        self.v = v
+        self.u = u.copy()
+        self.v = v.copy()
 
 
 def valid_rotor(r: RotorQ) -> Bool:

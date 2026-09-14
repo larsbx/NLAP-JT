@@ -9,7 +9,7 @@
 
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
-from rat_q import Q, demo_q_normalization, demo_q_order
+from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order
 from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
@@ -37,6 +37,7 @@ from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
 from checked_landing_target_adapter import checked_landing_target_adapter_smoke
 from bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke
 from bigint_adapter import bigint_adapter_phase_one_smoke, bigint_adapter_phase_two_smoke, bigint_adapter_complete_smoke
+from rat_backend_plan import q_backend_migration_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -246,6 +247,10 @@ def test_theorem_tags() -> Bool:
 
 
 def run_smoke_tests() -> Bool:
+    if not bigq_storage_smoke():
+        return False
+    if not q_backend_migration_smoke():
+        return False
     if not smoke_poly_identities():
         return False
     if not test_headers():

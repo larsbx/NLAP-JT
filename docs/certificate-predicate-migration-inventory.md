@@ -22,9 +22,10 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 
 ## Next obligations
 
-1. Replace bounded `Q` storage with normalized fractions over the completed
-   dynamic-limb `BigZ` backend.
-2. Replay localization, exact-type uniqueness, and landing association on that
+1. Replay localization, exact-type uniqueness, and landing association on the
+   normalized `BigZ`-backed `Q` layer; audit every interval consumer for explicit
+   rejected-state propagation.
+2. Re-run the complete certificate predicates on that
    backend; bounded-width success remains transitional evidence only.
 3. Port incidence packaging only after items 1 and 2, preserving the rule that
    an emitted point is a finite vertex whose carrier is a set of vertices.

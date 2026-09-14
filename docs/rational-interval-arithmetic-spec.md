@@ -231,7 +231,7 @@ The binding table lists every module that instantiates a layer, its conformance 
 
 | Spec item | Module | Class | Notes |
 | --- | --- | --- | --- |
-| 1.1–1.3 ℚ | `src/rat_q.mojo` (`Q`) | DEMO | `Int64` unchecked; `backend.toml` declares `Int64DemoBackend`, `proof_grade = false`; migration contract in `src/rat_backend_plan.mojo` |
+| 1.1–1.3 ℚ | `src/rat_q.mojo` (`Q`) | CONFORMS | normalized `BigZ` numerator/positive denominator storage; zero denominators and division by zero propagate rejection; certificate acceptance remains disabled pending consumer replay |
 | 1.1 integer backend | `src/bigint_z.mojo` (`BigZ`) | CONFORMS | dynamic base-`10^9` limbs; exact signed ring/order operations, quotient/remainder, rejected non-divisions, Euclidean gcd, and canonical integer serialization; rational and interval consumers are not yet migrated |
 | 1.1–1.5 ℚ, checked transition | `src/checked_q.mojo` (`CheckedQResult`) | CONFORMS-CHECKED | normalized accepted results; zero denominator, division by zero, unrepresentable magnitude, arithmetic overflow, and unsafe comparison all return explicit rejected no-results; feeds the checked interval certificate transition path |
 | 2.1–2.5 I_Q, checked transition | `src/checked_interval_q.mojo` (`CheckedIQResult`) | CONFORMS-CHECKED | enforces J1; propagates rejected endpoints and comparisons; reciprocal rejects intervals containing zero; sign is three-valued with a separate rejected state; feeds checked Krawczyk and exact-type exclusion predicates |

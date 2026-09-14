@@ -24,5 +24,7 @@ def test_gcd_implementations_are_centralized():
 
 def test_zero_case_policy_is_explicit_for_rational_normalization():
     rational = (ROOT / "src" / "rat_q.mojo").read_text(encoding="utf-8")
-    assert "gcd_i64_or_one" in rational
-    assert "gcd_i64_or_one(nn, dd)" in rational
+    assert "if nn.is_zero():" in rational
+    assert "var common = bigz_gcd(nn, dd)" in rational
+    assert "bigz_div_exact(nn, common)" in rational
+    assert "bigz_div_exact(dd, common)" in rational

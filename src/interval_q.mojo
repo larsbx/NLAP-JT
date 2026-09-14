@@ -3,19 +3,19 @@
 # Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # Rational interval arithmetic scaffold for certificate witnesses.
-# Endpoints are normalized rationals represented with Int64 until bigint lands.
+# Endpoints are normalized rationals backed by dynamic-limb BigZ values.
 
 from rat_q import Q, q_min, q_max
 
 
-struct IQ(ImplicitlyCopyable):
+struct IQ(Copyable):
     var lo: Q
     var hi: Q
 
     def __init__(out self, lo: Q, hi: Q):
         # Caller contract: lo <= hi.
-        self.lo = lo
-        self.hi = hi
+        self.lo = lo.copy()
+        self.hi = hi.copy()
 
     @staticmethod
     def point(x: Q) -> IQ:
@@ -59,13 +59,13 @@ struct IQ(ImplicitlyCopyable):
         return other.lo.lt(self.lo) and self.hi.lt(other.hi)
 
 
-struct ComplexIQ(ImplicitlyCopyable):
+struct ComplexIQ(Copyable):
     var re: IQ
     var im: IQ
 
     def __init__(out self, re: IQ, im: IQ):
-        self.re = re
-        self.im = im
+        self.re = re.copy()
+        self.im = im.copy()
 
     @staticmethod
     def point(re: Q, im: Q) -> ComplexIQ:

@@ -45,7 +45,7 @@ def eval_poly_ascending_horner_ciq(c_box: ComplexIQ, coeffs: List[Int64]) -> Com
     while idx >= 0:
         acc = acc.mul(c_box).add(const_complex(coeffs[idx]))
         idx -= 1
-    return acc
+    return acc^
 
 
 def derivative_coeffs_ascending(coeffs: List[Int64]) -> List[Int64]:

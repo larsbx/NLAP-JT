@@ -7,7 +7,7 @@
 # The future implementation must preserve these names while replacing bounded
 # integer storage.
 
-from bigint_adapter import BigIntBackendStatus, int64_demo_backend_status
+from bigint_adapter import BigIntBackendStatus, dynamic_limb_bigz_backend_status
 
 
 struct RationalBackendStatus:
@@ -42,17 +42,17 @@ struct RationalBackendStatus:
 
 fn current_q_backend_status() -> RationalBackendStatus:
     return RationalBackendStatus(
-        int64_demo_backend_status(),
+        dynamic_limb_bigz_backend_status(),
         True,
         True,
         True,
-        False,
-        False,
+        True,
+        True,
         True,
     )
 
 
-# Required future Q API over bigint Z:
+# Implemented Q API over BigZ:
 #
 # struct Q:
 #     var num: Z
@@ -75,11 +75,25 @@ fn current_q_backend_status() -> RationalBackendStatus:
 # Normalization rule:
 #   gcd(abs(num), den)=1 and den>0 after construction and every operation.
 #
-# Safety rule:
-#   eq/lt/le may use cross multiplication only over unbounded Z. The current
-#   Int64 implementation must not be proof-grade because cross products can
-#   overflow silently.
+# Safety rule: eq/lt/le cross multiplication is over unbounded BigZ. Rational
+# readiness still does not enable certificate acceptance: the BigZ backend's
+# acceptance flag remains false until downstream replay is complete.
 
 
 fn q_backend_blocks_proof_acceptance(status: RationalBackendStatus) -> Bool:
     return not status.proof_ready()
+
+
+fn q_backend_migration_smoke() -> Bool:
+    var status = current_q_backend_status()
+    return (
+        status.backend.integer_backend_ready() and
+        status.normalized_after_every_operation and
+        status.denominator_strictly_positive and
+        status.denominator_nonzero_checked and
+        status.equality_cross_multiply_safe and
+        status.order_cross_multiply_safe and
+        status.canonical_fraction_serialization and
+        not status.backend.allows_certificate_acceptance and
+        q_backend_blocks_proof_acceptance(status)
+    )

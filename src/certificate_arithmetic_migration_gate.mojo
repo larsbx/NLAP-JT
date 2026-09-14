@@ -5,35 +5,17 @@
 
 from cert_backend import CertIntBackend, int64_demo_backend, checked_int64_transition_backend
 from checked_krawczyk_witness import CheckedKrawczykResult, verify_checked_p21_krawczyk
-
-
-struct ExactTypeExclusionEvidence(ImplicitlyCopyable):
-    var box_name: String
-    var excluded_count: Int
-    var required_count: Int
-    var arithmetic_rejected: Bool
-
-    def __init__(out self, box_name: String, excluded_count: Int, required_count: Int, arithmetic_rejected: Bool):
-        self.box_name = box_name
-        self.excluded_count = excluded_count
-        self.required_count = required_count
-        self.arithmetic_rejected = arithmetic_rejected
-
-    def accepted(self) -> Bool:
-        return (
-            not self.arithmetic_rejected and self.required_count > 0 and
-            self.excluded_count == self.required_count
-        )
+from checked_interval_exclusion import CheckedExactTypeExclusionResult, checked_p21_exact_type_exclusions
 
 
 struct CheckedLocalizationEnvelope(ImplicitlyCopyable):
     var box_name: String
     var krawczyk_box_name: String
     var krawczyk: CheckedKrawczykResult
-    var exclusions: ExactTypeExclusionEvidence
+    var exclusions: CheckedExactTypeExclusionResult
     var backend: CertIntBackend
 
-    def __init__(out self, box_name: String, krawczyk_box_name: String, krawczyk: CheckedKrawczykResult, exclusions: ExactTypeExclusionEvidence, backend: CertIntBackend):
+    def __init__(out self, box_name: String, krawczyk_box_name: String, krawczyk: CheckedKrawczykResult, exclusions: CheckedExactTypeExclusionResult, backend: CertIntBackend):
         self.box_name = box_name
         self.krawczyk_box_name = krawczyk_box_name
         self.krawczyk = krawczyk
@@ -59,7 +41,7 @@ def c_minus_2_checked_localization() -> CheckedLocalizationEnvelope:
         box_name,
         box_name,
         verify_checked_p21_krawczyk(8),
-        ExactTypeExclusionEvidence(box_name, 5, 5, False),
+        checked_p21_exact_type_exclusions(8),
         checked_int64_transition_backend(),
     )
 
@@ -68,28 +50,28 @@ def certificate_arithmetic_migration_smoke() -> Bool:
     var checked = c_minus_2_checked_localization()
     var rejected_arithmetic = CheckedLocalizationEnvelope(
         "beta_c_minus_2", "beta_c_minus_2", verify_checked_p21_krawczyk(-1),
-        ExactTypeExclusionEvidence("beta_c_minus_2", 5, 5, False),
+        checked_p21_exact_type_exclusions(8),
         checked_int64_transition_backend(),
     )
-    var incomplete_exclusions = CheckedLocalizationEnvelope(
+    var ambiguous_exclusions = CheckedLocalizationEnvelope(
         "beta_c_minus_2", "beta_c_minus_2", verify_checked_p21_krawczyk(8),
-        ExactTypeExclusionEvidence("beta_c_minus_2", 4, 5, False),
+        checked_p21_exact_type_exclusions(0),
         checked_int64_transition_backend(),
     )
     var mismatched_box = CheckedLocalizationEnvelope(
         "beta_c_minus_2", "different_box", verify_checked_p21_krawczyk(8),
-        ExactTypeExclusionEvidence("beta_c_minus_2", 5, 5, False),
+        checked_p21_exact_type_exclusions(8),
         checked_int64_transition_backend(),
     )
     var demo = CheckedLocalizationEnvelope(
         "beta_c_minus_2", "beta_c_minus_2", verify_checked_p21_krawczyk(8),
-        ExactTypeExclusionEvidence("beta_c_minus_2", 5, 5, False),
+        checked_p21_exact_type_exclusions(8),
         int64_demo_backend(),
     )
     return (
         checked.checked_width_accepted() and not checked.proof_grade_accepted() and
         not rejected_arithmetic.checked_width_accepted() and
-        not incomplete_exclusions.checked_width_accepted() and
+        not ambiguous_exclusions.checked_width_accepted() and
         not mismatched_box.checked_width_accepted() and
         not demo.checked_width_accepted() and not demo.proof_grade_accepted()
     )

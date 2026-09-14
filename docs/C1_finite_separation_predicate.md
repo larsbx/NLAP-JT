@@ -103,11 +103,11 @@ The stream relation is the meta-level statement:
 SameFiberStream(A,B) := forall k, SameFiberPrefix_k(A,B)
 ```
 
-Only the stream relation corresponds to classical same-fiber membership under catalogue extensionality.
+Only the stream relation corresponds to classical same-fiber membership under `SeparatorCatalogueAdequacy`.
 
 ## Bridge target
 
-The immediate theorem target is catalogue extensionality:
+The immediate theorem target is `SeparatorCatalogueAdequacy`:
 
 ```text
 exists k. Separated_k(A,B)

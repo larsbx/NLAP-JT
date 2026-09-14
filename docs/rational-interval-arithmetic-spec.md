@@ -1,6 +1,6 @@
 # Rational and interval arithmetic: canonical exactness specification
 
-**Status:** repository invariant in `larsbx/NLAP-JT`; cross-program canonical hook. This file is authoritative only for NLAP-JT: `larsbx/pisot-substitution-conjecture-research` does not mirror it but consumes the NLAP-JT arithmetic modules themselves, vendored byte-for-byte into `mojo/finite_exact/` and pinned to an NLAP-JT commit in `mojo/finite_exact/UPSTREAM.md`. Sections 0 to 5 are repository-independent; section 6 records the binding rows of both repositories. NLAP-JT enforces its own rows with the audit script and regression tests in section 7; PSC enforces its pin with `scripts/check_finite_exact_sync.py`.
+**Status:** repository invariant in `larsbx/NLAP-JT`; cross-program canonical hook. This file is authoritative only for NLAP-JT: `larsbx/pisot-substitution-conjecture-research` does not mirror it but consumes the NLAP-JT arithmetic modules themselves, vendored into `mojo/finite_exact/` and pinned to an NLAP-JT commit in `mojo/finite_exact/UPSTREAM.md`. The vendored files are identical to the NLAP-JT sources except that the intra-package import lines are package-qualified (`from bigint_z import` becomes `from finite_exact.bigint_z import`, likewise `rat_q`); PSC's digest check reverses that rewrite before comparing. Sections 0 to 5 are repository-independent; section 6 records the binding rows of both repositories. NLAP-JT enforces its own rows with the audit script and regression tests in section 7; PSC enforces its pin with `scripts/check_finite_exact_sync.py`.
 
 Terminology in this file is field-recognizable (rational arithmetic, interval arithmetic, natural interval extension, dependency problem, floating-point filter). No novel bridge term is introduced. Where NLAP-JT terminology governance applies, every term here is Route A.
 
@@ -219,7 +219,7 @@ The binding table lists every module that instantiates a layer, its conformance 
 
 | Spec item | Module | Class | Notes |
 | --- | --- | --- | --- |
-| 1.1 integer backend, 1.1–1.3 ℚ, 2.1–2.5 I_Q | `mojo/finite_exact/bigint_z.mojo`, `mojo/finite_exact/rat_q.mojo`, `mojo/finite_exact/interval_q.mojo` | CONFORMS | byte-for-byte copies of the three NLAP-JT modules of 6.2 (import lines package-qualified), pinned in `mojo/finite_exact/UPSTREAM.md`; drift fails PSC CI |
+| 1.1 integer backend, 1.1–1.3 ℚ, 2.1–2.5 I_Q | `mojo/finite_exact/bigint_z.mojo`, `mojo/finite_exact/rat_q.mojo`, `mojo/finite_exact/interval_q.mojo` | CONFORMS | copies of the three NLAP-JT modules of 6.2, identical up to the package qualification of their intra-package import lines; `scripts/check_finite_exact_sync.py` undoes that rewrite and compares SHA-256 digests with the upstream digests pinned in `mojo/finite_exact/UPSTREAM.md`, so any other local edit fails PSC CI |
 | PSC conventions over the package | `mojo/psc/exact.mojo` | CONFORMS | a rejected enclosure raises, a rejected scalar in integer-seeded polynomial arithmetic aborts as an impossible state; integer lifts, Horner helpers, midpoint, diagnostic rendering |
 | 1–2 direct consumers | `mojo/psc/qlinalg.mojo`, `mojo/psc/pisot.mojo`, `mojo/psc/tensor3.mojo`, `mojo/psc/w3.mojo` | CONFORMS | exact linear algebra, Sturm sequences, and the PIP screen over unbounded rationals; the former machine-width `Rat` is retired |
 | 2.3 enclosure of `β ∉ ℚ` | `mojo/psc/perron_interval.mojo` (`perron_root_interval`) | CONFORMS | integer bracket by exact sign changes, then bisection with unbounded endpoints |
@@ -249,7 +249,7 @@ The earlier `CheckedRat`/`RatInterval` layer (`mojo/psc/rational_interval.mojo`,
 | 2.4 exclusion oracle (secondary) | `tools/interval_exclusion_reference.py` | CONFORMS | Python `Fraction` endpoints; reference for `src/interval_orbit.mojo` |
 | — | `src/complex_box.mojo` (`C64`, `ComplexBox`), `src/finite_mandelbrot.mojo`, `src/run_examples.mojo` | QUARANTINED | `Float64` demo substrate; replacement target is dyadic-rational endpoints per `docs/interval-orbit-native-target.md` |
 
-Promotion of any DEMO row to CONFORMS requires the unbounded backend gate in `backend.toml` and `docs/bigint-migration-handoff.md`; promotion to CONFORMS-CHECKED requires overflow-checked operations in the `Q` constructor and every arithmetic method (the `CheckedRat` pattern of 6.1 is the reference implementation).
+Promotion of any DEMO row to CONFORMS requires the unbounded backend gate in `backend.toml` and `docs/bigint-migration-handoff.md`; promotion to CONFORMS-CHECKED requires overflow-checked operations in the constructor and every arithmetic method, with every unsafe case returning an explicit rejected result (`src/checked_q.mojo` in 6.2 is the reference implementation).
 
 ## 7. Hook: how the specification is enforced
 

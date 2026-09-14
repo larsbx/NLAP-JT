@@ -67,8 +67,21 @@ def test_final_admissibility_requires_checked_assumption_payload():
     text = body(SRC)
     assert "assumption_payload_present" in text
     assert "adapter_use_declared" in text
-    assert "import_status == \"CHECKED\"" in text
+    assert "ImportStatus.checked().code" in text
     assert "theorem_tag_admissible_for_final" in text
+
+
+def test_import_conclusion_strength_and_status_are_typed():
+    text = body(SRC)
+    assert "struct ImportConclusionKind" in text
+    assert "struct ImportStrengthClass" in text
+    assert "struct ImportStatus" in text
+    assert "var conclusion_kind: ImportConclusionKind" in text
+    assert "var strength_class: ImportStrengthClass" in text
+    assert "var import_status: ImportStatus" in text
+    assert "conclusion_kind: String" not in text
+    assert "strength_class: String" not in text
+    assert "import_status: String" not in text
 
 
 def test_initial_tags_are_scaffolded_not_final_checked():
@@ -76,7 +89,7 @@ def test_initial_tags_are_scaffolded_not_final_checked():
     assert "rational_parameter_ray_landing_tag_ready" in text
     assert "fiber_definition_equivalence_tag_ready" in text
     assert "known_trivial_fiber_class_tag_ready" in text
-    assert "SCAFFOLDED" in text
+    assert "ImportStatus.scaffolded()" in text
     assert "theorem_tags_block_final_proof_until_checked() -> Bool" in text
 
 

@@ -1,6 +1,6 @@
 # Rational and interval arithmetic: canonical exactness specification
 
-**Status:** repository invariant in `larsbx/NLAP-JT`; proposed cross-program canonical hook. The intended counterpart at `docs/rational-interval-arithmetic-spec.md` is not yet present on the default branch of `larsbx/pisot-substitution-conjecture-research`, so this revision is authoritative only for NLAP-JT. Sections 0 to 5 are repository-independent; section 6 retains the proposed binding table for both repositories so a future PSC import can be reviewed explicitly rather than assumed. NLAP-JT enforces its binding rows with the audit script and regression tests in section 7.
+**Status:** repository invariant in `larsbx/NLAP-JT`; cross-program canonical hook. This file is authoritative only for NLAP-JT: `larsbx/pisot-substitution-conjecture-research` does not mirror it but consumes the NLAP-JT arithmetic modules themselves, vendored byte-for-byte into `mojo/finite_exact/` and pinned to an NLAP-JT commit in `mojo/finite_exact/UPSTREAM.md`. Sections 0 to 5 are repository-independent; section 6 records the binding rows of both repositories. NLAP-JT enforces its own rows with the audit script and regression tests in section 7; PSC enforces its pin with `scripts/check_finite_exact_sync.py`.
 
 Terminology in this file is field-recognizable (rational arithmetic, interval arithmetic, natural interval extension, dependency problem, floating-point filter). No novel bridge term is introduced. Where NLAP-JT terminology governance applies, every term here is Route A.
 
@@ -219,13 +219,14 @@ The binding table lists every module that instantiates a layer, its conformance 
 
 | Spec item | Module | Class | Notes |
 | --- | --- | --- | --- |
-| 1.1–1.3 ℚ | `mojo/psc/rational.mojo` (`Rat`) | DEMO | `Int` backend unchecked; used for exact linear algebra in the spectral certificate; overflow is not reachable on the fixed seed data but is not checked |
-| 1.1–1.5 ℚ, checked | `mojo/psc/rational_interval.mojo` (`CheckedRat`) | CONFORMS-CHECKED | every backend op overflow-checked, raises |
-| 2.1–2.5 I_Q | `mojo/psc/rational_interval.mojo` (`RatInterval`, `interval_horner_int`) | CONFORMS-CHECKED | J1 enforced; reciprocal fails closed; `strict_sign` three-valued; Horner form |
-| 2.3 enclosure of `β ∉ ℚ` | `mojo/psc/perron_interval.mojo` (`perron_root_interval`) | CONFORMS-CHECKED | integer bracket by exact sign changes, then bisection |
-| 3.2 filter-then-exact | `mojo/psc/perron_interval.mojo` (`perron_sign_decision`) with oracle `psc.perron_field3.sign_at_perron` | CONFORMS-CHECKED | R1: fallback on `0`; R2: `interval_certified` flag |
-| 3.3 skeleton/margin split | `mojo/psc/overlap_interval_audit.mojo` | CONFORMS-CHECKED | overlap graph exact; margins interval-first with exact fallback; uniform minimum reported only when every margin is interval-certified |
-| ℚ oracle (secondary) | `src/psc_research/rational_interval.py` | CONFORMS | Python `fractions.Fraction`; independent oracle for the spec laws only |
+| 1.1 integer backend, 1.1–1.3 ℚ, 2.1–2.5 I_Q | `mojo/finite_exact/bigint_z.mojo`, `mojo/finite_exact/rat_q.mojo`, `mojo/finite_exact/interval_q.mojo` | CONFORMS | byte-for-byte copies of the three NLAP-JT modules of 6.2 (import lines package-qualified), pinned in `mojo/finite_exact/UPSTREAM.md`; drift fails PSC CI |
+| PSC conventions over the package | `mojo/psc/exact.mojo` | CONFORMS | a rejected enclosure raises, a rejected scalar in integer-seeded polynomial arithmetic aborts as an impossible state; integer lifts, Horner helpers, midpoint, diagnostic rendering |
+| 1–2 direct consumers | `mojo/psc/qlinalg.mojo`, `mojo/psc/pisot.mojo`, `mojo/psc/tensor3.mojo`, `mojo/psc/w3.mojo` | CONFORMS | exact linear algebra, Sturm sequences, and the PIP screen over unbounded rationals; the former machine-width `Rat` is retired |
+| 2.3 enclosure of `β ∉ ℚ` | `mojo/psc/perron_interval.mojo` (`perron_root_interval`) | CONFORMS | integer bracket by exact sign changes, then bisection with unbounded endpoints |
+| 3.2 filter-then-exact | `mojo/psc/perron_interval.mojo` (`perron_sign_decision`) with oracle `psc.perron_field3.sign_at_perron` | CONFORMS | R1: fallback on `0`; R2: `interval_certified` flag |
+| 3.3 skeleton/margin split | `mojo/psc/overlap_interval_audit.mojo` | CONFORMS | overlap graph exact; margins interval-first with exact fallback; uniform minimum reported only when every margin is interval-certified |
+
+The earlier `CheckedRat`/`RatInterval` layer (`mojo/psc/rational_interval.mojo`, CONFORMS-CHECKED) and the unchecked `Rat` (`mojo/psc/rational.mojo`, DEMO) are deleted; their tests were carried over to `mojo/tests/test_exact_interval.mojo`.
 
 ### 6.2 `larsbx/NLAP-JT`
 
@@ -258,7 +259,7 @@ The specification is a hook, not a note. Each repository wires it into its contr
 2. **Allowlist** (`tools/exact_arithmetic_allowlist.md` in NLAP-JT, `scripts/exact_arithmetic_allowlist.md` in PSC). The only place QUARANTINED files may be named. Adding a file here requires a matching QUARANTINED row in section 6.
 3. **Law tests.** Executable checks of 1.3 (normalization, decidable equality, `1/10 + 2/10 = 3/10`, order-independence), 2.2 to 2.5 (inclusion, three-valued sign, `X − X ≠ [0,0]`, subdistributivity, fail-closed reciprocal and J1), and 3.2 (filter agrees with oracle; fallthrough on `0`). They exist in Mojo against the canonical kernels and in Python against the secondary oracle. NLAP-JT additionally runs the randomized property probe of `src/exact_arithmetic_property_probe.mojo` against `tools/exact_arithmetic_property_oracle.py` in CI (`pixi run property`); a disagreement on any canonical byte fails the build.
 4. **Policy pointers.** `README.md` and the implementation policy file (`AGENTS.md` in PSC, `docs/mojo_first_execution_policy.md` in NLAP-JT) name this file as the arithmetic policy; `backend.toml` in NLAP-JT carries `exact_arithmetic_spec` and `no_float_certificate_arithmetic = true`.
-5. **Future sync rule.** Once the PSC counterpart is added and reviewed, changes to this file must be mirrored verbatim, binding tables included. Until then, no NLAP-JT check or document may claim that the cross-repository mirror exists.
+5. **Cross-repository rule.** PSC consumes the NLAP-JT modules by pinned vendoring, not by mirroring this file. A change to `src/bigint_z.mojo`, `src/rat_q.mojo`, or `src/interval_q.mojo` here is picked up by PSC only when PSC re-vendors and updates `mojo/finite_exact/UPSTREAM.md`; a change to sections 0 to 5 must keep the public boundary of `docs/exact-arithmetic-public-boundary.md`. No NLAP-JT check or document may claim that a mirror of this file exists in PSC.
 
 ## 8. Non-goals
 

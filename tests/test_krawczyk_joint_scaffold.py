@@ -39,6 +39,19 @@ def test_p21_demo_is_computed_not_status_asserted():
     assert "KrawczykWitnessStatus(\"P_2_1\", True, True, True, True" not in demo_src
 
 
+def test_bigq_krawczyk_replay_is_typed_and_fail_closed():
+    src = read(KRAW)
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "struct BigQKrawczykResult(Copyable)" in src
+    assert "def verify_bigq_p21_krawczyk_c_minus_2" in src
+    assert "if not beta.accepted() or not image.accepted():" in src
+    assert "return BigQKrawczykResult(False, True)" in src
+    assert "def arithmetic_replay_accepted(self) -> Bool:" in src
+    assert "q_backend_blocks_proof_acceptance(backend)" in src
+    assert "var wide_radius = verify_bigq_p21_krawczyk_c_minus_2(80)" in src
+    assert "if not bigq_krawczyk_replay_smoke():" in smoke
+
+
 def test_krawczyk_formula_is_present():
     src = read(KRAW)
     assert "K(beta)=m-A P(m)+(1-A P'(beta))(beta-m)" in src

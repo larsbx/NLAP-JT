@@ -13,7 +13,9 @@
 #   functions available, but its final inclusion witness remains pending.
 
 from interval_q import ComplexIQ, IQ
-from rat_q import Q
+from bigint_z import bigz_from_i64, bigz_mul
+from rat_q import Q, q_from_bigz, q_rejected
+from rat_backend_plan import current_q_backend_status, q_backend_blocks_proof_acceptance
 from poly_interval_eval import eval_p21, eval_p21_derivative, eval_p41, eval_p41_derivative
 
 
@@ -42,6 +44,20 @@ struct KrawczykWitnessStatus:
         )
 
 
+struct BigQKrawczykResult(Copyable):
+    # Arithmetic rejection and a valid non-contraction are distinct. Accepted
+    # here means only that the finite BigZ interval contraction was replayed.
+    var contraction_verified: Bool
+    var rejected: Bool
+
+    def __init__(out self, contraction_verified: Bool, rejected: Bool):
+        self.contraction_verified = contraction_verified
+        self.rejected = rejected
+
+    def arithmetic_replay_accepted(self) -> Bool:
+        return self.contraction_verified and not self.rejected
+
+
 def complex_one() -> ComplexIQ:
     return ComplexIQ.point(Q.one(), Q.zero())
 
@@ -56,11 +72,12 @@ def complex_minus_two_point() -> ComplexIQ:
 
 def c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
     # Dyadic box centered at -2 with half-width 2^{-radius_den_power} in each coordinate.
-    # Keep this demo input compact even though rational storage is unbounded.
-    var den = 1
+    if radius_den_power < 0:
+        return ComplexIQ.point(q_rejected(), q_rejected())
+    var den = bigz_from_i64(1)
     for _ in range(radius_den_power):
-        den *= 2
-    var h = Q(1, Int64(den))
+        den = bigz_mul(den, bigz_from_i64(2))
+    var h = q_from_bigz(bigz_from_i64(1), den)
     return ComplexIQ(IQ(Q(-2, 1).sub(h), Q(-2, 1).add(h)), IQ(h.neg(), h))
 
 
@@ -75,11 +92,19 @@ def p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
     return m.sub(a.mul(p_m)).add(one_minus_a_dp.mul(beta_minus_m))
 
 
-def verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
+def verify_bigq_p21_krawczyk_c_minus_2(radius_den_power: Int) -> BigQKrawczykResult:
     var beta = c_minus_2_box(radius_den_power)
     var image = p21_krawczyk_image(beta)
-    var inclusion = image.strict_subset_of(beta)
-    return not inclusion.rejected and inclusion.value
+    if not beta.accepted() or not image.accepted():
+        return BigQKrawczykResult(False, True)
+    var strict = image.strict_subset_of(beta)
+    if strict.rejected:
+        return BigQKrawczykResult(False, True)
+    return BigQKrawczykResult(strict.value, False)
+
+
+def verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
+    return verify_bigq_p21_krawczyk_c_minus_2(radius_den_power).arithmetic_replay_accepted()
 
 
 def demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
@@ -87,6 +112,19 @@ def demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
     # The default radius 2^-8 keeps the witness readable during debugging.
     var ok = verify_p21_krawczyk_c_minus_2(8)
     return KrawczykWitnessStatus("P_2_1", True, True, True, ok, "beta_c_minus_2")
+
+
+def bigq_krawczyk_replay_smoke() -> Bool:
+    var witness = verify_bigq_p21_krawczyk_c_minus_2(8)
+    var invalid_radius = verify_bigq_p21_krawczyk_c_minus_2(-1)
+    var wide_radius = verify_bigq_p21_krawczyk_c_minus_2(80)
+    var backend = current_q_backend_status()
+    return (
+        witness.arithmetic_replay_accepted() and
+        invalid_radius.rejected and not invalid_radius.arithmetic_replay_accepted() and
+        wide_radius.arithmetic_replay_accepted() and
+        q_backend_blocks_proof_acceptance(backend)
+    )
 
 
 def f7_name() -> String:

@@ -13,6 +13,7 @@ from interval_q import ComplexIQ, demo_interval_mul, demo_complex_quadrance_poin
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
+from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_exit, rejected_final_exit
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -35,6 +36,19 @@ def test_final_proof_ledger_policy() -> Bool:
         not final_ledger_ready_for_c1() and
         current_priority_block() == "ResidualClosureNoMissingLinks" and
         next_immediate_block() == "TheoremTagPayloadInstances"
+    )
+
+
+def test_typed_final_exit_kinds() -> Bool:
+    return (
+        accepted_final_exit(FinalExitKind.finite_separation()) and
+        accepted_final_exit(FinalExitKind.boundary_equality()) and
+        accepted_final_exit(FinalExitKind.established_trivial_fiber()) and
+        rejected_final_exit(FinalExitKind.missing_theorem_catalogue_link()) and
+        rejected_final_exit(FinalExitKind.open_analytic_assumption()) and
+        rejected_final_exit(FinalExitKind.bounded_search_failure()) and
+        rejected_final_exit(FinalExitKind.label_equality_only()) and
+        not accepted_final_exit(FinalExitKind(99))
     )
 
 
@@ -101,6 +115,8 @@ def run_smoke_tests() -> Bool:
     if not verify_p21_krawczyk_c_minus_2(8):
         return False
     if not test_final_proof_ledger_policy():
+        return False
+    if not test_typed_final_exit_kinds():
         return False
     return True
 

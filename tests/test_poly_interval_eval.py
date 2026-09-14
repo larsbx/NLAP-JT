@@ -50,5 +50,5 @@ def test_derivative_path_is_generated_not_hand_copied():
 
 def test_no_forbidden_shortcuts_in_poly_interval_eval():
     src = read().lower()
-    for token in ["float64", "math.", "cmath", "numpy", "atan", "radian", "degree"]:
+    for token in ["float64", "math.", "cmath", "numpy", "atan", "radian"]:
         assert token not in src

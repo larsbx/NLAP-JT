@@ -10,6 +10,8 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 | --- | --- | --- | --- |
 | Squarefree `P_{2,1}` evaluation and strict localization | `src/krawczyk_witness.mojo` | replayed on unbounded BigZ rational intervals; rejection distinct from non-contraction | accepts the finite arithmetic replay only; proof-grade acceptance is explicitly false |
 | Same-box forbidden collisions | `src/interval_orbit.mojo` | replayed 5/5 on the same parameterized BigZ box constructor as localization; rejection distinct from ambiguity | accepts the finite exact-type arithmetic replay only |
+| Rational ray-address orbit for `1/2` | `src/bigq_ray_address.mojo` | replayed with normalized BigZ-backed `Q`, including a representation whose inputs exceed `Int64`; malformed and out-of-range values reject | accepts finite symbolic address data only |
+| Rational parameter-ray landing target | `src/bigq_landing_target_adapter.mojo` | composes same-exponent BigZ localization, exact-type exclusion, and symbolic address replay; correspondence citation remains metadata | finite association only; theorem import and certificate acceptance are explicitly false |
 | Squarefree `P_{2,1}` evaluation and strict localization | `src/checked_krawczyk_witness.mojo` | computed, checked-width | accepts bounded localization only |
 | Same-box forbidden collisions | `src/checked_interval_exclusion.mojo` | computed 5/5, checked-width | accepts bounded exact-type evidence only |
 | Joint arithmetic localization | `src/certificate_arithmetic_migration_gate.mojo` | computed, same-box, checked-width | proof-grade acceptance remains false |
@@ -24,11 +26,9 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 
 ## Next obligations
 
-1. Replay landing association on the normalized `BigZ`-backed `Q` layer; the
-   c=-2 localization and exact-type exclusion replays are complete.
-2. Re-run the remaining certificate predicates on that
+1. Re-run the remaining certificate predicates on the
    backend; bounded-width success remains transitional evidence only.
-3. Port incidence packaging only after items 1 and 2, preserving the rule that
+2. Port incidence packaging only after item 1, preserving the rule that
    an emitted point is a finite vertex whose carrier is a set of vertices.
-4. Keep the C1 residual-closure proof track separate; no finite example or
+3. Keep the C1 residual-closure proof track separate; no finite example or
    successful certificate implies the missing global closure statement.

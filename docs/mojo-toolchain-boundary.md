@@ -38,6 +38,8 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_landing_target_adapter.mojo`.
 - `src/bigint_z.mojo`.
 - `src/bigint_adapter.mojo`.
+- `src/bigq_ray_address.mojo`.
+- `src/bigq_landing_target_adapter.mojo`.
 
 A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
 `bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,
@@ -105,6 +107,11 @@ Quotient/remainder uses schoolbook long division, checked in-process against the
 retained shift-and-subtract reference; `Q` scales by denominator cofactors and
 cross-cancels before multiplying. Both are exercised by the smoke target and by
 the randomized property probe.
+The BigZ landing-target replay composes the same exponent across localization
+and exact-type exclusion with a normalized symbolic `1/2 -> 0 -> 0` address
+orbit whose supplied numerator and denominator exceed `Int64`. It explicitly
+rejects theorem-import and certificate acceptance; the correspondence citation
+is metadata only.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

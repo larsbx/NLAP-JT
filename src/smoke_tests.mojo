@@ -14,6 +14,8 @@ from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2, bigq_krawczyk_replay_smoke
 from interval_orbit import bigq_exact_type_exclusion_replay_smoke
+from bigq_ray_address import bigq_ray_address_replay_smoke
+from bigq_landing_target_adapter import bigq_landing_target_replay_smoke
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
 from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_exit, rejected_final_exit
 from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, PayloadStrengthClass, allowed_payload_kind, allowed_payload_conclusion, allowed_payload_strength, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
@@ -275,6 +277,10 @@ def run_smoke_tests() -> Bool:
     if not bigq_krawczyk_replay_smoke():
         return False
     if not bigq_exact_type_exclusion_replay_smoke():
+        return False
+    if not bigq_ray_address_replay_smoke():
+        return False
+    if not bigq_landing_target_replay_smoke():
         return False
     if not test_final_proof_ledger_policy():
         return False

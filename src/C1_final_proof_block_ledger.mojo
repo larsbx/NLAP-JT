@@ -4,7 +4,7 @@
 # It is intentionally conservative: a scaffolded or open-frontier block rejects
 # final acceptance.
 
-struct ProofBlockStatus:
+struct ProofBlockStatus(ImplicitlyCopyable):
     var name: String
     var proved_or_imported_checked: Bool
     var scaffolded: Bool
@@ -12,7 +12,7 @@ struct ProofBlockStatus:
     var research_only: Bool
     var required_for_final: Bool
 
-    fn __init__(inout self, name: String, proved_or_imported_checked: Bool, scaffolded: Bool, open_frontier: Bool, research_only: Bool, required_for_final: Bool):
+    def __init__(out self, name: String, proved_or_imported_checked: Bool, scaffolded: Bool, open_frontier: Bool, research_only: Bool, required_for_final: Bool):
         self.name = name
         self.proved_or_imported_checked = proved_or_imported_checked
         self.scaffolded = scaffolded
@@ -21,53 +21,68 @@ struct ProofBlockStatus:
         self.required_for_final = required_for_final
 
 
-fn separator_catalogue_soundness_status() -> ProofBlockStatus:
+struct FinalEvidencePolicy(ImplicitlyCopyable):
+    var missing_link_exit: Bool
+    var bounded_search: Bool
+    var label_only_equality: Bool
+    var unchecked_theorem_tag: Bool
+    var rank2_locus_primitive: Bool
+
+    def __init__(out self, missing_link_exit: Bool, bounded_search: Bool, label_only_equality: Bool, unchecked_theorem_tag: Bool, rank2_locus_primitive: Bool):
+        self.missing_link_exit = missing_link_exit
+        self.bounded_search = bounded_search
+        self.label_only_equality = label_only_equality
+        self.unchecked_theorem_tag = unchecked_theorem_tag
+        self.rank2_locus_primitive = rank2_locus_primitive
+
+
+def separator_catalogue_soundness_status() -> ProofBlockStatus:
     return ProofBlockStatus("SeparatorCatalogueSoundness", False, True, False, False, True)
 
 
-fn separator_catalogue_completeness_status() -> ProofBlockStatus:
+def separator_catalogue_completeness_status() -> ProofBlockStatus:
     return ProofBlockStatus("SeparatorCatalogueCompleteness", False, True, False, False, True)
 
 
-fn fiber_definition_adapter_status() -> ProofBlockStatus:
+def fiber_definition_adapter_status() -> ProofBlockStatus:
     return ProofBlockStatus("FiberDefinitionAdapter", False, True, False, False, True)
 
 
-fn residual_closure_no_missing_links_status() -> ProofBlockStatus:
+def residual_closure_no_missing_links_status() -> ProofBlockStatus:
     return ProofBlockStatus("ResidualClosureNoMissingLinks", False, False, True, False, True)
 
 
-fn exit_closure_for_c1_status() -> ProofBlockStatus:
+def exit_closure_for_c1_status() -> ProofBlockStatus:
     return ProofBlockStatus("ExitClosureForC1", False, True, False, False, True)
 
 
-fn boundary_equality_soundness_status() -> ProofBlockStatus:
+def boundary_equality_soundness_status() -> ProofBlockStatus:
     return ProofBlockStatus("BoundaryEqualitySoundness", False, True, False, False, True)
 
 
-fn theorem_tag_import_soundness_status() -> ProofBlockStatus:
+def theorem_tag_import_soundness_status() -> ProofBlockStatus:
     return ProofBlockStatus("TheoremTagImportSoundness", False, True, False, False, True)
 
 
-fn theorem_tag_import_ledger_status() -> ProofBlockStatus:
+def theorem_tag_import_ledger_status() -> ProofBlockStatus:
     return ProofBlockStatus("TheoremTagImportLedger", True, False, False, False, False)
 
 
-fn theorem_tag_assumption_payloads_status() -> ProofBlockStatus:
+def theorem_tag_assumption_payloads_status() -> ProofBlockStatus:
     return ProofBlockStatus("TheoremTagAssumptionPayloads", True, False, False, False, False)
 
 
-fn theorem_tag_payload_instances_status() -> ProofBlockStatus:
+def theorem_tag_payload_instances_status() -> ProofBlockStatus:
     return ProofBlockStatus("TheoremTagPayloadInstances", False, True, False, False, True)
 
 
-fn block_ready_for_final(block: ProofBlockStatus) -> Bool:
+def block_ready_for_final(block: ProofBlockStatus) -> Bool:
     if not block.required_for_final:
         return True
     return block.proved_or_imported_checked and not block.scaffolded and not block.open_frontier and not block.research_only
 
 
-fn final_ledger_ready_for_c1() -> Bool:
+def final_ledger_ready_for_c1() -> Bool:
     return (
         block_ready_for_final(separator_catalogue_soundness_status()) and
         block_ready_for_final(separator_catalogue_completeness_status()) and
@@ -80,37 +95,51 @@ fn final_ledger_ready_for_c1() -> Bool:
     )
 
 
-fn current_priority_block() -> String:
-    return "ResidualClosureNoMissingLinks"
+def current_priority_block() -> String:
+    return residual_closure_no_missing_links_status().name
 
 
-fn next_immediate_block() -> String:
-    return "TheoremTagPayloadInstances"
+def next_immediate_block() -> String:
+    return theorem_tag_payload_instances_status().name
 
 
-fn import_ledger_created() -> Bool:
-    return True
+def import_ledger_created() -> Bool:
+    return theorem_tag_import_ledger_status().proved_or_imported_checked
 
 
-fn assumption_payload_schema_created() -> Bool:
-    return True
+def assumption_payload_schema_created() -> Bool:
+    return theorem_tag_assumption_payloads_status().proved_or_imported_checked
 
 
-fn missing_link_exit_allowed_in_final() -> Bool:
-    return False
+def canonical_final_evidence_policy() -> FinalEvidencePolicy:
+    return FinalEvidencePolicy(False, False, False, False, False)
 
 
-fn bounded_search_allowed_as_final_evidence() -> Bool:
-    return False
+def final_evidence_policy_valid(policy: FinalEvidencePolicy) -> Bool:
+    return not (
+        policy.missing_link_exit or
+        policy.bounded_search or
+        policy.label_only_equality or
+        policy.unchecked_theorem_tag or
+        policy.rank2_locus_primitive
+    )
 
 
-fn label_only_equality_allowed_as_final_evidence() -> Bool:
-    return False
+def missing_link_exit_allowed_in_final(policy: FinalEvidencePolicy) -> Bool:
+    return policy.missing_link_exit
 
 
-fn unchecked_theorem_tag_allowed_in_final() -> Bool:
-    return False
+def bounded_search_allowed_as_final_evidence(policy: FinalEvidencePolicy) -> Bool:
+    return policy.bounded_search
 
 
-fn rank2_locus_primitive_allowed_in_final() -> Bool:
-    return False
+def label_only_equality_allowed_as_final_evidence(policy: FinalEvidencePolicy) -> Bool:
+    return policy.label_only_equality
+
+
+def unchecked_theorem_tag_allowed_in_final(policy: FinalEvidencePolicy) -> Bool:
+    return policy.unchecked_theorem_tag
+
+
+def rank2_locus_primitive_allowed_in_final(policy: FinalEvidencePolicy) -> Bool:
+    return policy.rank2_locus_primitive

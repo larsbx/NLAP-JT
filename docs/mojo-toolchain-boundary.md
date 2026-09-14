@@ -17,6 +17,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/C1_final_proof_block_ledger.mojo`.
 - `src/C1_residual_closure_no_missing_links.mojo`.
 - `src/C1_theorem_tag_assumption_payloads.mojo`.
+- `src/C1_theorem_tag_import_ledger.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -29,6 +30,8 @@ negative control, and checks typed accepted and rejected residual exit kinds.
 It also checks typed theorem assumption-payload families, conclusions, and
 strength classes, including out-of-range, generic-MLC, and bounded-search
 rejection paths.
+The import ledger separately checks typed conclusion, strength, and status
+vocabularies while retaining its scaffolded, non-final records.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

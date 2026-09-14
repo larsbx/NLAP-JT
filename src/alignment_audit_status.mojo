@@ -1,4 +1,5 @@
 # Alignment-audit status and Mojo theorem-kernel trust boundary.
+# Terminology used here is governed by docs/terminology-registry.md.
 #
 # This module records repository status semantics. Mojo is the first-class
 # execution language and the finite proof-object theorem kernel. It still does

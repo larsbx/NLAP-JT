@@ -1,6 +1,6 @@
 # Serialization and Hash-Root Handoff
 
-Status: next implementation target.
+Status: canonical integer encoding implemented; rational and composite layers pending.
 
 The repository now has a canonical serialization contract and Mojo-shaped schema scaffold. This is not yet a proof-grade hash-root layer.
 
@@ -14,10 +14,10 @@ Implemented/scaffolded:
 - Misiurewicz certificate field order;
 - debug serialization gate;
 - proof-grade digest gate blocked by backend and hash-suite status.
+- bigint-backed canonical integer serialization.
 
 Blocked:
 
-- bigint-backed integer serialization;
 - proof-grade rational normalization;
 - selected hash suite;
 - theorem-tag stable identifiers;
@@ -26,14 +26,17 @@ Blocked:
 
 ## Required next implementation
 
-1. Select bigint backend and set `backend.toml` only after proof-grade requirements are satisfied.
-2. Implement canonical integer encoding:
+Implemented in `src/bigint_z.mojo`:
 
 ```text
 Z(sign, byte_len, big_endian_magnitude)
 ```
 
-3. Implement rational encoding:
+The concrete encoding is one sign byte, an unsigned 8-byte big-endian magnitude
+length, then the minimal big-endian magnitude. This completes only the integer
+primitive; `backend.toml` remains unchanged until all proof consumers migrate.
+
+1. Implement rational encoding:
 
 ```text
 Q(num, den)
@@ -41,7 +44,7 @@ Q(num, den)
 
 with normalized numerator and positive denominator.
 
-4. Implement composite encoders:
+2. Implement composite encoders:
 
 ```text
 Coord2

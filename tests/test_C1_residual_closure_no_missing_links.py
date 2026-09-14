@@ -47,22 +47,30 @@ def test_required_dependencies_are_explicit():
 def test_only_three_final_exits_are_accepted():
     text = body(SRC)
     for accepted in [
-        "FiniteSeparationCertificate",
-        "BoundaryEqualityCertificate",
-        "EstablishedTrivialFiberTag",
+        "finite_separation",
+        "boundary_equality",
+        "established_trivial_fiber",
     ]:
         assert accepted in text
     assert "accepted_final_exit" in text
-    assert "return True" in text
+    assert "accepted_final_exit(kind: FinalExitKind)" in text
+
+
+def test_final_exit_kind_is_typed_not_free_form_string():
+    text = body(SRC)
+    assert "struct FinalExitKind" in text
+    assert "var final_exit_kind: FinalExitKind" in text
+    assert "final_exit_kind: String" not in text
+    assert "accepted_final_exit(kind: String)" not in text
 
 
 def test_missing_link_and_shortcuts_are_rejected():
     text = body(DOC) + "\n" + body(SRC)
     for rejected in [
-        "MissingTheoremCatalogueLink",
-        "OpenAnalyticAssumption",
-        "BoundedSearchFailure",
-        "LabelEqualityOnly",
+        "missing_theorem_catalogue_link",
+        "open_analytic_assumption",
+        "bounded_search_failure",
+        "label_equality_only",
     ]:
         assert rejected in text
     assert "missing_link_exit_allowed_in_final_c1_proof() -> Bool" in text
@@ -74,8 +82,8 @@ def test_imported_theorems_and_boundary_equality_have_payload_checks():
     text = body(SRC)
     assert "imported_theorem_assumption_payloads" in text
     assert "boundary_equality_uses_content_not_label" in text
-    assert "EstablishedTrivialFiberTag" in text
-    assert "BoundaryEqualityCertificate" in text
+    assert "FinalExitKind.established_trivial_fiber()" in text
+    assert "FinalExitKind.boundary_equality()" in text
 
 
 def test_no_rank2_locus_shortcut_and_not_c1_by_itself():

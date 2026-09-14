@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "canonical_serialization.mojo"
 DOC = ROOT / "docs" / "canonical-serialization.md"
+BIGZ = ROOT / "src" / "bigint_z.mojo"
 
 
 def read(path: Path) -> str:
@@ -44,6 +45,16 @@ def test_certificate_field_order_documented():
     assert "1. certificate schema id" in doc
     assert "10. incidence carrier" in doc
     assert "Map/dictionary iteration order is forbidden" in doc
+
+
+def test_bigz_integer_encoding_is_concrete_and_canonical():
+    src = read(BIGZ)
+    doc = read(DOC)
+    assert "def bigz_is_canonical" in src
+    assert "def bigz_canonical_bytes" in src
+    assert "unsigned 64-bit big-endian" in src
+    assert "minimal big-endian magnitude" in doc
+    assert "-1000000001 -> 02 0000000000000004 3b9aca01" in doc
 
 
 def test_no_forbidden_serialization_shortcuts():

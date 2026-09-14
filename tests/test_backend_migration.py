@@ -62,6 +62,21 @@ def test_dynamic_limb_phase_two_adds_division_and_gcd_but_stays_blocked():
     assert "if not bigint_adapter_phase_two_smoke():" in smoke
 
 
+def test_dynamic_limb_bigz_adds_canonical_serialization_and_is_integer_ready():
+    src = read(BIG)
+    z = read(ROOT / "src" / "bigint_z.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "dynamic_limb_bigz_backend_status" in src
+    assert '"MojoDynamicLimbBigZ"' in src
+    for operation in ["bigz_is_canonical", "bigz_canonical_bytes", "canonical_bytes_equal"]:
+        assert f"def {operation}" in z
+    assert "byte_len >> UInt64(length_index * 8)" in z
+    assert "negative.bytes[9] == 59" in z
+    assert "status.proof_ready()" in src
+    assert "if not bigint_z_phase_three_smoke():" in smoke
+    assert "if not bigint_adapter_complete_smoke():" in smoke
+
+
 def test_rational_backend_requires_normalization_and_safe_order():
     src = read(RAT)
     assert "struct RationalBackendStatus" in src

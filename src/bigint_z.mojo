@@ -4,8 +4,8 @@
 # Limbs are little-endian in base 10^9. Dynamic List storage removes the fixed
 # Int64 magnitude bound. This phase implements exact construction, add, sub,
 # mul, equality, order, quotient/remainder, exact division, and Euclidean gcd.
-# Canonical serialization remains a separate blocker, so this module cannot
-# enable certificate acceptance.
+# Canonical serialization uses sign, fixed-width byte length, and minimal
+# big-endian magnitude. Higher rational and certificate layers remain separate.
 
 comptime BIGZ_BASE = UInt64(1000000000)
 
@@ -53,6 +53,15 @@ struct BigZExactDivisionResult(Copyable):
 
     def __init__(out self):
         self.quotient = BigZ()
+        self.rejected = False
+
+
+struct BigZCanonicalBytes(Copyable):
+    var bytes: List[UInt8]
+    var rejected: Bool
+
+    def __init__(out self):
+        self.bytes = List[UInt8]()
         self.rejected = False
 
 
@@ -228,6 +237,18 @@ def bigz_abs_div_small(a: BigZ, divisor: UInt64) -> BigZ:
     return out^
 
 
+def bigz_abs_mod_small(a: BigZ, divisor: UInt64) -> UInt64:
+    if divisor == 0:
+        return 0
+    var carry = UInt64(0)
+    var idx = len(a.limbs) - 1
+    while idx >= 0:
+        var current = carry * BIGZ_BASE + a.limbs[idx]
+        carry = current % divisor
+        idx -= 1
+    return carry
+
+
 def rejected_bigz_divmod() -> BigZDivModResult:
     var out = BigZDivModResult()
     out.rejected = True
@@ -308,6 +329,67 @@ def bigz_divmod_identity_holds(dividend: BigZ, divisor: BigZ) -> Bool:
     )
 
 
+def bigz_is_canonical(value: BigZ) -> Bool:
+    if value.sign < -1 or value.sign > 1:
+        return False
+    if value.sign == 0:
+        return len(value.limbs) == 0
+    if len(value.limbs) == 0 or value.limbs[len(value.limbs) - 1] == 0:
+        return False
+    for limb in value.limbs:
+        if limb >= BIGZ_BASE:
+            return False
+    return True
+
+
+def rejected_bigz_canonical_bytes() -> BigZCanonicalBytes:
+    var out = BigZCanonicalBytes()
+    out.rejected = True
+    return out^
+
+
+def bigz_canonical_bytes(value: BigZ) -> BigZCanonicalBytes:
+    # Z(sign, byte_len, big_endian_magnitude). Sign codes are 0, 1, 2 for
+    # zero, positive, and negative. byte_len is an unsigned 64-bit big-endian
+    # count. The magnitude has no leading zero byte.
+    if not bigz_is_canonical(value):
+        return rejected_bigz_canonical_bytes()
+    var out = BigZCanonicalBytes()
+    var sign_code = UInt8(0)
+    if value.sign > 0:
+        sign_code = 1
+    elif value.sign < 0:
+        sign_code = 2
+    out.bytes.append(sign_code)
+
+    var magnitude = bigz_abs(value)
+    var reversed_magnitude = List[UInt8]()
+    while not magnitude.is_zero():
+        reversed_magnitude.append(UInt8(bigz_abs_mod_small(magnitude, 256)))
+        magnitude = bigz_abs_div_small(magnitude, 256)
+
+    var byte_len = UInt64(len(reversed_magnitude))
+    var length_index = 7
+    while length_index >= 0:
+        out.bytes.append(UInt8((byte_len >> UInt64(length_index * 8)) & 255))
+        length_index -= 1
+
+    var magnitude_index = len(reversed_magnitude) - 1
+    while magnitude_index >= 0:
+        out.bytes.append(reversed_magnitude[magnitude_index])
+        magnitude_index -= 1
+    return out^
+
+
+def canonical_bytes_equal(a: BigZCanonicalBytes, b: BigZCanonicalBytes) -> Bool:
+    if a.rejected or b.rejected or len(a.bytes) != len(b.bytes):
+        return False
+    for idx in range(len(a.bytes)):
+        if a.bytes[idx] != b.bytes[idx]:
+            return False
+    return True
+
+
 def bigint_z_phase_one_smoke() -> Bool:
     var q7_max = bigz_from_i64(17999433372)
     var q7_square = bigz_mul(q7_max, q7_max)
@@ -353,4 +435,26 @@ def bigint_z_phase_two_smoke() -> Bool:
         bigz_divmod_identity_holds(bigz_from_i64(10), bigz_from_i64(3)) and
         bigz_divmod_identity_holds(bigz_from_i64(-10), bigz_from_i64(3)) and
         bigz_divmod_identity_holds(bigz_from_i64(10), bigz_from_i64(-3))
+    )
+
+
+def bigint_z_phase_three_smoke() -> Bool:
+    var zero = bigz_canonical_bytes(bigz_zero())
+    var one = bigz_canonical_bytes(bigz_from_i64(1))
+    var negative = bigz_canonical_bytes(bigz_from_i64(-1000000001))
+    var q7_square = bigz_canonical_bytes(bigz_mul(bigz_from_i64(17999433372), bigz_from_i64(17999433372)))
+    var malformed = BigZ()
+    malformed.sign = 1
+    malformed.limbs.append(0)
+    var rejected = bigz_canonical_bytes(malformed)
+    return (
+        not zero.rejected and len(zero.bytes) == 9 and zero.bytes[0] == 0 and zero.bytes[8] == 0 and
+        not one.rejected and len(one.bytes) == 10 and one.bytes[0] == 1 and one.bytes[8] == 1 and one.bytes[9] == 1 and
+        not negative.rejected and len(negative.bytes) == 13 and negative.bytes[0] == 2 and
+        negative.bytes[8] == 4 and negative.bytes[9] == 59 and negative.bytes[10] == 154 and
+        negative.bytes[11] == 202 and negative.bytes[12] == 1 and
+        not q7_square.rejected and len(q7_square.bytes) == 18 and q7_square.bytes[8] == 9 and
+        q7_square.bytes[9] == 17 and q7_square.bytes[10] == 144 and q7_square.bytes[17] == 16 and
+        rejected.rejected and
+        canonical_bytes_equal(one, bigz_canonical_bytes(bigz_from_i64(1)))
     )

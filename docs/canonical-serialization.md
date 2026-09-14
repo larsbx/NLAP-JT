@@ -42,7 +42,18 @@ Field order is part of the schema. Map/dictionary iteration order is forbidden. 
 Z(sign, byte_len, big_endian_magnitude)
 ```
 
-Zero has sign `0` and empty magnitude. Positive sign is `+`; negative sign is `-`. No leading zero bytes are permitted.
+The concrete Mojo encoding is one sign byte (`0` zero, `1` positive, `2`
+negative), followed by an unsigned 8-byte big-endian `byte_len`, followed by
+exactly that many magnitude bytes. Zero has an empty magnitude. Nonzero
+magnitudes use a minimal big-endian magnitude with no leading zero byte.
+
+Golden vectors (hexadecimal):
+
+```text
+0           -> 00 0000000000000000
+1           -> 01 0000000000000001 01
+-1000000001 -> 02 0000000000000004 3b9aca01
+```
 
 ### Rational
 

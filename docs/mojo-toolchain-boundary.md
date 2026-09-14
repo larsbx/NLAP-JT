@@ -91,10 +91,12 @@ to the Schleicher landing and Misiurewicz-fiber source families. The landing
 adapter derives checked-width target uniqueness from `P_{2,1}=C(C+2)`, rejection
 of the lower-type `C=0` root, and the typed preperiod correspondence. Both
 imports remain rejected finally because the classification backend is bounded.
-The phase-two `BigZ` backend uses dynamic base-`10^9` limbs and executes exact
+The completed `BigZ` integer backend uses dynamic base-`10^9` limbs and executes exact
 signed construction, ring operations, order, quotient/remainder, rejected
-non-divisions, and Euclidean gcd beyond `Int64` magnitude. Its capability record
-still rejects certificate acceptance because canonical serialization is pending.
+non-divisions, and Euclidean gcd beyond `Int64` magnitude. Phase three adds a
+canonical sign/8-byte-length/minimal-big-endian-magnitude encoding. Its complete
+integer capability record permits rational migration, but no certificate path
+uses it yet; bounded `Q` and downstream consumers still reject proof acceptance.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

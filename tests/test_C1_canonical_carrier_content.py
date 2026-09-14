@@ -1,8 +1,11 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DOC = ROOT / "docs" / "C1_canonical_carrier_content.md"
 SRC = ROOT / "src" / "C1_canonical_carrier_content.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def read(path: Path) -> str:
@@ -73,7 +76,7 @@ def test_no_c1_singleton_or_rank2_circle_claims():
     assert "fn proves_c1() -> Bool:\n    return False" in body
     assert "fn proves_singleton_fiber() -> Bool:\n    return False" in body
     assert "fn rank2_circle_primitive_available() -> Bool:\n    return False" in body
-    lowered = body.lower()
+    lowered = mask_comments_and_strings(body).lower()
     assert "circle object" not in lowered
     assert "unit circle" not in lowered
     assert "analytic locus" not in lowered

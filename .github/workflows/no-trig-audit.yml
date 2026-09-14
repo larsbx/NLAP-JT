@@ -40,6 +40,9 @@ jobs:
       - name: Run backend manifest audit
         run: python3 tools/audit_backend_manifest.py
 
+      - name: Run exact arithmetic audit
+        run: python3 tools/audit_exact_arithmetic.py
+
       - name: Run polynomial reference oracle
         run: python3 tools/poly_reference.py
 

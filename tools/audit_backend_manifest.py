@@ -32,7 +32,10 @@ REQUIRED_POLICY = [
     "points_are_vertices_of_vertices",
     "squarefree_localization_only",
     "pointwise_exact_type_exclusion",
+    "no_float_certificate_arithmetic",
 ]
+
+EXACT_ARITHMETIC_SPEC = "docs/rational-interval-arithmetic-spec.md"
 
 
 def main() -> int:
@@ -46,6 +49,9 @@ def main() -> int:
     for key in REQUIRED_POLICY:
         if policy.get(key) is not True:
             errors.append(f"policy.{key} must be true")
+
+    if policy.get("exact_arithmetic_spec") != EXACT_ARITHMETIC_SPEC or not (ROOT / EXACT_ARITHMETIC_SPEC).exists():
+        errors.append(f"policy.exact_arithmetic_spec must name the existing {EXACT_ARITHMETIC_SPEC}")
 
     proof_grade = backend.get("proof_grade") is True
     allow_proof = policy.get("allow_proof_grade_certificates") is True

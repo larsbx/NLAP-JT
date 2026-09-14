@@ -1,5 +1,9 @@
 # complex_box.mojo
 #
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2, QUARANTINED).
+# Floating-point demo substrate; allowlisted in tools/exact_arithmetic_allowlist.md.
+# Must not be imported by any module that emits or accepts certificate data.
+#
 # Finite-regime Mandelbrot computation substrate.
 #
 # This file keeps the executable/numeric side deliberately small:

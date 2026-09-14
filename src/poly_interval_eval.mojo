@@ -1,5 +1,7 @@
 # poly_interval_eval.mojo
 #
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+#
 # Native interval polynomial evaluation for squarefree localization polynomials.
 #
 # Coefficients are stored in ascending order: coeffs[d] is the coefficient of C^d.

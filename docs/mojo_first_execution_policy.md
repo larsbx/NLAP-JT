@@ -8,6 +8,16 @@ Mojo is the default first-class language for executable finite-regime computatio
 
 This does not mean Mojo re-proves the analytic literature. It means the repository’s trusted internal checker for finite algebraic, combinatorial, separator-catalogue, witness, and carrier-refinement derivations is written in Mojo.
 
+## Arithmetic contract
+
+Every integer, rational, and interval kernel Mojo owns is bound by
+`docs/rational-interval-arithmetic-spec.md`: exact normalized `Q` for
+equality and order, rational-endpoint intervals for enclosure, three-valued
+interval signs, filter-then-exact fallback, and no floating point in any
+certificate path. `tools/audit_exact_arithmetic.py` enforces the binding
+table in CI; the quarantined `Float64` demo files are listed in
+`tools/exact_arithmetic_allowlist.md`.
+
 ## What Mojo owns
 
 Mojo should be the primary implementation language for:

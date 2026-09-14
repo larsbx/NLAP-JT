@@ -26,6 +26,8 @@ def test_manifest_keeps_finite_regime_invariants_true():
     assert policy["points_are_vertices_of_vertices"] is True
     assert policy["squarefree_localization_only"] is True
     assert policy["pointwise_exact_type_exclusion"] is True
+    assert policy["no_float_certificate_arithmetic"] is True
+    assert policy["exact_arithmetic_spec"] == "docs/rational-interval-arithmetic-spec.md"
 
 
 def test_manifest_blocks_proof_grade_requirements_on_demo_backend():

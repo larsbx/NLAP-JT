@@ -29,6 +29,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_interval_q.mojo`.
 - `src/checked_complex_interval.mojo`.
 - `src/checked_krawczyk_witness.mojo`.
+- `src/checked_interval_exclusion.mojo`.
 - `src/cert_backend.mojo`.
 - `src/certificate_arithmetic_migration_gate.mojo`.
 
@@ -62,15 +63,18 @@ rejects unsafe construction, arithmetic, division, and comparison. Existing
 migration.
 The checked interval transition layer enforces ordered endpoints and propagates
 rational rejection through interval arithmetic, reciprocal, sign, and subset
-queries. It is not yet connected to certificate consumers.
+queries used by the checked certificate transition path.
 The checked complex interval layer propagates component rejection through
-rank-2 arithmetic and Horner evaluation of `P_{2,1}` and its derivative. The
-checked Krawczyk acceptance path remains pending.
+rank-2 arithmetic, orbit recurrence, and Horner evaluation of `P_{2,1}` and its
+derivative.
 The checked `P_{2,1}` Krawczyk path now distinguishes verified contraction,
 valid non-contraction, and arithmetic rejection. This bounded checked path does
 not satisfy the repository's unbounded proof-grade backend requirement.
+The checked exact-type path evaluates all five forbidden collisions for the
+same c=-2 box. Arithmetic rejection and ambiguous zero containment both reject
+the exclusion result.
 The arithmetic migration gate accepts the checked-width `P_{2,1}` localization
-only when the contraction, exact-type exclusion counts, same-box identity, and
+only when the contraction, computed exact-type exclusions, same-box identity, and
 checked backend all agree. It separately rejects proof-grade acceptance because
 the backend is bounded.
 Passing it does not imply that

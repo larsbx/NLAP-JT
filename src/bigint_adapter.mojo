@@ -97,6 +97,21 @@ def dynamic_limb_phase_two_backend_status() -> BigIntBackendStatus:
     )
 
 
+def dynamic_limb_bigz_backend_status() -> BigIntBackendStatus:
+    # All integer-backend requirements are compiled. This permits migration of
+    # rational consumers; it does not by itself accept a certificate.
+    return BigIntBackendStatus(
+        "MojoDynamicLimbBigZ",
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+        True,
+    )
+
+
 # Target adapter operations for the real backend. These are comments until a
 # concrete Mojo-compatible bigint source is selected.
 #
@@ -141,3 +156,8 @@ def bigint_adapter_phase_two_smoke() -> Bool:
         not status.has_canonical_serialization and not status.allows_certificate_acceptance and
         bigint_backend_blocks_proof_acceptance(status)
     )
+
+
+def bigint_adapter_complete_smoke() -> Bool:
+    var status = dynamic_limb_bigz_backend_status()
+    return status.proof_ready()

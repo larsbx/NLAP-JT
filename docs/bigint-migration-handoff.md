@@ -55,8 +55,11 @@ Every constructor and operation must normalize. Equality and order may use cross
    interval arithmetic and `P_{2,1}` Horner evaluation.
    `src/checked_krawczyk_witness.mojo` now propagates rejection through strict
    inclusion and the complete `P_{2,1}` contraction calculation. The next slice
-   is to define the consumer migration gate and replace demo acceptance paths;
-   do not replace `Q` until every downstream predicate propagates failure.
+   `src/certificate_arithmetic_migration_gate.mojo` now separates checked-width
+   localization acceptance from proof-grade acceptance and binds the checked
+   contraction to exact-type exclusion counts on the same box. The next slice
+   is to migrate the exclusion calculation itself; do not replace `Q` until
+   every downstream predicate propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.

@@ -202,7 +202,7 @@ def test_final_proof_object_policy_data() -> Bool:
 
 
 def test_headers() -> Bool:
-    # c = -2: critical type (ell,k)=(2,1), angle preperiod lambda=1, ray period n=1.
+    # c = -2: critical type (ell,k)=(2,1), ray-address preperiod lambda=1, ray period n=1.
     var c_minus_2 = MisCertHeader(2, 1, 3, 1)
     if not c_minus_2.header_ok():
         return False

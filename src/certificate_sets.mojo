@@ -1,9 +1,9 @@
 """
-Finite collision-set and angle-doubling computations for the certificate calculus.
+Finite collision-set and ray-address-doubling computations for the certificate calculus.
 
 This file preserves the non-analytic combinatorial computations used by the
-spec. It avoids external rays as geometric objects; angles are rational pairs
-(num, den), and doubling is arithmetic modulo den.
+spec. It avoids external rays as geometric objects; addresses are rational
+pairs (num, den), and doubling is arithmetic modulo den.
 """
 
 from integer_gcd import gcd_int
@@ -73,15 +73,15 @@ def print_intended_forbidden_sets(ell: Int, k: Int, horizon: Int):
 def c_minus_2_sets():
     print("c=-2 horizon H=3")
     print_intended_forbidden_sets(2, 1, 3)
-    print_doubling_orbit("angle 1/2", 1, 2, 3)
+    print_doubling_orbit("ray address 1/2", 1, 2, 3)
 
 
 def m41_sets():
     print("M_{4,1} horizon H=6")
     print_intended_forbidden_sets(4, 1, 6)
-    print_doubling_orbit("angle 9/56", 9, 56, 6)
-    print_doubling_orbit("angle 11/56", 11, 56, 6)
-    print_doubling_orbit("angle 15/56", 15, 56, 6)
+    print_doubling_orbit("ray address 9/56", 9, 56, 6)
+    print_doubling_orbit("ray address 11/56", 11, 56, 6)
+    print_doubling_orbit("ray address 15/56", 15, 56, 6)
 
 
 def main():

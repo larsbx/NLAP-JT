@@ -67,8 +67,8 @@ def rotate_by_rotor(v: Vec2Q, r: RotorQ) -> Vec2Q:
     return Vec2Q(v.x.mul(r.u).sub(v.y.mul(r.v)), v.x.mul(r.v).add(v.y.mul(r.u)))
 
 
-def double_ray_addr(theta: RayAddr64) -> RayAddr64:
-    return theta.doubled()
+def double_ray_addr(address: RayAddr64) -> RayAddr64:
+    return address.doubled()
 
 
 def demo_spread_orthogonal_axes() -> Q:

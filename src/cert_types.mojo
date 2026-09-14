@@ -106,14 +106,14 @@ struct MisCertHeader:
     var ell: Int
     var period_k: Int
     var horizon_H: Int
-    var angle_preperiod_lambda: Int
+    var ray_address_preperiod_lambda: Int
     var ray_period_n: Int
 
     def __init__(out self, ell: Int, period_k: Int, horizon_H: Int, ray_period_n: Int):
         self.ell = ell
         self.period_k = period_k
         self.horizon_H = horizon_H
-        self.angle_preperiod_lambda = ell - 1
+        self.ray_address_preperiod_lambda = ell - 1
         self.ray_period_n = ray_period_n
 
     def header_ok(self) -> Bool:
@@ -123,7 +123,7 @@ struct MisCertHeader:
             return False
         if self.horizon_H < self.ell + self.period_k:
             return False
-        if self.angle_preperiod_lambda != self.ell - 1:
+        if self.ray_address_preperiod_lambda != self.ell - 1:
             return False
         if self.ray_period_n % self.period_k != 0:
             return False

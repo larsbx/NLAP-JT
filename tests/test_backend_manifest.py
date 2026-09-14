@@ -51,6 +51,16 @@ def test_checked_int64_transition_layer_is_compiler_wired():
     assert "if not checked_i64_boundary_smoke():" in smoke
 
 
+def test_checked_rational_transition_layer_is_compiler_wired():
+    src = (ROOT / "src" / "checked_q.mojo").read_text(encoding="utf-8")
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    for operation in ["checked_q_add", "checked_q_sub", "checked_q_mul", "checked_q_div", "checked_q_lt"]:
+        assert f"def {operation}" in src
+    assert "normalize_checked_q(1, 0).rejected" in src
+    assert "from checked_q import checked_q_smoke" in smoke
+    assert "if not checked_q_smoke():" in smoke
+
+
 def test_backend_manifest_audit_exists_and_checks_all_requirements():
     src = AUDIT.read_text(encoding="utf-8")
     for key in [

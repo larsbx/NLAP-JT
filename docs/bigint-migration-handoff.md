@@ -48,6 +48,9 @@ Every constructor and operation must normalize. Equality and order may use cross
    compiled Q_8 growth control confirms the present bounded backend cannot
    complete the intended recurrence. This layer does not itself permit
    certificate acceptance and `Q` has not yet been migrated to it.
+   `src/checked_q.mojo` now supplies the normalized, rejection-aware rational
+   API over that transition layer. The next slice is a rejection-aware interval
+   type; do not replace `Q` until every downstream predicate propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.
 3. Replace `Q(Int64, Int64)` internals with `Q(Z, Z)` while preserving public arithmetic names.

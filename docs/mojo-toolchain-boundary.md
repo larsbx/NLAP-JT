@@ -13,6 +13,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/rat_q.mojo`;
 - `src/integer_gcd.mojo`;
 - `src/ray_address.mojo`;
+- `src/rational_trig.mojo`;
 - `src/interval_q.mojo`;
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.
@@ -24,7 +25,8 @@ The compiler-checked dependency closure currently consists of:
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
 normalized rational arithmetic, rational ordering, interval multiplication,
-coordinate-record quadrance, and interval Horner evaluation of the squarefree
+coordinate-record quadrance, normalized rational spread, symbolic ray-address
+doubling, and interval Horner evaluation of the squarefree
 localization polynomial, and the exact interval Krawczyk contraction for
 `P_{2,1}` at the dyadic box centered on -2. It also checks the C1 final-ledger
 readiness and final-evidence policy from explicit data, including an unsafe

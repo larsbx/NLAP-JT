@@ -11,66 +11,32 @@
 # chooses its bigint backend.
 
 from ray_address import RayAddr64
+from rat_q import Q
 
 
-struct Rat:
-    var num: Int64
-    var den: Int64
+struct Vec2Q(ImplicitlyCopyable):
+    var x: Q
+    var y: Q
 
-    fn __init__(inout self, num: Int64, den: Int64):
-        # Caller must provide den != 0. Normalization is stubbed until bigint/gcd
-        # backend is selected.
-        self.num = num
-        self.den = den
-
-    fn zero() -> Rat:
-        return Rat(0, 1)
-
-    fn one() -> Rat:
-        return Rat(1, 1)
-
-    fn add(self, other: Rat) -> Rat:
-        return Rat(self.num * other.den + other.num * self.den, self.den * other.den)
-
-    fn sub(self, other: Rat) -> Rat:
-        return Rat(self.num * other.den - other.num * self.den, self.den * other.den)
-
-    fn mul(self, other: Rat) -> Rat:
-        return Rat(self.num * other.num, self.den * other.den)
-
-    fn div(self, other: Rat) -> Rat:
-        return Rat(self.num * other.den, self.den * other.num)
-
-    fn neg(self) -> Rat:
-        return Rat(-self.num, self.den)
-
-    fn square(self) -> Rat:
-        return self.mul(self)
-
-
-struct Vec2Q:
-    var x: Rat
-    var y: Rat
-
-    fn __init__(inout self, x: Rat, y: Rat):
+    def __init__(out self, x: Q, y: Q):
         self.x = x
         self.y = y
 
 
-fn dot(a: Vec2Q, b: Vec2Q) -> Rat:
+def dot(a: Vec2Q, b: Vec2Q) -> Q:
     return a.x.mul(b.x).add(a.y.mul(b.y))
 
 
-fn cross_det(a: Vec2Q, b: Vec2Q) -> Rat:
+def cross_det(a: Vec2Q, b: Vec2Q) -> Q:
     return a.x.mul(b.y).sub(a.y.mul(b.x))
 
 
-fn quadrance(v: Vec2Q) -> Rat:
+def quadrance(v: Vec2Q) -> Q:
     # Q(v) = x^2 + y^2.
     return v.x.square().add(v.y.square())
 
 
-fn spread(a: Vec2Q, b: Vec2Q) -> Rat:
+def spread(a: Vec2Q, b: Vec2Q) -> Q:
     # s(a,b) = det(a,b)^2 / (Q(a) Q(b)).
     var d = cross_det(a, b)
     var qa = quadrance(a)
@@ -78,42 +44,40 @@ fn spread(a: Vec2Q, b: Vec2Q) -> Rat:
     return d.square().div(qa.mul(qb))
 
 
-fn dot_ratio(a: Vec2Q, b: Vec2Q) -> Rat:
+def dot_ratio(a: Vec2Q, b: Vec2Q) -> Q:
     # d(a,b)^2 / (Q(a) Q(b)).
     var d = dot(a, b)
     return d.square().div(quadrance(a).mul(quadrance(b)))
 
 
-struct RotorQ:
-    var u: Rat
-    var v: Rat
+struct RotorQ(ImplicitlyCopyable):
+    var u: Q
+    var v: Q
 
-    fn __init__(inout self, u: Rat, v: Rat):
+    def __init__(out self, u: Q, v: Q):
         # A valid rotor satisfies u^2 + v^2 = 1, checked by valid_rotor().
         self.u = u
         self.v = v
 
 
-fn valid_rotor(r: RotorQ) -> Bool:
+def valid_rotor(r: RotorQ) -> Bool:
     var lhs = r.u.square().add(r.v.square())
-    # Temporary exact equality without normalization. Bigint/gcd pass should
-    # normalize before comparing.
-    return lhs.num == lhs.den
+    return lhs.eq(Q.one())
 
 
-fn rotate_by_rotor(v: Vec2Q, r: RotorQ) -> Vec2Q:
+def rotate_by_rotor(v: Vec2Q, r: RotorQ) -> Vec2Q:
     return Vec2Q(v.x.mul(r.u).sub(v.y.mul(r.v)), v.x.mul(r.v).add(v.y.mul(r.u)))
 
 
-fn double_ray_addr(theta: RayAddr64) -> RayAddr64:
+def double_ray_addr(theta: RayAddr64) -> RayAddr64:
     return theta.doubled()
 
 
-fn demo_spread_orthogonal_axes() -> Rat:
-    var e1 = Vec2Q(Rat.one(), Rat.zero())
-    var e2 = Vec2Q(Rat.zero(), Rat.one())
+def demo_spread_orthogonal_axes() -> Q:
+    var e1 = Vec2Q(Q.one(), Q.zero())
+    var e2 = Vec2Q(Q.zero(), Q.one())
     return spread(e1, e2)
 
 
-fn demo_ray_addr_doubling_half() -> RayAddr64:
+def demo_ray_addr_doubling_half() -> RayAddr64:
     return double_ray_addr(RayAddr64(1, 2))

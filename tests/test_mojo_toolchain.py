@@ -70,6 +70,8 @@ def test_compiler_checked_boundary_is_explicit():
         "src/checked_finite_certificate_gate.mojo",
         "src/C1_theorem_tag_payload_instances.mojo",
         "src/checked_landing_target_adapter.mojo",
+        "src/bigint_z.mojo",
+        "src/bigint_adapter.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

@@ -55,6 +55,16 @@ def test_mojo_checker_has_allowed_payload_predicates():
     assert "theorem_tag_payload_admissible" in text
 
 
+def test_payload_and_conclusion_kinds_are_typed():
+    text = body(SRC)
+    assert "struct AssumptionPayloadKind" in text
+    assert "struct PayloadConclusionKind" in text
+    assert "var payload_kind: AssumptionPayloadKind" in text
+    assert "var conclusion_kind: PayloadConclusionKind" in text
+    assert "payload_kind: String" not in text
+    assert "conclusion_kind: String" not in text
+
+
 def test_mojo_checker_blocks_forbidden_imports():
     text = body(SRC)
     for forbidden in [

@@ -72,9 +72,24 @@ def test_dynamic_limb_bigz_adds_canonical_serialization_and_is_integer_ready():
         assert f"def {operation}" in z
     assert "byte_len >> UInt64(length_index * 8)" in z
     assert "negative.bytes[9] == 59" in z
-    assert "status.proof_ready()" in src
+    assert "def integer_backend_ready" in src
+    assert "status.integer_backend_ready()" in src
+    assert "not status.allows_certificate_acceptance" in src
+    assert "not status.proof_ready()" in src
+    assert "bigint_backend_blocks_proof_acceptance(status)" in src
     assert "if not bigint_z_phase_three_smoke():" in smoke
     assert "if not bigint_adapter_complete_smoke():" in smoke
+
+
+def test_completed_integer_backend_cannot_enable_certificate_acceptance():
+    src = read(BIG)
+    complete = src.split("def dynamic_limb_bigz_backend_status()", 1)[1].split(
+        "# Target adapter operations", 1
+    )[0]
+    assert '"MojoDynamicLimbBigZ"' in complete
+    assert complete.count("True,") == 6
+    assert complete.count("False,") == 1
+    assert complete.rstrip().endswith("False,\n    )")
 
 
 def test_rational_backend_requires_normalization_and_safe_order():

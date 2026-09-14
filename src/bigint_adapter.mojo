@@ -40,6 +40,19 @@ struct BigIntBackendStatus(ImplicitlyCopyable):
             self.allows_certificate_acceptance
         )
 
+    def integer_backend_ready(self) -> Bool:
+        # Integer readiness is deliberately weaker than proof readiness.  It
+        # permits BigZ-backed rational migration without accepting any
+        # certificate before the rational and replay layers are complete.
+        return (
+            self.has_unbounded_storage and
+            self.has_exact_add_sub_mul and
+            self.has_exact_order and
+            self.has_euclidean_gcd and
+            self.has_exact_divisibility and
+            self.has_canonical_serialization
+        )
+
 
 def int64_demo_backend_status() -> BigIntBackendStatus:
     return BigIntBackendStatus(
@@ -108,7 +121,7 @@ def dynamic_limb_bigz_backend_status() -> BigIntBackendStatus:
         True,
         True,
         True,
-        True,
+        False,
     )
 
 
@@ -160,4 +173,9 @@ def bigint_adapter_phase_two_smoke() -> Bool:
 
 def bigint_adapter_complete_smoke() -> Bool:
     var status = dynamic_limb_bigz_backend_status()
-    return status.proof_ready()
+    return (
+        status.integer_backend_ready() and
+        not status.allows_certificate_acceptance and
+        not status.proof_ready() and
+        bigint_backend_blocks_proof_acceptance(status)
+    )

@@ -26,6 +26,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/C1_final_proof_object_skeleton.mojo`.
 - `src/checked_int64_backend.mojo`.
 - `src/checked_q.mojo`.
+- `src/checked_interval_q.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -55,6 +56,9 @@ The checked rational transition layer normalizes accepted values and explicitly
 rejects unsafe construction, arithmetic, division, and comparison. Existing
 `Q` and interval consumers remain on the demo path pending rejection-aware
 migration.
+The checked interval transition layer enforces ordered endpoints and propagates
+rational rejection through interval arithmetic, reciprocal, sign, and subset
+queries. It is not yet connected to certificate consumers.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

@@ -6,16 +6,16 @@
 
 from certificate_arithmetic_migration_gate import CheckedLocalizationEnvelope, c_minus_2_checked_localization
 from checked_ray_address import CheckedRayOrbitStatus, verify_checked_one_half_orbit
-from C1_theorem_tag_import_ledger import TheoremTagRecord, theorem_tag_admissible_for_final, rational_parameter_ray_landing_tag_ready, known_trivial_fiber_class_tag_ready
+from C1_theorem_tag_payload_instances import RationalRayLandingInstance, MisiurewiczTrivialFiberInstance, c_minus_2_landing_instance, c_minus_2_trivial_fiber_instance
 
 
 struct CheckedFiniteCertificateStatus(ImplicitlyCopyable):
     var localization: CheckedLocalizationEnvelope
     var rays: CheckedRayOrbitStatus
-    var landing_tag: TheoremTagRecord
-    var fiber_tag: TheoremTagRecord
+    var landing_tag: RationalRayLandingInstance
+    var fiber_tag: MisiurewiczTrivialFiberInstance
 
-    def __init__(out self, localization: CheckedLocalizationEnvelope, rays: CheckedRayOrbitStatus, landing_tag: TheoremTagRecord, fiber_tag: TheoremTagRecord):
+    def __init__(out self, localization: CheckedLocalizationEnvelope, rays: CheckedRayOrbitStatus, landing_tag: RationalRayLandingInstance, fiber_tag: MisiurewiczTrivialFiberInstance):
         self.localization = localization
         self.rays = rays
         self.landing_tag = landing_tag
@@ -26,8 +26,8 @@ struct CheckedFiniteCertificateStatus(ImplicitlyCopyable):
 
     def theorem_tags_accepted(self) -> Bool:
         return (
-            theorem_tag_admissible_for_final(self.landing_tag) and
-            theorem_tag_admissible_for_final(self.fiber_tag)
+            self.landing_tag.final_import_admissible() and
+            self.fiber_tag.final_import_admissible()
         )
 
     def certificate_accepted(self) -> Bool:
@@ -41,8 +41,8 @@ def c_minus_2_checked_finite_certificate() -> CheckedFiniteCertificateStatus:
     return CheckedFiniteCertificateStatus(
         c_minus_2_checked_localization(),
         verify_checked_one_half_orbit(),
-        rational_parameter_ray_landing_tag_ready(),
-        known_trivial_fiber_class_tag_ready(),
+        c_minus_2_landing_instance(),
+        c_minus_2_trivial_fiber_instance(),
     )
 
 

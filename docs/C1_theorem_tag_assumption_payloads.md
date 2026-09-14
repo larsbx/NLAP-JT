@@ -150,3 +150,20 @@ HyperbolicBoundaryTrivialFiber
 ```
 
 No generic boundary tag is allowed as an instance.
+
+## First source-specific instances
+
+`src/C1_theorem_tag_payload_instances.mojo` binds the checked c=-2 finite data
+to two explicit bibliography records:
+
+- `SchleicherRationalParameterRays`, covering preperiodic rational parameter
+  rays. The `1/2` address has checked preperiod 1 and period 1, but the finite
+  adapter has not yet associated its landing target with `beta_c_minus_2`, so
+  this import remains inadmissible.
+- `SchleicherFibersLC`, covering trivial fibers at Misiurewicz parameters. The
+  checked-width `(ell, period) = (2, 1)` classification matches the source
+  scope, but final import remains inadmissible until localization is replayed
+  on a proof-grade unbounded backend.
+
+These are payload instances, not completed theorem imports. The
+`TheoremTagPayloadInstances` proof block therefore remains open.

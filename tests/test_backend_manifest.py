@@ -109,15 +109,23 @@ def test_checked_interval_exclusion_is_computed_and_compiler_wired():
 def test_checked_ray_and_finite_certificate_boundary_are_compiler_wired():
     ray = (ROOT / "src" / "checked_ray_address.mojo").read_text(encoding="utf-8")
     gate = (ROOT / "src" / "checked_finite_certificate_gate.mojo").read_text(encoding="utf-8")
+    tags = (ROOT / "src" / "C1_theorem_tag_payload_instances.mojo").read_text(encoding="utf-8")
     smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
     assert "checked_mul_i64(address.num, 2)" in ray
     assert "if doubled.overflowed:" in ray
     assert "verify_checked_one_half_orbit" in ray
     assert "self.localization.checked_width_accepted() and self.rays.accepted()" in gate
-    assert "theorem_tag_admissible_for_final(self.landing_tag)" in gate
+    assert "self.landing_tag.final_import_admissible()" in gate
     assert "not status.theorem_tags_accepted()" in gate
+    assert '"SchleicherRationalParameterRays"' in tags
+    assert '"SchleicherFibersLC"' in tags
+    assert "landing_target_association_checked" in tags
+    assert "self.localization.proof_grade_accepted()" in tags
+    assert "not landing.final_import_admissible()" in tags
+    assert "not fiber.final_import_admissible()" in tags
     assert "if not checked_ray_address_smoke():" in smoke
     assert "if not checked_finite_certificate_gate_smoke():" in smoke
+    assert "if not theorem_tag_payload_instances_smoke():" in smoke
 
 
 def test_backend_manifest_audit_exists_and_checks_all_requirements():

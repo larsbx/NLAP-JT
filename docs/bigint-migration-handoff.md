@@ -66,7 +66,8 @@ Every constructor and operation must normalize. Equality and order may use cross
    `src/checked_ray_address.mojo` computes the c=-2 rational ray orbit with
    fixed-width overflow rejection, and `src/checked_finite_certificate_gate.mojo`
    now proves that checked finite inputs are insufficient while theorem-tag
-   records remain scaffolded. Do not replace `Q` until every downstream
+   instances still lack landing-target association or proof-grade
+   classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
 1. Choose a Mojo-compatible bigint source.
 2. Implement `Z` behind `bigint_adapter.mojo`.

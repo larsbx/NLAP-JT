@@ -28,6 +28,8 @@ from checked_q import checked_q_smoke
 from checked_interval_q import checked_iq_smoke
 from checked_complex_interval import checked_complex_horner_smoke
 from checked_krawczyk_witness import checked_krawczyk_smoke
+from cert_backend import cert_backend_smoke
+from certificate_arithmetic_migration_gate import certificate_arithmetic_migration_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -286,6 +288,10 @@ def run_smoke_tests() -> Bool:
     if not checked_complex_horner_smoke():
         return False
     if not checked_krawczyk_smoke():
+        return False
+    if not cert_backend_smoke():
+        return False
+    if not certificate_arithmetic_migration_smoke():
         return False
     return True
 

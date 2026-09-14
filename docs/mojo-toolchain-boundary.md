@@ -29,6 +29,8 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_interval_q.mojo`.
 - `src/checked_complex_interval.mojo`.
 - `src/checked_krawczyk_witness.mojo`.
+- `src/cert_backend.mojo`.
+- `src/certificate_arithmetic_migration_gate.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -67,6 +69,10 @@ checked Krawczyk acceptance path remains pending.
 The checked `P_{2,1}` Krawczyk path now distinguishes verified contraction,
 valid non-contraction, and arithmetic rejection. This bounded checked path does
 not satisfy the repository's unbounded proof-grade backend requirement.
+The arithmetic migration gate accepts the checked-width `P_{2,1}` localization
+only when the contraction, exact-type exclusion counts, same-box identity, and
+checked backend all agree. It separately rejects proof-grade acceptance because
+the backend is bounded.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

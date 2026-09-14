@@ -17,7 +17,7 @@ def test_backend_contract_requires_unbounded_storage():
     assert "euclidean_gcd" in src
     assert "exact_divisibility" in src
     assert "normalized_serialization" in src
-    assert "fn certificate_ready" in src
+    assert "def certificate_ready" in src
 
 
 def test_int64_demo_backend_not_certificate_ready():
@@ -25,6 +25,15 @@ def test_int64_demo_backend_not_certificate_ready():
     assert "Int64DemoBackend" in src
     assert "False," in src
     assert "must_reject_certificate_on_int64_demo_backend" in src
+
+
+def test_checked_width_and_proof_grade_are_separate_gates():
+    src = read(ROOT / "src" / "certificate_arithmetic_migration_gate.mojo")
+    assert "def checked_width_accepted" in src
+    assert "def proof_grade_accepted" in src
+    assert "self.backend.certificate_ready()" in src
+    assert "not checked.proof_grade_accepted()" in src
+    assert "not demo.checked_width_accepted()" in src
 
 
 def test_proof_grade_gate_composes_certificate_and_backend():

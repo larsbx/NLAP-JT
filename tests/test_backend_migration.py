@@ -122,12 +122,14 @@ def test_q_storage_is_normalized_bigz_and_fail_closed():
     assert "var den: BigZ" in src
     assert "var rejected: Bool" in src
     assert "def q_normalize_bigz" in src
+    assert "if not bigz_is_canonical(n) or not bigz_is_canonical(d):" in src
     assert "if d.is_zero():" in src
     assert "other.num.is_zero()" in src
     assert "var common = bigz_gcd(nn, dd)" in src
     assert "bigz_div_exact" in src
     assert "def q_canonical_bytes" in src
     assert "beyond_i64" in src
+    assert "malformed.sign = 2" in src
     assert "if not bigq_storage_smoke():" in smoke
 
 

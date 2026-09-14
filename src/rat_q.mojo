@@ -4,7 +4,7 @@
 # Invalid construction and division propagate a rejected state. This module
 # does not enable certificate acceptance or discharge any theorem obligation.
 
-from bigint_z import BigZ, bigz_add, bigz_canonical_bytes, bigz_div_exact, bigz_eq, bigz_from_i64, bigz_gcd, bigz_lt, bigz_mul, bigz_neg, bigz_sub, bigz_zero
+from bigint_z import BigZ, bigz_add, bigz_canonical_bytes, bigz_div_exact, bigz_eq, bigz_from_i64, bigz_gcd, bigz_is_canonical, bigz_lt, bigz_mul, bigz_neg, bigz_sub, bigz_zero
 
 
 struct Q(Copyable):
@@ -105,6 +105,8 @@ def q_rejected() -> Q:
 
 
 def q_normalize_bigz(n: BigZ, d: BigZ) -> Q:
+    if not bigz_is_canonical(n) or not bigz_is_canonical(d):
+        return q_rejected()
     if d.is_zero():
         return q_rejected()
     var nn = n.copy()
@@ -176,10 +178,13 @@ def bigq_storage_smoke() -> Bool:
     var negative_denominator = q_from_bigz(bigz_from_i64(2), bigz_from_i64(-4))
     var zero_denominator = q_from_bigz(bigz_from_i64(1), bigz_zero())
     var division_by_zero = Q(1, 2).div(Q.zero())
+    var malformed = bigz_from_i64(1)
+    malformed.sign = 2
+    var malformed_input = q_from_bigz(malformed, bigz_from_i64(1))
     var encoded = q_canonical_bytes(half)
     return (
         half.eq(Q(1, 2)) and negative_denominator.eq(Q(-1, 2)) and
-        zero_denominator.rejected and division_by_zero.rejected and
+        zero_denominator.rejected and division_by_zero.rejected and malformed_input.rejected and
         not encoded.rejected and len(encoded.bytes) == 20 and
         q_canonical_bytes(zero_denominator).rejected
     )

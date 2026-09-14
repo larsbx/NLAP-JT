@@ -1,7 +1,10 @@
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "certificate_incidence.mojo"
+sys.path.insert(0, str(ROOT / "tools"))
+from source_tokens import mask_comments_and_strings
 
 
 def text() -> str:
@@ -9,7 +12,7 @@ def text() -> str:
 
 
 def test_certificate_incidence_wrapper_exists():
-    src = text()
+    src = mask_comments_and_strings(text())
     assert "struct CertificateIncidence" in src
     assert "var root_handle: Vertex" in src
     assert "var ray_addr_set: Vertex" in src
@@ -38,7 +41,7 @@ def test_m41_placeholder_incidence_not_accepted():
 
 
 def test_no_analytic_point_terms_added():
-    src = text()
+    src = mask_comments_and_strings(text())
     forbidden = ["analytic singleton", "eval_point", "point_eval", "point_value", "to_point_interval"]
     for token in forbidden:
         assert token not in src

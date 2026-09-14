@@ -5,6 +5,8 @@
 # catalogue-extensionality bridge. It does not prove MLC, fibre triviality, or
 # generic boundary landing.
 
+from integer_gcd import gcd_int
+
 struct RayAddrCode:
     var num: Int
     var den: Int
@@ -14,22 +16,6 @@ struct RayAddrCode:
         self.den = den
 
 
-fn abs_i(x: Int) -> Int:
-    if x < 0:
-        return -x
-    return x
-
-
-fn gcd_i(a0: Int, b0: Int) -> Int:
-    var a = abs_i(a0)
-    var b = abs_i(b0)
-    while b != 0:
-        let r = a % b
-        a = b
-        b = r
-    return a
-
-
 fn is_normalized_ray_addr(addr: RayAddrCode) -> Bool:
     if addr.den <= 0:
         return False
@@ -37,7 +23,7 @@ fn is_normalized_ray_addr(addr: RayAddrCode) -> Bool:
         return False
     if addr.num >= addr.den:
         return False
-    return gcd_i(addr.num, addr.den) == 1
+    return gcd_int(addr.num, addr.den) == 1
 
 
 fn same_ray_addr(a: RayAddrCode, b: RayAddrCode) -> Bool:

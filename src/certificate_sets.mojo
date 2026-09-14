@@ -6,19 +6,7 @@ spec. It avoids external rays as geometric objects; angles are rational pairs
 (num, den), and doubling is arithmetic modulo den.
 """
 
-
-def gcd_int(a0: Int, b0: Int) -> Int:
-    var a = a0
-    var b = b0
-    if a < 0:
-        a = -a
-    if b < 0:
-        b = -b
-    while b != 0:
-        var r = a % b
-        a = b
-        b = r
-    return a
+from integer_gcd import gcd_int
 
 
 def reduce_num(num0: Int, den0: Int) -> Int:

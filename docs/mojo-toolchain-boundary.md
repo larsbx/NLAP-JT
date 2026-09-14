@@ -11,6 +11,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/poly_z.mojo`;
 - `src/cert_types.mojo`;
 - `src/rat_q.mojo`;
+- `src/integer_gcd.mojo`;
 - `src/interval_q.mojo`;
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.

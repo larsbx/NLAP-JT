@@ -7,23 +7,7 @@
 # Required hardening: replace Int64 with a bigint backend before relying on this
 # for high-depth orbit or polynomial certificates.
 
-
-def abs_i64(x: Int64) -> Int64:
-    if x < 0:
-        return -x
-    return x
-
-
-def gcd_i64(a0: Int64, b0: Int64) -> Int64:
-    var a = abs_i64(a0)
-    var b = abs_i64(b0)
-    while b != 0:
-        var r = a % b
-        a = b
-        b = r
-    if a == 0:
-        return 1
-    return a
+from integer_gcd import gcd_i64_or_one
 
 
 struct Q(ImplicitlyCopyable):
@@ -37,7 +21,7 @@ struct Q(ImplicitlyCopyable):
         if dd < 0:
             nn = -nn
             dd = -dd
-        var g = gcd_i64(nn, dd)
+        var g = gcd_i64_or_one(nn, dd)
         self.num = nn // g
         self.den = dd // g
 

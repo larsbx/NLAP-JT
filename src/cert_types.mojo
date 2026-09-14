@@ -7,16 +7,6 @@
 #   - exact type is pointwise exclusion on the same box;
 #   - landing/fiber conclusions are theorem tags, not internal proofs.
 
-
-struct Rat:
-    var num: Int
-    var den: Int
-
-    def __init__(out self, num: Int, den: Int):
-        self.num = num
-        self.den = den
-
-
 struct Dyadic:
     var mantissa: Int
     var shift: Int

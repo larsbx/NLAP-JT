@@ -57,4 +57,4 @@ def test_priority_and_next_block_are_explicit():
     assert "current_priority_block() -> String" in body
     assert 'return "ResidualClosureNoMissingLinks"' in body
     assert "next_immediate_block() -> String" in body
-    assert 'return "TheoremTagImportLedger"' in body
+    assert 'return "TheoremTagPayloadInstances"' in body

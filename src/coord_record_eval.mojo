@@ -1,6 +1,7 @@
 # coord_record_eval.mojo
 #
 # Coordinate-record polynomial evaluation for finite certificate construction.
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # Regime rule: this is not analytic point evaluation. A CoordRecord is a finite
 # rational data record that may feed a singleton box or RootHandle witness.

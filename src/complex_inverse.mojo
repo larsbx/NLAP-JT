@@ -1,6 +1,7 @@
 # complex_inverse.mojo
 #
 # Rational complex inverse helpers for Krawczyk witnesses.
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # Finite-regime rule: inverse is computed algebraically by conjugate divided by
 # quadrance. There are no analytic angle APIs and no transcendental operations.

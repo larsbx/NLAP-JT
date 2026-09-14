@@ -1,4 +1,5 @@
 # smoke_tests.mojo
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # Smoke-test harness for the finite-regime Mandelbrot computation layer.
 #

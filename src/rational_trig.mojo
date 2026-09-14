@@ -1,4 +1,5 @@
 # rational_trig.mojo
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # Rational geometry substrate for the finite-regime Mandelbrot project.
 #

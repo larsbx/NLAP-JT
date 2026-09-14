@@ -1,6 +1,7 @@
 # rank2_operator.mojo
 #
 # Rank-2 coordinate-record substrate for finite-regime Mandelbrot arithmetic.
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
 #
 # A complex-like object here is a coordinate record or vertex-data payload with
 # the multiplication law (x,y) star (u,v) = (xu-yv, xv+yu). It is not an

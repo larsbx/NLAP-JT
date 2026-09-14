@@ -1,6 +1,8 @@
 """
 Finite-regime Mandelbrot computations preserved in Mojo.
 
+Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2, QUARANTINED).
+
 This file intentionally separates:
 - executable numeric smoke/stress checks, and
 - exact algebraic certificate obligations that should later be backed by a

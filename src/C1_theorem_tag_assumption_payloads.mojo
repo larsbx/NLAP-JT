@@ -37,11 +37,26 @@ struct PayloadConclusionKind(ImplicitlyCopyable):
     def boundary_equality_adapter() -> Self: return Self(4)
 
 
+struct PayloadStrengthClass(ImplicitlyCopyable):
+    var code: Int
+
+    def __init__(out self, code: Int): self.code = code
+
+    @staticmethod
+    def adapter_only() -> Self: return Self(0)
+    @staticmethod
+    def local_landing() -> Self: return Self(1)
+    @staticmethod
+    def class_specific_fiber_triviality() -> Self: return Self(2)
+    @staticmethod
+    def class_specific_local_connectivity() -> Self: return Self(3)
+
+
 struct TheoremTagPayload(ImplicitlyCopyable):
     var tag_name: String
     var payload_kind: AssumptionPayloadKind
     var conclusion_kind: PayloadConclusionKind
-    var strength_class: String
+    var strength_class: PayloadStrengthClass
     var has_finite_witness_payload: Bool
     var has_adapter_payload: Bool
     var has_source_family: Bool
@@ -55,7 +70,7 @@ struct TheoremTagPayload(ImplicitlyCopyable):
         tag_name: String,
         payload_kind: AssumptionPayloadKind,
         conclusion_kind: PayloadConclusionKind,
-        strength_class: String,
+        strength_class: PayloadStrengthClass,
         has_finite_witness_payload: Bool,
         has_adapter_payload: Bool,
         has_source_family: Bool,
@@ -85,13 +100,8 @@ def allowed_payload_conclusion(kind: PayloadConclusionKind) -> Bool:
     return kind.code >= 0 and kind.code <= 4
 
 
-def allowed_payload_strength(strength: String) -> Bool:
-    return (
-        strength == "AdapterOnly" or
-        strength == "LocalLanding" or
-        strength == "ClassSpecificFiberTriviality" or
-        strength == "ClassSpecificLocalConnectivity"
-    )
+def allowed_payload_strength(strength: PayloadStrengthClass) -> Bool:
+    return strength.code >= 0 and strength.code <= 3
 
 
 def forbidden_payload_tag(name: String) -> Bool:
@@ -135,7 +145,7 @@ def rational_parameter_ray_landing_payload_scaffold() -> TheoremTagPayload:
         "RationalParameterRayLanding",
         AssumptionPayloadKind.rational_ray_landing(),
         PayloadConclusionKind.ray_landing(),
-        "LocalLanding",
+        PayloadStrengthClass.local_landing(),
         True,
         True,
         True,
@@ -151,7 +161,7 @@ def fiber_definition_payload_scaffold() -> TheoremTagPayload:
         "FiberDefinitionEquivalence",
         AssumptionPayloadKind.fiber_definition(),
         PayloadConclusionKind.fiber_definition_adapter(),
-        "AdapterOnly",
+        PayloadStrengthClass.adapter_only(),
         True,
         True,
         True,
@@ -167,7 +177,7 @@ def generic_mlc_payload_rejected() -> Bool:
         "GenericMLC",
         AssumptionPayloadKind.known_trivial_fiber(),
         PayloadConclusionKind.class_specific_trivial_fiber(),
-        "ClassSpecificFiberTriviality",
+        PayloadStrengthClass.class_specific_fiber_triviality(),
         True,
         True,
         True,
@@ -184,7 +194,7 @@ def bounded_search_payload_rejected() -> Bool:
         "BoundedSearchTermination",
         AssumptionPayloadKind.known_trivial_fiber(),
         PayloadConclusionKind.class_specific_trivial_fiber(),
-        "ClassSpecificFiberTriviality",
+        PayloadStrengthClass.class_specific_fiber_triviality(),
         True,
         True,
         True,

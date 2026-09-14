@@ -18,15 +18,15 @@ def conv(a, b):
 
 def test_general_horner_api_exists():
     src = read()
-    assert "fn eval_poly_ascending_horner_ciq" in src
-    assert "fn derivative_coeffs_ascending" in src
+    assert "def eval_poly_ascending_horner_ciq" in src
+    assert "def derivative_coeffs_ascending" in src
     assert "coefficient_order_ascending" in src
     assert "backend_certificate_ready: Bool" in src
 
 
 def test_p21_coefficients_preserved():
     src = read()
-    assert "return List[Int64](0, 2, 1)" in src
+    assert "return [0, 2, 1]" in src
     assert "P_{2,1}=C(C+2)=C^2+2C" in src
 
 
@@ -38,14 +38,14 @@ def test_p41_expanded_coefficients_match_factors():
     f7 = [2, 2, 4, 6, 6, 6, 4, 1]
     expected = conv(conv(conv(c, c_plus_2), f3), f7)
     assert expected == [0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1]
-    assert "return List[Int64](0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1)" in read()
+    assert "return [0, 8, 20, 40, 68, 94, 114, 116, 94, 60, 28, 8, 1]" in read()
 
 
 def test_derivative_path_is_generated_not_hand_copied():
     src = read()
-    assert "fn p41_derivative_coeffs_ascending" in src
+    assert "def p41_derivative_coeffs_ascending" in src
     assert "return derivative_coeffs_ascending(p41_coeffs_ascending())" in src
-    assert "fn eval_p41_derivative" in src
+    assert "def eval_p41_derivative" in src
 
 
 def test_no_forbidden_shortcuts_in_poly_interval_eval():

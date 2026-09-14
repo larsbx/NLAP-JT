@@ -8,6 +8,21 @@
 
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
+from rat_q import Q, demo_q_normalization, demo_q_order
+from interval_q import ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
+from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
+from krawczyk_witness import verify_p21_krawczyk_c_minus_2
+
+
+def test_interval_polynomial_evaluation() -> Bool:
+    var c_minus_2 = ComplexIQ.point(Q(-2, 1), Q.zero())
+    var value = eval_p21(c_minus_2)
+    var status = demo_poly_interval_eval_status()
+    return (
+        value.re.lo.eq(Q.zero()) and value.re.hi.eq(Q.zero()) and
+        value.im.lo.eq(Q.zero()) and value.im.hi.eq(Q.zero()) and
+        status.scaffold_accepted() and not status.certificate_ready()
+    )
 
 
 def test_headers() -> Bool:
@@ -63,6 +78,14 @@ def run_smoke_tests() -> Bool:
     if not test_joint_box_gate():
         return False
     if not test_theorem_tags():
+        return False
+    if not demo_q_normalization() or not demo_q_order():
+        return False
+    if not demo_interval_mul() or not demo_complex_quadrance_point():
+        return False
+    if not test_interval_polynomial_evaluation():
+        return False
+    if not verify_p21_krawczyk_c_minus_2(8):
         return False
     return True
 

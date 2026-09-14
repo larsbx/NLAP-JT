@@ -74,7 +74,7 @@ def test_joint_certificate_requires_both_halves_and_tags():
     assert "self.krawczyk.accepted()" in src
     assert "self.exclusions.accepted()" in src
     assert "self.theorem_tags.accepted()" in src
-    assert "self.angle_kneading_match" in src
+    assert "self.ray_address_kneading_match" in src
     assert "self.box_names_match" in src
 
 

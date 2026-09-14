@@ -20,7 +20,7 @@ struct MisiurewiczClaim:
         self.k = k
         self.horizon = horizon
 
-    fn angle_preperiod(self) -> Int:
+    fn ray_address_preperiod(self) -> Int:
         return self.ell - 1
 
     fn valid_horizon(self) -> Bool:
@@ -57,13 +57,13 @@ fn verify_control_flow(claim: MisiurewiczClaim) -> Bool:
     # TODO interval: for forbidden pairs, prove 0 notin H_ij(beta).
     print("TODO: verify forbidden H_ij exclusions on the same beta")
 
-    # 7. Verify angle datum.
+    # 7. Verify the symbolic rational ray-address datum.
     # TODO rational arithmetic: doubling, eventual period, unlinking, kneading.
-    print("TODO: verify rational angle dynamics and unlinking")
+    print("TODO: verify rational ray-address dynamics and unlinking")
 
-    # 8. Match algebraic type to kneading type, not raw angle period.
-    let lam = claim.angle_preperiod()
-    print("angle/kneading preperiod lambda=", lam)
+    # 8. Match algebraic type to kneading type, not raw address period.
+    let lam = claim.ray_address_preperiod()
+    print("ray-address/kneading preperiod lambda=", lam)
     print("TODO: verify k divides raw ray period n")
 
     # 9. Theorem tags are external bindings.

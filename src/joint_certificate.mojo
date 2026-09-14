@@ -26,16 +26,16 @@ struct JointCertificateStatus:
     var krawczyk: KrawczykWitnessStatus
     var exclusions: IntervalOrbitStatus
     var theorem_tags: TheoremTagStatus
-    var angle_kneading_match: Bool
+    var ray_address_kneading_match: Bool
     var box_names_match: Bool
 
-    fn __init__(inout self, example_name: String, same_box_name: String, krawczyk: KrawczykWitnessStatus, exclusions: IntervalOrbitStatus, theorem_tags: TheoremTagStatus, angle_kneading_match: Bool, box_names_match: Bool):
+    fn __init__(inout self, example_name: String, same_box_name: String, krawczyk: KrawczykWitnessStatus, exclusions: IntervalOrbitStatus, theorem_tags: TheoremTagStatus, ray_address_kneading_match: Bool, box_names_match: Bool):
         self.example_name = example_name
         self.same_box_name = same_box_name
         self.krawczyk = krawczyk
         self.exclusions = exclusions
         self.theorem_tags = theorem_tags
-        self.angle_kneading_match = angle_kneading_match
+        self.ray_address_kneading_match = ray_address_kneading_match
         self.box_names_match = box_names_match
 
     fn accepted(self) -> Bool:
@@ -44,7 +44,7 @@ struct JointCertificateStatus:
             self.krawczyk.accepted() and
             self.exclusions.accepted() and
             self.theorem_tags.accepted() and
-            self.angle_kneading_match
+            self.ray_address_kneading_match
         )
 
 

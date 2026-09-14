@@ -19,7 +19,7 @@ struct RationalBackendStatus:
     var order_cross_multiply_safe: Bool
     var canonical_fraction_serialization: Bool
 
-    fn __init__(inout self, backend: BigIntBackendStatus, normalized_after_every_operation: Bool, denominator_strictly_positive: Bool, denominator_nonzero_checked: Bool, equality_cross_multiply_safe: Bool, order_cross_multiply_safe: Bool, canonical_fraction_serialization: Bool):
+    def __init__(out self, backend: BigIntBackendStatus, normalized_after_every_operation: Bool, denominator_strictly_positive: Bool, denominator_nonzero_checked: Bool, equality_cross_multiply_safe: Bool, order_cross_multiply_safe: Bool, canonical_fraction_serialization: Bool):
         self.backend = backend
         self.normalized_after_every_operation = normalized_after_every_operation
         self.denominator_strictly_positive = denominator_strictly_positive
@@ -28,7 +28,7 @@ struct RationalBackendStatus:
         self.order_cross_multiply_safe = order_cross_multiply_safe
         self.canonical_fraction_serialization = canonical_fraction_serialization
 
-    fn proof_ready(self) -> Bool:
+    def proof_ready(self) -> Bool:
         return (
             self.backend.proof_ready() and
             self.normalized_after_every_operation and
@@ -40,7 +40,7 @@ struct RationalBackendStatus:
         )
 
 
-fn current_q_backend_status() -> RationalBackendStatus:
+def current_q_backend_status() -> RationalBackendStatus:
     return RationalBackendStatus(
         dynamic_limb_bigz_backend_status(),
         True,
@@ -80,11 +80,11 @@ fn current_q_backend_status() -> RationalBackendStatus:
 # acceptance flag remains false until downstream replay is complete.
 
 
-fn q_backend_blocks_proof_acceptance(status: RationalBackendStatus) -> Bool:
+def q_backend_blocks_proof_acceptance(status: RationalBackendStatus) -> Bool:
     return not status.proof_ready()
 
 
-fn q_backend_migration_smoke() -> Bool:
+def q_backend_migration_smoke() -> Bool:
     var status = current_q_backend_status()
     return (
         status.backend.integer_backend_ready() and

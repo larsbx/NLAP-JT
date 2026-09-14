@@ -15,7 +15,7 @@ def test_finite_separation_predicate_doc_exists():
     assert "SideAssignment" in doc
     assert "SameFiberPrefix_k" in doc
     assert "SameFiberStream" in doc
-    assert "catalogue extensionality" in doc
+    assert "SeparatorCatalogueAdequacy" in doc
 
 
 def test_scaffold_requires_admissible_separator_and_distinct_sides():

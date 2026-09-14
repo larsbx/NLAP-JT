@@ -9,6 +9,7 @@ version = "0.1.0"
 test = "python -m pytest tests/"
 mojo-smoke = "mojo src/smoke_tests.mojo"
 mojo-build = "mojo build src/smoke_tests.mojo -o .pixi/nlap-smoke"
+property = "python tools/exact_arithmetic_property_oracle.py"
 
 [dependencies]
 mojo = "==1.0.0"

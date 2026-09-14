@@ -3,6 +3,12 @@
 # Normalized rational arithmetic over the dynamic-limb BigZ backend.
 # Invalid construction and division propagate a rejected state. This module
 # does not enable certificate acceptance or discharge any theorem obligation.
+#
+# Public boundary: docs/exact-arithmetic-public-boundary.md. Addition,
+# subtraction, and comparison scale by the denominator cofactors of
+# gcd(den, den'); multiplication cross-cancels before multiplying. Both keep
+# intermediate magnitudes near the size of the normalized result rather than
+# near the product of the operands.
 
 from bigint_z import BigZ, bigz_add, bigz_canonical_bytes, bigz_div_exact, bigz_eq, bigz_from_i64, bigz_gcd, bigz_is_canonical, bigz_lt, bigz_mul, bigz_neg, bigz_sub, bigz_zero
 
@@ -46,28 +52,33 @@ struct Q(Copyable):
     def add(self, other: Q) -> Q:
         if self.rejected or other.rejected:
             return q_rejected()
-        return q_normalize_bigz(
-            bigz_add(bigz_mul(self.num, other.den), bigz_mul(other.num, self.den)),
-            bigz_mul(self.den, other.den),
-        )
+        var terms = q_cross_terms(self, other)
+        return q_normalize_bigz(bigz_add(terms.left, terms.right), terms.den)
 
     def sub(self, other: Q) -> Q:
         if self.rejected or other.rejected:
             return q_rejected()
-        return q_normalize_bigz(
-            bigz_sub(bigz_mul(self.num, other.den), bigz_mul(other.num, self.den)),
-            bigz_mul(self.den, other.den),
-        )
+        var terms = q_cross_terms(self, other)
+        return q_normalize_bigz(bigz_sub(terms.left, terms.right), terms.den)
 
     def mul(self, other: Q) -> Q:
         if self.rejected or other.rejected:
             return q_rejected()
-        return q_normalize_bigz(bigz_mul(self.num, other.num), bigz_mul(self.den, other.den))
+        # Cross-cancel gcd(num, den') and gcd(num', den) before multiplying.
+        var g1 = bigz_gcd(self.num, other.den)
+        var g2 = bigz_gcd(other.num, self.den)
+        var a = bigz_div_exact(self.num, g1)
+        var b = bigz_div_exact(other.num, g2)
+        var c = bigz_div_exact(self.den, g2)
+        var d = bigz_div_exact(other.den, g1)
+        if a.rejected or b.rejected or c.rejected or d.rejected:
+            return q_rejected()
+        return q_normalize_bigz(bigz_mul(a.quotient, b.quotient), bigz_mul(c.quotient, d.quotient))
 
     def div(self, other: Q) -> Q:
         if self.rejected or other.rejected or other.num.is_zero():
             return q_rejected()
-        return q_normalize_bigz(bigz_mul(self.num, other.den), bigz_mul(self.den, other.num))
+        return self.mul(q_normalize_bigz(other.den, other.num))
 
     def square(self) -> Q:
         return self.mul(self)
@@ -78,12 +89,37 @@ struct Q(Copyable):
     def lt(self, other: Q) -> Bool:
         if self.rejected or other.rejected:
             return False
-        return bigz_lt(bigz_mul(self.num, other.den), bigz_mul(other.num, self.den))
+        var terms = q_cross_terms(self, other)
+        return bigz_lt(terms.left, terms.right)
 
     def le(self, other: Q) -> Bool:
         if self.rejected or other.rejected:
             return False
-        return not bigz_lt(bigz_mul(other.num, self.den), bigz_mul(self.num, other.den))
+        var terms = q_cross_terms(self, other)
+        return not bigz_lt(terms.right, terms.left)
+
+
+struct QCrossTerms(Copyable):
+    # For accepted a = p/q and b = r/s with g = gcd(q, s):
+    # left = p * (s/g), right = r * (q/g), den = q * (s/g) = lcm(q, s).
+    # Then a - b has the sign of left - right and a + b = (left + right) / den.
+    var left: BigZ
+    var right: BigZ
+    var den: BigZ
+
+    def __init__(out self, left: BigZ, right: BigZ, den: BigZ):
+        self.left = left.copy()
+        self.right = right.copy()
+        self.den = den.copy()
+
+
+def q_cross_terms(a: Q, b: Q) -> QCrossTerms:
+    # Caller contract: both operands accepted, so denominators are positive
+    # canonical BigZ values and the exact divisions below cannot reject.
+    var common = bigz_gcd(a.den, b.den)
+    var a_scale = bigz_div_exact(b.den, common).quotient.copy()
+    var b_scale = bigz_div_exact(a.den, common).quotient.copy()
+    return QCrossTerms(bigz_mul(a.num, a_scale), bigz_mul(b.num, b_scale), bigz_mul(a.den, a_scale))
 
 
 struct QCanonicalBytes(Copyable):
@@ -196,3 +232,27 @@ def demo_q_normalization() -> Bool:
 
 def demo_q_order() -> Bool:
     return Q(1, 3).lt(Q(1, 2))
+
+
+def q_cancellation_smoke() -> Bool:
+    # Cofactor scaling and cross-cancellation must agree with the naive
+    # cross-multiplied results and must not inflate normalized values.
+    var beyond_i64 = bigz_add(bigz_from_i64(9223372036854775807), bigz_from_i64(1))
+    var big_den = bigz_mul(beyond_i64, bigz_from_i64(6))
+    var a = q_from_bigz(bigz_from_i64(1), big_den)
+    var b = q_from_bigz(bigz_from_i64(1), bigz_mul(beyond_i64, bigz_from_i64(4)))
+    var expected_sum = q_from_bigz(bigz_from_i64(5), bigz_mul(beyond_i64, bigz_from_i64(12)))
+    var cross = q_from_bigz(beyond_i64, bigz_from_i64(7)).mul(q_from_bigz(bigz_from_i64(14), beyond_i64))
+    var terms = q_cross_terms(Q(1, 6), Q(1, 4))
+    return (
+        a.add(b).eq(expected_sum) and
+        expected_sum.sub(b).eq(a) and
+        cross.eq(Q(2, 1)) and
+        Q(-3, 4).mul(Q(8, 9)).eq(Q(-2, 3)) and
+        Q(3, 4).div(Q(9, 8)).eq(Q(2, 3)) and
+        bigz_eq(terms.left, bigz_from_i64(2)) and bigz_eq(terms.right, bigz_from_i64(3)) and
+        bigz_eq(terms.den, bigz_from_i64(12)) and
+        a.lt(b) and not b.lt(a) and a.le(b) and a.le(a) and not b.le(a) and
+        Q(1, 6).lt(Q(1, 4)) and Q(-1, 4).lt(Q(-1, 6)) and not Q(1, 4).lt(Q(1, 4)) and
+        Q(1, 2).div(Q.zero()).rejected and q_rejected().add(Q.one()).rejected
+    )

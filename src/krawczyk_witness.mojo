@@ -59,21 +59,21 @@ struct BigQKrawczykResult(Copyable):
 
 
 def complex_one() -> ComplexIQ:
-    return ComplexIQ.point(Q.one(), Q.zero())
+    return ComplexIQ.singleton(Q.one(), Q.zero())
 
 
 def complex_minus_half() -> ComplexIQ:
-    return ComplexIQ.point(Q(-1, 2), Q.zero())
+    return ComplexIQ.singleton(Q(-1, 2), Q.zero())
 
 
 def complex_minus_two_point() -> ComplexIQ:
-    return ComplexIQ.point(Q(-2, 1), Q.zero())
+    return ComplexIQ.singleton(Q(-2, 1), Q.zero())
 
 
 def c_minus_2_box(half_width_den_power: Int) -> ComplexIQ:
     # Dyadic box centered at -2 with half-width 2^{-half_width_den_power} in each coordinate.
     if half_width_den_power < 0:
-        return ComplexIQ.point(q_rejected(), q_rejected())
+        return ComplexIQ.singleton(q_rejected(), q_rejected())
     var den = bigz_from_i64(1)
     for _ in range(half_width_den_power):
         den = bigz_mul(den, bigz_from_i64(2))

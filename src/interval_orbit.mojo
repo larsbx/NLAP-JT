@@ -126,7 +126,7 @@ fn intended_count(ell: Int, period: Int, horizon: Int) -> Int:
 
 
 fn zero_box() -> ComplexIQ:
-    return ComplexIQ.point(Q.zero(), Q.zero())
+    return ComplexIQ.singleton(Q.zero(), Q.zero())
 
 
 fn next_orbit_value(z: ComplexIQ, c_box: ComplexIQ) -> ComplexIQ:

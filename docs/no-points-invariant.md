@@ -51,7 +51,7 @@ Core source should avoid `Point` as a type name for finite-regime objects. Prefe
 - `RootHandle` for `(polynomial_id, beta_id)` referents;
 - `RayAddr` for symbolic external-ray addresses.
 
-`point(...)` helper constructors are allowed only when they mean **singleton box constructor** or **rational coordinate constructor**, and comments must state that no ideal point is being introduced.
+Singleton-box constructors are named `singleton(...)` (`IQ.singleton`, `ComplexIQ.singleton`) and rational coordinate constructors `coord(...)`; a constructor named `point(...)` is rejected by `tools/audit_no_points.py`. Their comments must state that no ideal point is being introduced.
 
 ## Consequence for Krawczyk
 

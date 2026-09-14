@@ -23,6 +23,7 @@ from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_ha
 from alignment_audit_status import AlignmentPolicy, canonical_alignment_policy, alignment_policy_valid
 from mojo_optimization_contract import OptimizationPolicy, canonical_optimization_policy, optimization_policy_valid
 from C1_final_proof_object_skeleton import C1FinalProofObject, FinalProofAcceptancePolicy, canonical_final_proof_acceptance_policy, final_proof_acceptance_policy_valid, accepts_c1_final_proof_object, rejects_missing_link_final_exit, skeleton_alone_proves_c1
+from checked_int64_backend import checked_i64_boundary_smoke
 
 
 def test_rational_field_laws() -> Bool:
@@ -271,6 +272,8 @@ def run_smoke_tests() -> Bool:
     if not test_optimization_policy_data():
         return False
     if not test_final_proof_object_policy_data():
+        return False
+    if not checked_i64_boundary_smoke():
         return False
     return True
 

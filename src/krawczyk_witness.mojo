@@ -23,7 +23,7 @@ struct KrawczykWitnessStatus:
     var krawczyk_subset_interior: Bool
     var root_box_name: String
 
-    fn __init__(inout self, polynomial_name: String, used_squarefree_polynomial: Bool, used_dyadic_center: Bool, used_dyadic_inverse: Bool, krawczyk_subset_interior: Bool, root_box_name: String):
+    def __init__(out self, polynomial_name: String, used_squarefree_polynomial: Bool, used_dyadic_center: Bool, used_dyadic_inverse: Bool, krawczyk_subset_interior: Bool, root_box_name: String):
         self.polynomial_name = polynomial_name
         self.used_squarefree_polynomial = used_squarefree_polynomial
         self.used_dyadic_center = used_dyadic_center
@@ -31,7 +31,7 @@ struct KrawczykWitnessStatus:
         self.krawczyk_subset_interior = krawczyk_subset_interior
         self.root_box_name = root_box_name
 
-    fn accepted(self) -> Bool:
+    def accepted(self) -> Bool:
         return (
             self.used_squarefree_polynomial and
             self.used_dyadic_center and
@@ -40,29 +40,29 @@ struct KrawczykWitnessStatus:
         )
 
 
-fn complex_one() -> ComplexIQ:
+def complex_one() -> ComplexIQ:
     return ComplexIQ.point(Q.one(), Q.zero())
 
 
-fn complex_minus_half() -> ComplexIQ:
+def complex_minus_half() -> ComplexIQ:
     return ComplexIQ.point(Q(-1, 2), Q.zero())
 
 
-fn complex_minus_two_point() -> ComplexIQ:
+def complex_minus_two_point() -> ComplexIQ:
     return ComplexIQ.point(Q(-2, 1), Q.zero())
 
 
-fn c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
+def c_minus_2_box(radius_den_power: Int) -> ComplexIQ:
     # Dyadic box centered at -2 with half-width 2^{-radius_den_power} in each coordinate.
     # Current Int64 rational backend only supports small powers safely.
     var den = 1
     for _ in range(radius_den_power):
         den *= 2
-    var h = Q(1, den)
+    var h = Q(1, Int64(den))
     return ComplexIQ(IQ(Q(-2, 1).sub(h), Q(-2, 1).add(h)), IQ(h.neg(), h))
 
 
-fn p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
+def p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
     # K(beta)=m-A P(m)+(1-A P'(beta))(beta-m)
     # for m=-2 and A=-1/2.
     var m = complex_minus_two_point()
@@ -73,13 +73,13 @@ fn p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
     return m.sub(a.mul(p_m)).add(one_minus_a_dp.mul(beta_minus_m))
 
 
-fn verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
+def verify_p21_krawczyk_c_minus_2(radius_den_power: Int) -> Bool:
     var beta = c_minus_2_box(radius_den_power)
     var image = p21_krawczyk_image(beta)
     return image.strict_subset_of(beta)
 
 
-fn demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
+def demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
     # Computed native interval witness for beta centered at -2.
     # The default radius 2^-8 is intentionally small enough for the current
     # Int64 rational scaffold and still large enough for readable debugging.
@@ -87,15 +87,15 @@ fn demo_krawczyk_p21_c_minus_2() -> KrawczykWitnessStatus:
     return KrawczykWitnessStatus("P_2_1", True, True, True, ok, "beta_c_minus_2")
 
 
-fn f7_name() -> String:
+def f7_name() -> String:
     return "F7=C^7+4C^6+6C^5+6C^4+6C^3+4C^2+2C+2"
 
 
-fn p41_squarefree_name() -> String:
+def p41_squarefree_name() -> String:
     return "P_4_1=C(C+2)(C^3+2C^2+2C+2)F7"
 
 
-fn p41_evaluation_available_on_box(beta: ComplexIQ) -> Bool:
+def p41_evaluation_available_on_box(beta: ComplexIQ) -> Bool:
     # This performs polynomial and derivative interval evaluation through the
     # general Horner evaluator, but does not yet certify a Krawczyk inclusion.
     var p_beta = eval_p41(beta)
@@ -103,7 +103,7 @@ fn p41_evaluation_available_on_box(beta: ComplexIQ) -> Bool:
     return not p_beta.re.contains_zero() or dp_beta.re.contains_zero() or dp_beta.im.contains_zero() or not p_beta.im.contains_zero()
 
 
-fn demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:
+def demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:
     # Required target witness for M_{4,1}:
     #   P=P_4_1 squarefree polynomial.
     #   beta centered at dyadic approximation of upper non-real F7 root.
@@ -114,5 +114,5 @@ fn demo_krawczyk_p41_m41_placeholder() -> KrawczykWitnessStatus:
     return KrawczykWitnessStatus("P_4_1", True, True, False, False, "beta_m41_pending")
 
 
-fn krawczyk_ready_for_joint_certificate(status: KrawczykWitnessStatus) -> Bool:
+def krawczyk_ready_for_joint_certificate(status: KrawczykWitnessStatus) -> Bool:
     return status.accepted()

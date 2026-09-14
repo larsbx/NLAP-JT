@@ -82,6 +82,21 @@ def dynamic_limb_phase_one_backend_status() -> BigIntBackendStatus:
     )
 
 
+def dynamic_limb_phase_two_backend_status() -> BigIntBackendStatus:
+    # Dynamic arithmetic, Euclidean gcd, and exact divisibility are compiled.
+    # Canonical serialization remains the final integer-backend blocker.
+    return BigIntBackendStatus(
+        "MojoDynamicLimbBigZPhaseTwo",
+        True,
+        True,
+        True,
+        True,
+        True,
+        False,
+        False,
+    )
+
+
 # Target adapter operations for the real backend. These are comments until a
 # concrete Mojo-compatible bigint source is selected.
 #
@@ -113,6 +128,16 @@ def bigint_adapter_phase_one_smoke() -> Bool:
     return (
         status.has_unbounded_storage and status.has_exact_add_sub_mul and status.has_exact_order and
         not status.has_euclidean_gcd and not status.has_exact_divisibility and
+        not status.has_canonical_serialization and not status.allows_certificate_acceptance and
+        bigint_backend_blocks_proof_acceptance(status)
+    )
+
+
+def bigint_adapter_phase_two_smoke() -> Bool:
+    var status = dynamic_limb_phase_two_backend_status()
+    return (
+        status.has_unbounded_storage and status.has_exact_add_sub_mul and status.has_exact_order and
+        status.has_euclidean_gcd and status.has_exact_divisibility and
         not status.has_canonical_serialization and not status.allows_certificate_acceptance and
         bigint_backend_blocks_proof_acceptance(status)
     )

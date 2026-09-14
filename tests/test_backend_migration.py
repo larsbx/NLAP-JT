@@ -45,6 +45,23 @@ def test_dynamic_limb_phase_one_is_explicitly_incomplete():
     assert "if not bigint_adapter_phase_one_smoke():" in smoke
 
 
+def test_dynamic_limb_phase_two_adds_division_and_gcd_but_stays_blocked():
+    src = read(BIG)
+    z = read(ROOT / "src" / "bigint_z.mojo")
+    smoke = read(ROOT / "src" / "smoke_tests.mojo")
+    assert "dynamic_limb_phase_two_backend_status" in src
+    assert '"MojoDynamicLimbBigZPhaseTwo"' in src
+    for operation in ["bigz_abs_divmod", "bigz_divmod", "bigz_div_exact", "bigz_gcd"]:
+        assert f"def {operation}" in z
+    assert "if division.rejected or not division.remainder.is_zero():" in z
+    assert "bigz_divmod_identity_holds" in z
+    assert "status.has_euclidean_gcd and status.has_exact_divisibility" in src
+    assert "not status.has_canonical_serialization" in src
+    assert "not status.allows_certificate_acceptance" in src
+    assert "if not bigint_z_phase_two_smoke():" in smoke
+    assert "if not bigint_adapter_phase_two_smoke():" in smoke
+
+
 def test_rational_backend_requires_normalization_and_safe_order():
     src = read(RAT)
     assert "struct RationalBackendStatus" in src

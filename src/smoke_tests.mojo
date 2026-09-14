@@ -174,7 +174,7 @@ def test_final_proof_object_policy_data() -> Bool:
     var policy = canonical_final_proof_acceptance_policy()
     var unsafe_policy = FinalProofAcceptancePolicy(False, True, True, True, True, False, False)
     var complete = C1FinalProofObject(True, True, True, True, True, True, True, True, True, True, True, True, True)
-    var missing_link = C1FinalProofObject(True, True, True, False, True, True, True, True, False, True, True, True, True)
+    var missing_link = C1FinalProofObject(True, True, True, True, True, True, True, True, False, True, True, True, True)
     return (
         final_proof_acceptance_policy_valid(policy) and
         not final_proof_acceptance_policy_valid(unsafe_policy) and

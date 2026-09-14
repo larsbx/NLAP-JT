@@ -31,25 +31,25 @@ def test_open_frontier_strength_gate_is_explicit():
 def test_finite_state_does_not_prove_global_termination():
     body = text(AUDIT) + "\n" + text(STATUS)
     assert "finite carrier at each stage does not imply" in body
-    assert "bounded_search_proves_global_termination() -> Bool" in body
-    assert "finite_state_alone_proves_well_foundedness() -> Bool" in body
-    assert "return False" in body
+    assert "bounded_search_proves_global_termination(policy: AlignmentPolicy)" in body
+    assert "finite_state_alone_proves_well_foundedness(policy: AlignmentPolicy)" in body
+    assert "return policy.bounded_search_global" in body
 
 
 def test_mojo_is_first_class_execution_and_finite_theorem_kernel():
     body = text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
     assert "Mojo is the default first-class language" in body
     assert "finite proof-object theorem kernel" in body
-    assert "mojo_is_first_class_execution_language() -> Bool" in body
+    assert "mojo_is_first_class_execution_language(policy: AlignmentPolicy)" in body
     assert "mojo_is_finite_theorem_kernel() -> Bool" in body
     assert "return True" in body
 
 
 def test_mojo_kernel_does_not_reprove_imported_analytic_theorems():
     body = text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
-    assert "mojo_reproves_imported_analytic_theorems() -> Bool" in body
+    assert "mojo_reproves_imported_analytic_theorems(policy: AlignmentPolicy)" in body
     assert "mojo_reproves_external_analytic_theorems() -> Bool" in body
-    assert "theorem_tags_require_import_validation() -> Bool" in body
+    assert "theorem_tags_require_import_validation(policy: AlignmentPolicy)" in body
     assert "TheoremTagImport" in body
     assert "return False" in body
 
@@ -66,8 +66,8 @@ def test_rank2_layer_restriction_not_absolute_ontology_claim():
     body = text(AUDIT) + "\n" + text(MOJO_POLICY) + "\n" + text(STATUS) + "\n" + text(KERNEL)
     assert "layer restriction" in body
     assert "not primitive constructors" in body or "must not expose primitive constructors" in body
-    assert "rank2_circle_primitive_available() -> Bool" in body
-    assert "rank2_higher_layer_adapter_required() -> Bool" in body
+    assert "rank2_circle_primitive_available(policy: AlignmentPolicy)" in body
+    assert "rank2_higher_layer_adapter_required(policy: AlignmentPolicy)" in body
     assert "rank2_circle_primitive_available_in_kernel() -> Bool" in body
 
 
@@ -78,3 +78,11 @@ def test_exact_type_galois_invariance_correction_is_incorporated():
     assert "Galois conjugates can mix exact-type and lower-type roots" not in body
     assert "pointwise" in body
     assert "same-box exclusions as its canonical verifier policy" in body
+
+
+def test_alignment_policy_is_data_checked_not_literal_functions():
+    body = text(STATUS)
+    assert "struct AlignmentPolicy" in body
+    assert "alignment_policy_valid(policy: AlignmentPolicy)" in body
+    assert "return policy.mojo_first_class" in body
+    assert "return policy.rank2_circle_primitive" in body

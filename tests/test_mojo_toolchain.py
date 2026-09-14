@@ -48,6 +48,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/integer_gcd.mojo",
         "src/ray_address.mojo",
         "src/rational_trig.mojo",
+        "src/alignment_audit_status.mojo",
         "src/interval_q.mojo",
         "src/poly_interval_eval.mojo",
         "src/krawczyk_witness.mojo",

@@ -25,6 +25,15 @@ def test_compiler_checked_boundary_is_explicit():
     boundary = (ROOT / "docs" / "mojo-toolchain-boundary.md").read_text(
         encoding="utf-8"
     )
-    for path in ["src/smoke_tests.mojo", "src/poly_z.mojo", "src/cert_types.mojo"]:
+    for path in [
+        "src/smoke_tests.mojo",
+        "src/poly_z.mojo",
+        "src/cert_types.mojo",
+        "src/rat_q.mojo",
+        "src/interval_q.mojo",
+        "src/poly_interval_eval.mojo",
+        "src/krawczyk_witness.mojo",
+    ]:
         assert path in boundary
-    assert "does not imply that every `.mojo` file compiles" in boundary
+    assert "Passing it does not imply that" in boundary
+    assert "every `.mojo` file compiles" in boundary

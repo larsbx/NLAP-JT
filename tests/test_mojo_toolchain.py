@@ -49,6 +49,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/ray_address.mojo",
         "src/rational_trig.mojo",
         "src/alignment_audit_status.mojo",
+        "src/mojo_optimization_contract.mojo",
         "src/interval_q.mojo",
         "src/poly_interval_eval.mojo",
         "src/krawczyk_witness.mojo",

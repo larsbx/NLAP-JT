@@ -20,6 +20,7 @@ from integer_gcd import gcd_int, gcd_i64, gcd_i64_or_one
 from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
 from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_half
 from alignment_audit_status import AlignmentPolicy, canonical_alignment_policy, alignment_policy_valid
+from mojo_optimization_contract import OptimizationPolicy, canonical_optimization_policy, optimization_policy_valid
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -130,6 +131,12 @@ def test_alignment_policy_data() -> Bool:
     return alignment_policy_valid(canonical) and not alignment_policy_valid(unsafe)
 
 
+def test_optimization_policy_data() -> Bool:
+    var canonical = canonical_optimization_policy()
+    var unsafe = OptimizationPolicy("Mojo", "Mojo", True, False, False, True, True, True, True, True)
+    return optimization_policy_valid(canonical) and not optimization_policy_valid(unsafe)
+
+
 def test_headers() -> Bool:
     # c = -2: critical type (ell,k)=(2,1), angle preperiod lambda=1, ray period n=1.
     var c_minus_2 = MisCertHeader(2, 1, 3, 1)
@@ -207,6 +214,8 @@ def run_smoke_tests() -> Bool:
     if not test_canonical_rational_geometry():
         return False
     if not test_alignment_policy_data():
+        return False
+    if not test_optimization_policy_data():
         return False
     return True
 

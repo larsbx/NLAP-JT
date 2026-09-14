@@ -9,7 +9,7 @@
 
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
-from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order
+from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order, q_cancellation_smoke
 from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2, bigq_krawczyk_replay_smoke
@@ -35,7 +35,7 @@ from checked_ray_address import checked_ray_address_smoke
 from checked_finite_certificate_gate import checked_finite_certificate_gate_smoke
 from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
 from checked_landing_target_adapter import checked_landing_target_adapter_smoke
-from bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke
+from bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke, bigz_long_division_smoke
 from bigint_adapter import bigint_adapter_phase_one_smoke, bigint_adapter_phase_two_smoke, bigint_adapter_complete_smoke
 from rat_backend_plan import q_backend_migration_smoke
 
@@ -73,7 +73,7 @@ def test_interval_enclosure_laws() -> Bool:
 
 
 def test_interval_polynomial_evaluation() -> Bool:
-    var c_minus_2 = ComplexIQ.point(Q(-2, 1), Q.zero())
+    var c_minus_2 = ComplexIQ.singleton(Q(-2, 1), Q.zero())
     var value = eval_p21(c_minus_2)
     var status = demo_poly_interval_eval_status()
     return (
@@ -328,6 +328,10 @@ def run_smoke_tests() -> Bool:
     if not bigint_z_phase_three_smoke():
         return False
     if not bigint_adapter_complete_smoke():
+        return False
+    if not bigz_long_division_smoke():
+        return False
+    if not q_cancellation_smoke():
         return False
     return True
 

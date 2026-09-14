@@ -21,14 +21,14 @@ CORE_PATHS = [ROOT / "src"]
 # Banned as type/function/API names when they indicate analytic singletons or
 # pointwise evaluation. PointVertex is explicitly allowed as finite incidence.
 TOKEN_RE = re.compile(
-    r"\b(?:Point(?!Vertex)|point_eval|eval_point|point_value|to_point_interval)\b|fn\s+point\s*\(",
+    r"\b(?:Point(?!Vertex)|point_eval|eval_point|point_value|to_point_interval)\b"
+    r"|(?:fn|def)\s+point\s*\(|\.point\s*\(",
 )
 
-ALLOW_LINES = {
-    "return ComplexIQ.point(self.re, self.im)",
-    "fn point(x: Q) -> IQ:",
-    "fn point(re: Q, im: Q) -> ComplexIQ:",
-}
+# Singleton-box constructors are named `singleton` (docs/no-points-invariant.md),
+# so no source line is exempt. Add an entry here only together with a matching
+# sentence in that invariant.
+ALLOW_LINES: set[str] = set()
 
 
 def iter_files() -> list[Path]:
@@ -57,7 +57,7 @@ def main() -> int:
         print("Forbidden analytic point API language found in core files:\n")
         for path, lineno, line in violations:
             print(f"{path}:{lineno}: {line}")
-        print("\nUse CoordRecord, SingletonBox, RootHandle, or PointVertex finite incidence instead.")
+        print("\nUse CoordRecord, IQ.singleton, RootHandle, or PointVertex finite incidence instead.")
         return 1
 
     print("OK: no forbidden analytic point API language found in core files.")

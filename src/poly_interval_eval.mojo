@@ -35,7 +35,7 @@ struct PolyIQEvalStatus:
 
 
 def const_complex(n: Int64) -> ComplexIQ:
-    return ComplexIQ.point(Q(n, 1), Q.zero())
+    return ComplexIQ.singleton(Q(n, 1), Q.zero())
 
 
 def eval_poly_ascending_horner_ciq(c_box: ComplexIQ, coeffs: List[Int64]) -> ComplexIQ:

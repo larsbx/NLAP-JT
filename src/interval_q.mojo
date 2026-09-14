@@ -4,6 +4,7 @@
 #
 # Rational interval arithmetic scaffold for certificate witnesses.
 # Endpoints are normalized rationals backed by dynamic-limb BigZ values.
+# Public boundary: docs/exact-arithmetic-public-boundary.md.
 
 from rat_q import Q, q_min, q_max, q_rejected
 
@@ -44,7 +45,9 @@ struct IQ(Copyable):
         return not self.rejected
 
     @staticmethod
-    def point(x: Q) -> IQ:
+    def singleton(x: Q) -> IQ:
+        # Singleton box [x, x] with an exact rational endpoint. No ideal point
+        # is introduced (docs/no-points-invariant.md).
         return IQ(x, x)
 
     def contains_zero(self) -> IQBoolResult:
@@ -130,8 +133,10 @@ struct ComplexIQ(Copyable):
         return self.re.accepted() and self.im.accepted()
 
     @staticmethod
-    def point(re: Q, im: Q) -> ComplexIQ:
-        return ComplexIQ(IQ.point(re), IQ.point(im))
+    def singleton(re: Q, im: Q) -> ComplexIQ:
+        # Rank-2 singleton box from two exact rational coordinates. No ideal
+        # point is introduced (docs/no-points-invariant.md).
+        return ComplexIQ(IQ.singleton(re), IQ.singleton(im))
 
     def add(self, other: ComplexIQ) -> ComplexIQ:
         return ComplexIQ(self.re.add(other.re), self.im.add(other.im))
@@ -173,7 +178,7 @@ def demo_interval_mul() -> Bool:
 
 
 def demo_complex_quadrance_point() -> Bool:
-    var z = ComplexIQ.point(Q(3, 1), Q(4, 1))
+    var z = ComplexIQ.singleton(Q(3, 1), Q(4, 1))
     var q = z.quadrance()
     return q.lo.eq(Q(25, 1)) and q.hi.eq(Q(25, 1))
 

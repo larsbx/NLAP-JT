@@ -39,6 +39,10 @@ The compiler-checked dependency closure currently consists of:
 - `src/bigint_z.mojo`.
 - `src/bigint_adapter.mojo`.
 
+A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
+`bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,
+which pipes its transcript into `tools/exact_arithmetic_property_oracle.py`.
+
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
 normalized rational arithmetic, rational ordering, interval multiplication,
@@ -97,6 +101,10 @@ non-divisions, and Euclidean gcd beyond `Int64` magnitude. Phase three adds a
 canonical sign/8-byte-length/minimal-big-endian-magnitude encoding. Its complete
 integer capability record permits rational migration, but no certificate path
 uses it yet; bounded `Q` and downstream consumers still reject proof acceptance.
+Quotient/remainder uses schoolbook long division, checked in-process against the
+retained shift-and-subtract reference; `Q` scales by denominator cofactors and
+cross-cancels before multiplying. Both are exercised by the smoke target and by
+the randomized property probe.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

@@ -6,6 +6,11 @@
 # mul, equality, order, quotient/remainder, exact division, and Euclidean gcd.
 # Canonical serialization uses sign, fixed-width byte length, and minimal
 # big-endian magnitude. Higher rational and certificate layers remain separate.
+#
+# Public boundary: docs/exact-arithmetic-public-boundary.md. Quotient/remainder
+# uses schoolbook long division on limbs (Knuth, TAOCP vol. 2, Algorithm D);
+# the earlier binary shift-and-subtract routine is retained only as an
+# in-process reference for the property probe and the smoke tests.
 
 comptime BIGZ_BASE = UInt64(1000000000)
 
@@ -255,7 +260,27 @@ def rejected_bigz_divmod() -> BigZDivModResult:
     return out^
 
 
-def bigz_abs_divmod(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
+def bigz_abs_mul_small(a: BigZ, factor: UInt64) -> BigZ:
+    # Internal use requires factor < BIGZ_BASE. Result is abs(a) * factor.
+    var out = BigZ()
+    if a.sign == 0 or factor == 0:
+        return out^
+    out.sign = 1
+    var carry = UInt64(0)
+    for idx in range(len(a.limbs)):
+        var total = a.limbs[idx] * factor + carry
+        out.limbs.append(total % BIGZ_BASE)
+        carry = total // BIGZ_BASE
+    if carry > 0:
+        out.limbs.append(carry)
+    out.normalize()
+    return out^
+
+
+def bigz_abs_divmod_shift_subtract(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
+    # Reference routine: binary shift-and-subtract. Quadratic in limb count per
+    # quotient bit, so unsuitable as the backend; kept as an independent oracle
+    # for bigz_abs_divmod in the property probe and the smoke tests.
     if divisor.sign == 0:
         return rejected_bigz_divmod()
     var out = BigZDivModResult()
@@ -281,6 +306,98 @@ def bigz_abs_divmod(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
 
     out.quotient = quotient.copy()
     out.remainder = remainder.copy()
+    return out^
+
+
+def bigz_abs_divmod(dividend: BigZ, divisor: BigZ) -> BigZDivModResult:
+    # Schoolbook long division on base-10^9 limbs (Knuth Algorithm D).
+    # Returns abs(dividend) = quotient * abs(divisor) + remainder with
+    # 0 <= remainder < abs(divisor). Every intermediate fits in Int64: a
+    # product of two limbs is below 10^18, and after normalization the top
+    # divisor limb is at least BIGZ_BASE / 2, so the estimate qhat is below
+    # 2 * BIGZ_BASE.
+    if divisor.sign == 0:
+        return rejected_bigz_divmod()
+    var out = BigZDivModResult()
+    var u = bigz_abs(dividend)
+    var v = bigz_abs(divisor)
+    if bigz_abs_compare(u, v) < 0:
+        out.remainder = u.copy()
+        return out^
+    var n = len(v.limbs)
+    if n == 1:
+        out.quotient = bigz_abs_div_small(u, v.limbs[0])
+        out.remainder = bigz_from_i64(Int64(bigz_abs_mod_small(u, v.limbs[0])))
+        return out^
+
+    # D1: normalize so that the top divisor limb is at least BIGZ_BASE / 2.
+    var scale = BIGZ_BASE // (v.limbs[n - 1] + 1)
+    var vn = bigz_abs_mul_small(v, scale)
+    var un_scaled = bigz_abs_mul_small(u, scale)
+    var m = len(u.limbs) - n
+    var un = List[Int64]()
+    for idx in range(m + n + 1):
+        un.append(Int64(un_scaled.limb(idx)))
+    var base = Int64(BIGZ_BASE)
+    var v_top = Int64(vn.limbs[n - 1])
+    var v_next = Int64(vn.limbs[n - 2])
+
+    var quotient = BigZ()
+    quotient.sign = 1
+    for _ in range(m + 1):
+        quotient.limbs.append(0)
+
+    # D2-D7: one quotient limb per iteration, most significant first.
+    var j = m
+    while j >= 0:
+        # D3: estimate qhat from the top two limbs of the current window.
+        var numerator = un[j + n] * base + un[j + n - 1]
+        var qhat = numerator // v_top
+        var rhat = numerator % v_top
+        while qhat >= base or qhat * v_next > rhat * base + un[j + n - 2]:
+            qhat -= 1
+            rhat += v_top
+            if rhat >= base:
+                break
+
+        # D4: multiply and subtract qhat * vn from the window un[j .. j+n].
+        var borrow = Int64(0)
+        for i in range(n):
+            var t = un[j + i] - qhat * Int64(vn.limbs[i]) - borrow
+            if t < 0:
+                var k = (-t + base - 1) // base
+                un[j + i] = t + k * base
+                borrow = k
+            else:
+                un[j + i] = t
+                borrow = 0
+        un[j + n] = un[j + n] - borrow
+
+        # D5-D6: the estimate was one too large; add the divisor back once.
+        if un[j + n] < 0:
+            qhat -= 1
+            var carry = Int64(0)
+            for i in range(n):
+                var t = un[j + i] + Int64(vn.limbs[i]) + carry
+                if t >= base:
+                    un[j + i] = t - base
+                    carry = 1
+                else:
+                    un[j + i] = t
+                    carry = 0
+            un[j + n] = un[j + n] + carry
+        quotient.limbs[j] = UInt64(qhat)
+        j -= 1
+
+    # D8: the remainder is the low window divided by the normalization scale.
+    var remainder_scaled = BigZ()
+    remainder_scaled.sign = 1
+    for idx in range(n):
+        remainder_scaled.limbs.append(UInt64(un[idx]))
+    remainder_scaled.normalize()
+    quotient.normalize()
+    out.quotient = quotient.copy()
+    out.remainder = bigz_abs_div_small(remainder_scaled, scale)
     return out^
 
 
@@ -457,4 +574,47 @@ def bigint_z_phase_three_smoke() -> Bool:
         q7_square.bytes[9] == 17 and q7_square.bytes[10] == 144 and q7_square.bytes[17] == 16 and
         rejected.rejected and
         canonical_bytes_equal(one, bigz_canonical_bytes(bigz_from_i64(1)))
+    )
+
+
+def bigz_long_division_agrees_with_reference(dividend: BigZ, divisor: BigZ) -> Bool:
+    var long = bigz_abs_divmod(dividend, divisor)
+    var reference = bigz_abs_divmod_shift_subtract(dividend, divisor)
+    return (
+        long.rejected == reference.rejected and
+        bigz_eq(long.quotient, reference.quotient) and
+        bigz_eq(long.remainder, reference.remainder)
+    )
+
+
+def bigz_long_division_smoke() -> Bool:
+    # Multi-limb divisors exercise the normalized estimate; the base-minus-one
+    # windows force the add-back branch (Knuth D6) on a deterministic input.
+    var beyond_i64 = bigz_add(bigz_from_i64(9223372036854775807), bigz_from_i64(1))
+    var wide = bigz_mul(bigz_mul(beyond_i64, beyond_i64), bigz_from_i64(999999937))
+    var wide_divisor = bigz_add(bigz_mul(beyond_i64, bigz_from_i64(3)), bigz_from_i64(7))
+    var add_back_dividend = BigZ()
+    add_back_dividend.sign = 1
+    for _ in range(6):
+        add_back_dividend.limbs.append(BIGZ_BASE - 1)
+    var add_back_divisor = BigZ()
+    add_back_divisor.sign = 1
+    add_back_divisor.limbs.append(BIGZ_BASE - 1)
+    add_back_divisor.limbs.append(0)
+    add_back_divisor.limbs.append(BIGZ_BASE // 2)
+    var single_limb = bigz_from_i64(1000000007)
+    var exact = bigz_mul(wide_divisor, bigz_from_i64(-12345))
+    var zero_divisor = bigz_abs_divmod(wide, bigz_zero())
+    var exact_result = bigz_div_exact(exact, wide_divisor)
+    return (
+        bigz_long_division_agrees_with_reference(wide, wide_divisor) and
+        bigz_long_division_agrees_with_reference(add_back_dividend, add_back_divisor) and
+        bigz_long_division_agrees_with_reference(wide, single_limb) and
+        bigz_long_division_agrees_with_reference(wide_divisor, wide) and
+        bigz_long_division_agrees_with_reference(bigz_zero(), wide_divisor) and
+        bigz_divmod_identity_holds(wide, wide_divisor) and
+        bigz_divmod_identity_holds(bigz_neg(wide), wide_divisor) and
+        bigz_divmod_identity_holds(add_back_dividend, add_back_divisor) and
+        zero_divisor.rejected and
+        not exact_result.rejected and bigz_eq(exact_result.quotient, bigz_from_i64(-12345))
     )

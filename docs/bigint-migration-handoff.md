@@ -75,9 +75,10 @@ Every constructor and operation must normalize. Equality and order may use cross
    add/sub/mul/order, quotient/remainder, rejected non-divisions, Euclidean gcd,
    and canonical `Z(sign, byte_len, big_endian_magnitude)` serialization.
 3. **Complete:** `Q` stores normalized `BigZ` numerator and denominator values while preserving its public arithmetic names; invalid denominators and division by zero propagate rejection.
-4. **Next:** replay interval arithmetic and certificate predicates against bigint-backed `Q`.
-5. Promote coordinate-record polynomial evaluation from pending to certificate-ready.
-6. Only then allow `ProofGradeCertificateStatus.accepted()` to return true.
+4. **Complete (arithmetic hardening):** the public boundary of `BigZ`, `Q`, `IQ`, and `ComplexIQ` is declared in `docs/exact-arithmetic-public-boundary.md`; long division replaces shift-and-subtract; `Q` cancels before multiplying and comparing; the randomized property probe runs against the Python oracle in CI.
+5. **Next:** replay interval arithmetic and certificate predicates against bigint-backed `Q`.
+6. Promote coordinate-record polynomial evaluation from pending to certificate-ready.
+7. Only then allow `ProofGradeCertificateStatus.accepted()` to return true.
 
 ## Forbidden shortcuts
 

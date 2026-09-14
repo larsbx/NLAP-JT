@@ -33,7 +33,7 @@ struct ComplexQ:
 
     fn to_singleton_box(self) -> ComplexIQ:
         # Singleton box constructor for a rational coordinate record.
-        return ComplexIQ.point(self.re, self.im)
+        return ComplexIQ.singleton(self.re, self.im)
 
 
 struct InverseWitness:

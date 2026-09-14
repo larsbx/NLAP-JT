@@ -20,6 +20,7 @@ from audit_exact_arithmetic import (  # noqa: E402
     SPEC,
     SPEC_REL,
     allowlisted,
+    arithmetic_consumers,
     audit,
     binding_rows,
 )
@@ -36,6 +37,8 @@ def text(rel: str) -> str:
 def test_spec_exists_with_required_sections():
     body = SPEC.read_text(encoding="utf-8")
     assert all(section in body for section in REQUIRED_SECTIONS)
+    assert "authoritative only for NLAP-JT" in body
+    assert "is mirrored byte-for-byte" not in body
 
 
 def test_audit_passes_on_current_tree():
@@ -61,6 +64,7 @@ def test_binding_table_covers_the_kernels_and_quarantines_floats():
     assert "src/complex_box.mojo" in by_class["QUARANTINED"]
     assert by_class["QUARANTINED"] == allowlisted()
     assert ALLOWLIST.exists()
+    assert arithmetic_consumers() <= set().union(*by_class.values())
 
 
 def test_audit_rejects_a_float_outside_the_allowlist(tmp_path, monkeypatch):
@@ -75,6 +79,37 @@ def test_audit_rejects_a_float_outside_the_allowlist(tmp_path, monkeypatch):
     monkeypatch.setattr(mod, "allowlisted", lambda: set())
     errors = mod.audit()
     assert any("leak.mojo:1" in e and "C1" in e for e in errors)
+
+
+def test_audit_rejects_every_mojo_decimal_float_form(tmp_path, monkeypatch):
+    import audit_exact_arithmetic as mod
+
+    kernel = tmp_path / "src"
+    kernel.mkdir()
+    forms = ["1e-3", "2.", ".5", "1.25", "1_000.5_0", "2E+4"]
+    (kernel / "leak.mojo").write_text(
+        "\n".join(f"var x{i} = {literal}" for i, literal in enumerate(forms)),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(mod, "SCAN_ROOTS", [kernel])
+    monkeypatch.setattr(mod, "ROOT", tmp_path)
+    monkeypatch.setattr(mod, "binding_rows", lambda text=None: [])
+    monkeypatch.setattr(mod, "allowlisted", lambda: set())
+    errors = mod.audit()
+    assert len([e for e in errors if "floating point in kernel scope" in e]) == len(forms)
+
+
+def test_audit_rejects_unbound_arithmetic_consumer(tmp_path, monkeypatch):
+    import audit_exact_arithmetic as mod
+
+    kernel = tmp_path / "src"
+    kernel.mkdir()
+    (kernel / "consumer.mojo").write_text("from rat_q import Q\n", encoding="utf-8")
+    monkeypatch.setattr(mod, "SCAN_ROOTS", [kernel])
+    monkeypatch.setattr(mod, "ROOT", tmp_path)
+    monkeypatch.setattr(mod, "binding_rows", lambda text=None: [])
+    monkeypatch.setattr(mod, "allowlisted", lambda: set())
+    assert "arithmetic consumer lacks binding row: src/consumer.mojo" in mod.audit()
 
 
 def test_policy_surfaces_point_at_the_spec():

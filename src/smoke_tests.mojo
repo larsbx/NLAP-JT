@@ -21,6 +21,7 @@ from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
 from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_half
 from alignment_audit_status import AlignmentPolicy, canonical_alignment_policy, alignment_policy_valid
 from mojo_optimization_contract import OptimizationPolicy, canonical_optimization_policy, optimization_policy_valid
+from C1_final_proof_object_skeleton import C1FinalProofObject, FinalProofAcceptancePolicy, canonical_final_proof_acceptance_policy, final_proof_acceptance_policy_valid, accepts_c1_final_proof_object, rejects_missing_link_final_exit, skeleton_alone_proves_c1
 
 
 def test_rational_field_laws() -> Bool:
@@ -169,6 +170,21 @@ def test_optimization_policy_data() -> Bool:
     return optimization_policy_valid(canonical) and not optimization_policy_valid(unsafe)
 
 
+def test_final_proof_object_policy_data() -> Bool:
+    var policy = canonical_final_proof_acceptance_policy()
+    var unsafe_policy = FinalProofAcceptancePolicy(False, True, True, True, True, False, False)
+    var complete = C1FinalProofObject(True, True, True, True, True, True, True, True, True, True, True, True, True)
+    var missing_link = C1FinalProofObject(True, True, True, True, True, True, True, True, False, True, True, True, True)
+    return (
+        final_proof_acceptance_policy_valid(policy) and
+        not final_proof_acceptance_policy_valid(unsafe_policy) and
+        accepts_c1_final_proof_object(complete) and
+        not accepts_c1_final_proof_object(missing_link) and
+        rejects_missing_link_final_exit(policy) and
+        not skeleton_alone_proves_c1(policy)
+    )
+
+
 def test_headers() -> Bool:
     # c = -2: critical type (ell,k)=(2,1), angle preperiod lambda=1, ray period n=1.
     var c_minus_2 = MisCertHeader(2, 1, 3, 1)
@@ -252,6 +268,8 @@ def run_smoke_tests() -> Bool:
     if not test_alignment_policy_data():
         return False
     if not test_optimization_policy_data():
+        return False
+    if not test_final_proof_object_policy_data():
         return False
     return True
 

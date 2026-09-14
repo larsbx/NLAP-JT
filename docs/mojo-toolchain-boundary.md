@@ -23,6 +23,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/C1_residual_closure_no_missing_links.mojo`.
 - `src/C1_theorem_tag_assumption_payloads.mojo`.
 - `src/C1_theorem_tag_import_ledger.mojo`.
+- `src/C1_final_proof_object_skeleton.mojo`.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -38,6 +39,9 @@ strength classes, including out-of-range, generic-MLC, and bounded-search
 rejection paths.
 The import ledger separately checks typed conclusion, strength, and status
 vocabularies while retaining its scaffolded, non-final records.
+The final proof-object skeleton checks its acceptance policy from explicit data,
+including unsafe-policy and missing-link negative controls; this does not make
+the current partial ledger ready for C1.
 Repository alignment policy is checked from explicit data with an unsafe
 theorem-import negative control.
 Optimization policy is likewise checked from explicit data, including a

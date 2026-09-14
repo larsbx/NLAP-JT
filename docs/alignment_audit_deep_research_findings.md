@@ -1,5 +1,7 @@
 # Alignment audit deep-research findings
 
+Terminology used here is governed by `docs/terminology-registry.md`.
+
 Status: incorporated research audit, September 2026.
 
 This document records the findings from the deep literature and terminology audit and turns them into repository-facing obligations.

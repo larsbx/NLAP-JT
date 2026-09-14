@@ -14,6 +14,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/integer_gcd.mojo`;
 - `src/ray_address.mojo`;
 - `src/rational_trig.mojo`;
+- `src/alignment_audit_status.mojo`;
 - `src/interval_q.mojo`;
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.
@@ -36,6 +37,8 @@ strength classes, including out-of-range, generic-MLC, and bounded-search
 rejection paths.
 The import ledger separately checks typed conclusion, strength, and status
 vocabularies while retaining its scaffolded, non-final records.
+Repository alignment policy is checked from explicit data with an unsafe
+theorem-import negative control.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

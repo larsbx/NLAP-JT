@@ -50,6 +50,7 @@ def test_compiler_checked_boundary_is_explicit():
         "src/krawczyk_witness.mojo",
         "src/C1_final_proof_block_ledger.mojo",
         "src/C1_residual_closure_no_missing_links.mojo",
+        "src/C1_theorem_tag_assumption_payloads.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

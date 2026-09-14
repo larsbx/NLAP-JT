@@ -26,8 +26,9 @@ localization polynomial, and the exact interval Krawczyk contraction for
 `P_{2,1}` at the dyadic box centered on -2. It also checks the C1 final-ledger
 readiness and final-evidence policy from explicit data, including an unsafe
 negative control, and checks typed accepted and rejected residual exit kinds.
-It also checks typed theorem assumption-payload families and conclusions,
-including out-of-range, generic-MLC, and bounded-search rejection paths.
+It also checks typed theorem assumption-payload families, conclusions, and
+strength classes, including out-of-range, generic-MLC, and bounded-search
+rejection paths.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

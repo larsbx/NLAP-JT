@@ -1,5 +1,7 @@
 # krawczyk_witness.mojo
 #
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+#
 # Native target for squarefree-polynomial Krawczyk localization witnesses.
 #
 # This module is finite-regime only: exact polynomial data, dyadic rational

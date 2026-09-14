@@ -1,5 +1,7 @@
 # rat_q.mojo
 #
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+#
 # Normalized rational arithmetic scaffold for finite-regime Mandelbrot work.
 # This module avoids floating point and analytic trig primitives.
 #

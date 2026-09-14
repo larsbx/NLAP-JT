@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Reference checker for exact-type interval exclusions.
 
+Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+
 This is a temporary Python oracle for the finite-regime Mandelbrot project. It
 checks the same-box exclusion requirement for H_{i,j}(beta)=Q_j(beta)-Q_i(beta)
 using rational interval arithmetic. It is not the final Mojo certificate engine.

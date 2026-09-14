@@ -28,3 +28,5 @@ no_analytic_points = true
 points_are_vertices_of_vertices = true
 squarefree_localization_only = true
 pointwise_exact_type_exclusion = true
+no_float_certificate_arithmetic = true
+exact_arithmetic_spec = "docs/rational-interval-arithmetic-spec.md"

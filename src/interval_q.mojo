@@ -1,5 +1,7 @@
 # interval_q.mojo
 #
+# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+#
 # Rational interval arithmetic scaffold for certificate witnesses.
 # Endpoints are normalized rationals represented with Int64 until bigint lands.
 

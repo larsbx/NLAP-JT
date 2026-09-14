@@ -84,6 +84,16 @@ The following are not primitive constructors, APIs, or inference rules at rank 2
 
 Such concepts require an explicit higher-layer adapter and cannot be imported merely from the polynomial expression `Q(x,y)=x^2+y^2`.
 
+## Exact arithmetic policy
+
+Every certificate-relevant number is a normalized rational or a rational-endpoint interval, never a float. The contract, its conformance criteria, and the binding of each kernel module to it are in:
+
+```text
+docs/rational-interval-arithmetic-spec.md
+```
+
+That file is mirrored verbatim in the PSC research repository and is enforced here by `tools/audit_exact_arithmetic.py`, the `tools/exact_arithmetic_allowlist.md` quarantine list, the `backend.toml` policy keys, and the law tests in `src/smoke_tests.mojo` and `tests/test_exact_arithmetic_spec.py`.
+
 ## Repository layout
 
 ```text
@@ -97,6 +107,7 @@ docs/
   terminology-registry.md
   terminology-use-manifest.md
   finite-certificate-calculus.md
+  rational-interval-arithmetic-spec.md
   literature-notes.md
   C1_*.md
 examples/
@@ -106,6 +117,7 @@ src/
   *.mojo
 tools/
   audit_*.py
+  exact_arithmetic_allowlist.md
 tests/
   test_*.py
 ```

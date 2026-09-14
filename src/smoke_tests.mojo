@@ -9,7 +9,7 @@
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
 from rat_q import Q, demo_q_normalization, demo_q_order
-from interval_q import ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
+from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
@@ -21,6 +21,38 @@ from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
 from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_half
 from alignment_audit_status import AlignmentPolicy, canonical_alignment_policy, alignment_policy_valid
 from mojo_optimization_contract import OptimizationPolicy, canonical_optimization_policy, optimization_policy_valid
+
+
+def test_rational_field_laws() -> Bool:
+    # docs/rational-interval-arithmetic-spec.md section 1.3: decidable
+    # equality, associativity, distributivity, lossless cancellation.
+    var a = Q(1, 3)
+    var b = Q(1, 7)
+    var c = Q(-2, 9)
+    return (
+        Q(1, 10).add(Q(2, 10)).eq(Q(3, 10)) and
+        a.add(b).add(c).eq(a.add(b.add(c))) and
+        a.mul(b.add(c)).eq(a.mul(b).add(a.mul(c))) and
+        a.add(b).sub(b).eq(a) and
+        Q(1, 3).lt(Q(1, 2))
+    )
+
+
+def test_interval_enclosure_laws() -> Bool:
+    # docs/rational-interval-arithmetic-spec.md sections 2.2 to 2.5: the
+    # dependency problem, subdistributivity, and the tighter square.
+    var x = IQ(Q(1, 1), Q(3, 1))
+    var y = IQ(Q(-1, 1), Q(2, 1))
+    var z = IQ(Q(2, 1), Q(5, 1))
+    var d = x.sub(x)
+    var lhs = x.mul(y.add(z))
+    var rhs = x.mul(y).add(x.mul(z))
+    return (
+        d.lo.eq(Q(-2, 1)) and d.hi.eq(Q(2, 1)) and d.contains_zero() and
+        lhs.subset_of(rhs) and
+        y.square().subset_of(y.mul(y)) and not y.mul(y).subset_of(y.square()) and
+        x.excludes_zero() and not y.excludes_zero()
+    )
 
 
 def test_interval_polynomial_evaluation() -> Bool:
@@ -194,6 +226,10 @@ def run_smoke_tests() -> Bool:
     if not demo_q_normalization() or not demo_q_order():
         return False
     if not demo_interval_mul() or not demo_complex_quadrance_point():
+        return False
+    if not test_rational_field_laws():
+        return False
+    if not test_interval_enclosure_laws():
         return False
     if not test_interval_polynomial_evaluation():
         return False

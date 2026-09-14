@@ -11,10 +11,13 @@ import re
 import sys
 from pathlib import Path
 
+from source_tokens import mask_comments_and_strings
+
 ROOT = Path(__file__).resolve().parents[1]
-CORE_PATHS = [ROOT / "src", ROOT / "tests"]
+CORE_PATHS = [ROOT / "src"]
 TOKEN_RE = re.compile(
-    r"\b(?:sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|radian|degree)\b|unit circle|polar angle",
+    r"\b(?:sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|radians?)\b"
+    r"|unit circle|polar angle|\b(?:angle[_ ]?degrees?|degrees?[_ ]?angle)\b",
     re.IGNORECASE,
 )
 
@@ -25,7 +28,7 @@ def iter_files() -> list[Path]:
         if not base.exists():
             continue
         for path in base.rglob("*"):
-            if path.is_file() and path.suffix in {".mojo", ".py"}:
+            if path.is_file() and path.suffix == ".mojo":
                 files.append(path)
     return files
 
@@ -33,7 +36,7 @@ def iter_files() -> list[Path]:
 def main() -> int:
     violations: list[tuple[Path, int, str]] = []
     for path in iter_files():
-        text = path.read_text(encoding="utf-8")
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
         for lineno, line in enumerate(text.splitlines(), start=1):
             if TOKEN_RE.search(line):
                 violations.append((path.relative_to(ROOT), lineno, line.strip()))

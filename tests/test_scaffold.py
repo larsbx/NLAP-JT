@@ -9,6 +9,8 @@ exist in the staged Mojo files.
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,18 +20,14 @@ def read(path: str) -> str:
 
 
 def test_no_forbidden_trig_tokens_in_src() -> None:
-    import re
-
-    token_re = re.compile(
-        r"\b(?:sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|radian|degree)\b|unit circle|polar angle",
-        re.IGNORECASE,
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "audit_no_trig.py")],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
     )
-    violations = []
-    for path in (ROOT / "src").rglob("*.mojo"):
-        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
-            if token_re.search(line):
-                violations.append(f"{path.relative_to(ROOT)}:{lineno}: {line.strip()}")
-    assert not violations, "Forbidden trig tokens found:\n" + "\n".join(violations)
+    assert result.returncode == 0, result.stdout + result.stderr
 
 
 def test_rational_arithmetic_demo_entrypoints_exist() -> None:

@@ -10,6 +10,7 @@ test = "python -m pytest tests/"
 mojo-smoke = "mojo src/smoke_tests.mojo"
 mojo-build = "mojo build src/smoke_tests.mojo -o .pixi/nlap-smoke"
 property = "python tools/exact_arithmetic_property_oracle.py"
+regime-audit = "python tools/audit_regime_correspondences.py"
 
 [dependencies]
 mojo = "==1.0.0"

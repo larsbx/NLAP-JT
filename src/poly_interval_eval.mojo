@@ -48,6 +48,7 @@ def eval_poly_ascending_horner_ciq(c_box: ComplexIQ, coeffs: List[Int64]) -> Com
     return acc^
 
 
+# Regime correspondence: formal-polynomial-derivative
 def derivative_coeffs_ascending(coeffs: List[Int64]) -> List[Int64]:
     var out = List[Int64]()
     for d in range(1, len(coeffs)):
@@ -90,6 +91,7 @@ def eval_p21(c_box: ComplexIQ) -> ComplexIQ:
     return eval_poly_ascending_horner_ciq(c_box, p21_coeffs_ascending())
 
 
+# Regime correspondence: formal-polynomial-derivative
 def eval_p21_derivative(c_box: ComplexIQ) -> ComplexIQ:
     return eval_poly_ascending_horner_ciq(c_box, p21_derivative_coeffs_ascending())
 

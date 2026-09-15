@@ -10,13 +10,13 @@ The compiler-checked dependency closure currently consists of:
 - `src/smoke_tests.mojo`;
 - `src/poly_z.mojo`;
 - `src/cert_types.mojo`;
-- `src/rat_q.mojo`;
+- `src/finite_exact/rat_q.mojo` (vendored from `larsbx/finite_exact`, pinned in `vendored.toml`);
 - `src/integer_gcd.mojo`;
 - `src/ray_address.mojo`;
 - `src/rational_trig.mojo`;
 - `src/alignment_audit_status.mojo`;
 - `src/mojo_optimization_contract.mojo`;
-- `src/interval_q.mojo`;
+- `src/interval_q/closed_q.mojo` (vendored from `larsbx/interval_q`, pinned in `vendored.toml`);
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.
 - `src/C1_final_proof_block_ledger.mojo`.
@@ -36,7 +36,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_finite_certificate_gate.mojo`.
 - `src/C1_theorem_tag_payload_instances.mojo`.
 - `src/checked_landing_target_adapter.mojo`.
-- `src/bigint_z.mojo`.
+- `src/finite_exact/bigint_z.mojo` (vendored from `larsbx/finite_exact`).
 - `src/bigint_adapter.mojo`.
 - `src/bigq_ray_address.mojo`.
 - `src/bigq_landing_target_adapter.mojo`.
@@ -44,9 +44,10 @@ The compiler-checked dependency closure currently consists of:
 - `src/bigq_finite_certificate_gate.mojo`.
 - `src/bigq_certificate_incidence.mojo`.
 
-A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
-`bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,
-which pipes its transcript into `tools/exact_arithmetic_property_oracle.py`.
+The randomized exact-arithmetic property probe that used to be a second
+compile target here now runs in the CI of `larsbx/finite_exact` and
+`larsbx/interval_q` at the commits pinned in `vendored.toml`; `pixi run
+vendored` checks that the vendored files are byte-identical to those commits.
 
 This slice checks the preserved polynomial identities, certificate-header
 constraints, the same-box joint-witness gate, imported-theorem-tag acceptance,
@@ -108,8 +109,8 @@ integer capability record permits rational migration, but no certificate path
 uses it yet; bounded `Q` and downstream consumers still reject proof acceptance.
 Quotient/remainder uses schoolbook long division, checked in-process against the
 retained shift-and-subtract reference; `Q` scales by denominator cofactors and
-cross-cancels before multiplying. Both are exercised by the smoke target and by
-the randomized property probe.
+cross-cancels before multiplying. Both are exercised by the smoke target here and
+by the randomized property probe upstream.
 The BigZ landing-target replay composes the same exponent across localization
 and exact-type exclusion with a normalized symbolic `1/2 -> 0 -> 0` address
 orbit whose supplied numerator and denominator exceed `Int64`. It explicitly

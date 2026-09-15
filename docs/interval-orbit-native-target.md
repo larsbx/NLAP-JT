@@ -14,8 +14,8 @@ The target file is:
 
 It must consume the rational interval primitives in:
 
-- `src/rat_q.mojo`
-- `src/interval_q.mojo`
+- `src/finite_exact/rat_q.mojo` (vendored)
+- `src/interval_q/closed_q.mojo` (vendored)
 
 ## Required functions
 

@@ -36,6 +36,8 @@ Field order is part of the schema. Map/dictionary iteration order is forbidden. 
 
 ## Primitive encodings
 
+The integer and rational encodings are defined by `larsbx/finite_exact:docs/canonical-encoding.md` and implemented by the vendored `src/finite_exact/bigint_z.mojo` (`bigz_canonical_bytes`) and `src/finite_exact/rat_q.mojo` (`q_canonical_bytes`); they are restated here because the composite schemas below are built on them. The composite schemas are this repository's own.
+
 ### Integer
 
 ```text

@@ -11,6 +11,20 @@ Heads audited, on the shared branch `claude/library-extraction-candidates-d9lp6i
 
 Markers: `[V]` was checked in this session by reading or executing the repository; `[U]` could not be checked here. Both CI workflows are green on their `main` heads `[V]` (NLAP run 679, PSC runs 884/721/665). Locally, PSC's Python suite passes in full and NLAP-JT's passes except the one test that requires a `mojo` binary, which this container lacks `[V]`.
 
+## Execution status (2026-09-15)
+
+| Step (section 8) | State | Where |
+| --- | --- | --- |
+| 1. Harden `finite_exact` here, extract | done | the section 9 pull request landed here; `larsbx/finite_exact` holds `BigZ`, `Q`, the probe, the oracle, the boundary, and sections 0 to 5 of the specification; `src/finite_exact/` is the vendored copy pinned in `vendored.toml`. `poly_z` stays here as a bounded-degree machine-integer module (section 1.3 item 7, second option) |
+| interval layer (section 3) | done | `larsbx/interval_q`; `src/interval_q/` is the vendored copy |
+| 2. Migrate PSC, delete `Rat` and `CheckedRat` | done | in PSC |
+| 3. Extract `substitution_dynamics` | done | `larsbx/substitution_dynamics`, from PSC |
+| 4. Separate exact linear algebra | done | `larsbx/finite_linear_algebra`, from PSC |
+| 5. Specify `finite_proof_records` | specification and Python reference model done; Mojo implementation pending | `larsbx/finite_proof_records`; nothing moved from `src/mojo_theorem_kernel.mojo` or the C1 ledgers |
+| 6. Extract the audit tooling with per-repository policy | not started | `tools/audit_*.py` |
+
+The heads and paths quoted below are those of 2026-09-14 and are kept as the audit record.
+
 ## 0. Summary
 
 | Priority | Candidate | Source of truth today | Consumers | Readiness |

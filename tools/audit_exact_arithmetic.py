@@ -3,7 +3,8 @@
 
 Three checks, all lexical and CI-cheap:
 
-1. the specification exists and carries every required section heading;
+1. the binding file exists and carries every required section heading
+   (the specification proper is larsbx/finite_exact:docs/rational-interval-arithmetic-spec.md);
 2. every arithmetic module is named in this repository's binding table (spec
    section 6), exists, cites the specification by path (criterion C7), and is
    listed in the allowlist exactly when its class is QUARANTINED;
@@ -27,19 +28,11 @@ ALLOWLIST = ROOT / "tools" / "exact_arithmetic_allowlist.md"
 SCAN_ROOTS = [ROOT / "src"]
 BINDING_HEADING = "### 6.2 `larsbx/NLAP-JT`"
 
+# Sections 0 to 5 of the specification live upstream in larsbx/finite_exact;
+# this repository keeps the pointer, its binding table, and the hook.
 REQUIRED_SECTIONS = [
-    "## 0. The problem being solved",
-    "## 1. Layer ℚ: eliminate rounding",
-    "### 1.5 Backend requirement",
-    "## 2. Layer I: keep rounding, bound it",
-    "### 2.3 The inclusion theorem",
-    "### 2.4 Decision semantics",
-    "## 3. Combining the layers",
-    "### 3.2 Filter-then-exact",
-    "## 4. Decision table",
-    "## 5. Conformance criteria",
+    "## 0. Where the specification lives",
     "## 6. Repository binding",
-    "### 6.1 `larsbx/pisot-substitution-conjecture-research`",
     "### 6.2 `larsbx/NLAP-JT`",
     "## 7. Hook: how the specification is enforced",
 ]
@@ -53,7 +46,7 @@ FLOAT_RE = re.compile(
     r")(?![\w.])"
 )
 PATH_RE = re.compile(r"`([\w./-]+\.(?:mojo|py))`")
-ARITHMETIC_IMPORT_RE = re.compile(r"^from\s+(?:rat_q|interval_q)\s+import\b", re.MULTILINE)
+ARITHMETIC_IMPORT_RE = re.compile(r"^from\s+(?:finite_exact\.rat_q|interval_q\.closed_q)\s+import\b", re.MULTILINE)
 
 
 def _section(text: str, heading: str) -> str:

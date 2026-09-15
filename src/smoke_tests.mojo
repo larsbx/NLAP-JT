@@ -9,8 +9,8 @@
 
 from poly_z import smoke_poly_identities
 from cert_types import MisCertHeader, JointBoxWitness, TheoremTags
-from rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order, q_cancellation_smoke
-from interval_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
+from finite_exact.rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo_q_order, q_cancellation_smoke
+from interval_q.closed_q import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2, bigq_krawczyk_replay_smoke
 from interval_orbit import bigq_exact_type_exclusion_replay_smoke
@@ -41,7 +41,7 @@ from checked_ray_address import checked_ray_address_smoke
 from checked_finite_certificate_gate import checked_finite_certificate_gate_smoke
 from C1_theorem_tag_payload_instances import theorem_tag_payload_instances_smoke
 from checked_landing_target_adapter import checked_landing_target_adapter_smoke
-from bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke, bigz_long_division_smoke
+from finite_exact.bigint_z import bigint_z_phase_one_smoke, bigint_z_phase_two_smoke, bigint_z_phase_three_smoke, bigz_long_division_smoke
 from bigint_adapter import bigint_adapter_phase_one_smoke, bigint_adapter_phase_two_smoke, bigint_adapter_complete_smoke
 from rat_backend_plan import q_backend_migration_smoke
 

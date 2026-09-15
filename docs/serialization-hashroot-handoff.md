@@ -26,7 +26,7 @@ Blocked:
 
 ## Required next implementation
 
-Implemented in `src/bigint_z.mojo`:
+Implemented in `src/finite_exact/bigint_z.mojo` (vendored from `larsbx/finite_exact`):
 
 ```text
 Z(sign, byte_len, big_endian_magnitude)

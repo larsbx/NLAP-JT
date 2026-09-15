@@ -1,5 +1,11 @@
 # Implementation Notes
 
+Exact arithmetic is not implemented in this directory. `finite_exact/` (`BigZ`,
+`Q`) and `interval_q/` (`IQ`, `ComplexIQ`) are vendored byte-for-byte from
+`larsbx/finite_exact` and `larsbx/interval_q`, pinned by commit and digest in
+`../vendored.toml` and checked by `../tools/check_vendored_sync.py`. Change
+them upstream, then re-vendor.
+
 Prototype implementation will go here after the certificate grammar stabilizes.
 
 ## Required modules

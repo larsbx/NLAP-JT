@@ -9,8 +9,8 @@
 # It uses BigZ-backed Q and fail-closed intervals, but remains an
 # implementation-grade scaffold until its acceptance-bearing replay is done.
 
-from interval_q import ComplexIQ
-from rat_q import Q
+from interval_q.closed_q import ComplexIQ
+from finite_exact.rat_q import Q
 
 
 struct PolyIQEvalStatus:

@@ -34,7 +34,7 @@ Only then may `BackendGate.allows_certificate_acceptance` be true.
 ## Selected path
 
 The repository uses a Mojo-native, little-endian dynamic-limb representation
-with base `10^9`. `src/bigint_z.mojo` implements canonical signed storage,
+with base `10^9`. `src/finite_exact/bigint_z.mojo` (vendored from `larsbx/finite_exact`) implements canonical signed storage,
 construction from every `Int64`, exact addition, subtraction, multiplication,
 equality, order, quotient/remainder, rejected non-divisions, Euclidean gcd, and
 canonical integer serialization. The byte encoding is a sign code (`0`, `1`,

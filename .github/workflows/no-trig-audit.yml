@@ -16,14 +16,14 @@ jobs:
         with:
           cache: true
 
+      - name: Vendored finite_exact and interval_q match their pins
+        run: pixi run vendored
+
       - name: Compile Mojo smoke target
         run: pixi run mojo-build
 
       - name: Run Mojo smoke target
         run: pixi run mojo-smoke
-
-      - name: Run exact-arithmetic property probe against the Python oracle
-        run: pixi run property
 
       - name: Run no-trig core audit
         run: python3 tools/audit_no_trig.py

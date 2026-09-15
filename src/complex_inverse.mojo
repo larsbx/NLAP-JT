@@ -7,8 +7,8 @@
 # quadrance. There are no analytic angle APIs and no transcendental operations.
 # No ideal points are introduced here: ComplexQ is a rational coordinate record.
 
-from interval_q import ComplexIQ, IQ
-from rat_q import Q
+from interval_q.closed_q import ComplexIQ, IQ
+from finite_exact.rat_q import Q
 
 
 struct ComplexQ:

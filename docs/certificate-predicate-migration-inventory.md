@@ -25,7 +25,7 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 | Known trivial-fiber class import | `src/C1_theorem_tag_payload_instances.mojo` | Misiurewicz source scope matched at checked width; proof-grade classification absent | blocks finite-certificate acceptance |
 | Checked finite-certificate composition | `src/checked_finite_certificate_gate.mojo` | finite inputs accepted; theorem tags rejected | full certificate remains rejected |
 | Incidence packaging | legacy `src/certificate_incidence.mojo` | size-only carrier, not in the compiler-wired acceptance path | retained for comparison; superseded by explicit BigZ-path carrier |
-| Integer backend | `src/bigint_z.mojo` | dynamic limbs with exact ring/order/division/gcd and canonical integer serialization | rational and core intervals migrated; remaining consumers still block proof-grade acceptance |
+| Integer backend | `src/finite_exact/bigint_z.mojo` (vendored) | dynamic limbs with exact ring/order/division/gcd and canonical integer serialization | rational and core intervals migrated; remaining consumers still block proof-grade acceptance |
 | `ResidualClosureNoMissingLinks` | `src/C1_residual_closure_no_missing_links.mojo` | open | blocks C1 independently of finite certificates |
 
 ## Next obligations

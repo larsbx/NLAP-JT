@@ -9,7 +9,7 @@
 # The rational coordinates use the selected dynamic-limb BigZ backend.
 
 from ray_address import RayAddr64
-from rat_q import Q
+from finite_exact.rat_q import Q
 
 
 struct Vec2Q(Copyable):

@@ -70,12 +70,12 @@ Every constructor and operation must normalize. Equality and order may use cross
    c=-2 association from exact-type uniqueness; theorem-tag instances now fail
    only at proof-grade classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
-1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/bigint_z.mojo`.
+1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/finite_exact/bigint_z.mojo` (vendored from `larsbx/finite_exact`).
 2. **Complete:** the integer layer implements unbounded signed storage, exact
    add/sub/mul/order, quotient/remainder, rejected non-divisions, Euclidean gcd,
    and canonical `Z(sign, byte_len, big_endian_magnitude)` serialization.
 3. **Complete:** `Q` stores normalized `BigZ` numerator and denominator values while preserving its public arithmetic names; invalid denominators and division by zero propagate rejection.
-4. **Complete (arithmetic hardening):** the public boundary of `BigZ`, `Q`, `IQ`, and `ComplexIQ` is declared in `docs/exact-arithmetic-public-boundary.md`; long division replaces shift-and-subtract; `Q` cancels before multiplying and comparing; the randomized property probe runs against the Python oracle in CI.
+4. **Complete (arithmetic hardening):** the public boundary of `BigZ`, `Q`, `IQ`, and `ComplexIQ` is declared in `larsbx/finite_exact:docs/exact-arithmetic-public-boundary.md` and `larsbx/interval_q:docs/exact-arithmetic-public-boundary.md` (pointer: `docs/exact-arithmetic-public-boundary.md`); long division replaces shift-and-subtract; `Q` cancels before multiplying and comparing; the randomized property probe runs against the Python oracle in the CI of those repositories, and the modules are vendored here at pinned commits.
 5. **Next:** replay interval arithmetic and certificate predicates against bigint-backed `Q`.
 6. Promote coordinate-record polynomial evaluation from pending to certificate-ready.
 7. Only then allow `ProofGradeCertificateStatus.accepted()` to return true.

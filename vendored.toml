@@ -1,0 +1,23 @@
+# Vendored packages, checked by check_vendored_sync.py; re-pin with
+# `check_vendored_sync.py pin NAME COMMIT` after copying from upstream.
+
+[[package]]
+name = "finite_exact"
+repository = "larsbx/finite_exact"
+commit = "5c0763a2fb4fa868b4b6d8b39adfbd9fbf14b35f"
+root = "src"
+
+[package.files]
+"finite_exact/__init__.mojo" = "b7cdb9dafe62fd6fe2594446d5f90e5c596e8841635a72498269a31e9d10fa56"
+"finite_exact/bigint_z.mojo" = "d02a0c033042661161a24f0b31f1e89fbf3ed908ccc86e42b5b80b8df4240df1"
+"finite_exact/rat_q.mojo" = "d7f8cc3a3879d76bfc242304a13d4f2c9d4cf2cdeeba586fa4af95980a4b9fa6"
+
+[[package]]
+name = "interval_q"
+repository = "larsbx/interval_q"
+commit = "8a3366c37e55efd1f0150046fd94dba185180b06"
+root = "src"
+
+[package.files]
+"interval_q/__init__.mojo" = "c9a0b7a15d6226a05f901987d6f5ecea314f609827fe9e9c78e26239a488c8dd"
+"interval_q/closed_q.mojo" = "72f66b6ed05913b9055c3e44c8f3e32e27a6e2908a407eb29c8ef2d790f9b186"

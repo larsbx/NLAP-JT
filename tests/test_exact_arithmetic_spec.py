@@ -61,7 +61,7 @@ def test_binding_table_covers_the_kernels_and_quarantines_floats():
     for cls, paths in rows:
         by_class.setdefault(cls, set()).update(paths)
     assert "src/poly_interval_eval.mojo" in by_class["DEMO"]
-    assert {"src/rat_q.mojo", "src/interval_q.mojo"} <= by_class["CONFORMS"]
+    assert {"src/finite_exact/rat_q.mojo", "src/interval_q/closed_q.mojo"} <= by_class["CONFORMS"]
     assert "src/complex_box.mojo" in by_class["QUARANTINED"]
     assert by_class["QUARANTINED"] == allowlisted()
     assert ALLOWLIST.exists()
@@ -105,7 +105,7 @@ def test_audit_rejects_unbound_arithmetic_consumer(tmp_path, monkeypatch):
 
     kernel = tmp_path / "src"
     kernel.mkdir()
-    (kernel / "consumer.mojo").write_text("from rat_q import Q\n", encoding="utf-8")
+    (kernel / "consumer.mojo").write_text("from finite_exact.rat_q import Q\n", encoding="utf-8")
     monkeypatch.setattr(mod, "SCAN_ROOTS", [kernel])
     monkeypatch.setattr(mod, "ROOT", tmp_path)
     monkeypatch.setattr(mod, "binding_rows", lambda text=None: [])

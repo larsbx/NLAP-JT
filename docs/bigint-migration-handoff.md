@@ -70,7 +70,7 @@ Every constructor and operation must normalize. Equality and order may use cross
    c=-2 association from exact-type uniqueness; theorem-tag instances now fail
    only at proof-grade classification. Do not replace `Q` until every downstream
    arithmetic predicate propagates failure.
-1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/bigint_z.mojo`.
+1. **Selected:** Mojo-native dynamic base-`10^9` limbs in `src/finite_exact/bigint_z.mojo`.
 2. **Complete:** the integer layer implements unbounded signed storage, exact
    add/sub/mul/order, quotient/remainder, rejected non-divisions, Euclidean gcd,
    and canonical `Z(sign, byte_len, big_endian_magnitude)` serialization.

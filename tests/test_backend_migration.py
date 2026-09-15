@@ -28,7 +28,7 @@ def test_int64_demo_backend_is_not_proof_ready():
 
 def test_dynamic_limb_phase_one_is_explicitly_incomplete():
     src = read(BIG)
-    z = read(ROOT / "src" / "bigint_z.mojo")
+    z = read(ROOT / "src" / "finite_exact" / "bigint_z.mojo")
     smoke = read(ROOT / "src" / "smoke_tests.mojo")
     assert "dynamic_limb_phase_one_backend_status" in src
     assert '"MojoDynamicLimbBigZPhaseOne"' in src
@@ -47,7 +47,7 @@ def test_dynamic_limb_phase_one_is_explicitly_incomplete():
 
 def test_dynamic_limb_phase_two_adds_division_and_gcd_but_stays_blocked():
     src = read(BIG)
-    z = read(ROOT / "src" / "bigint_z.mojo")
+    z = read(ROOT / "src" / "finite_exact" / "bigint_z.mojo")
     smoke = read(ROOT / "src" / "smoke_tests.mojo")
     assert "dynamic_limb_phase_two_backend_status" in src
     assert '"MojoDynamicLimbBigZPhaseTwo"' in src
@@ -64,7 +64,7 @@ def test_dynamic_limb_phase_two_adds_division_and_gcd_but_stays_blocked():
 
 def test_dynamic_limb_bigz_adds_canonical_serialization_and_is_integer_ready():
     src = read(BIG)
-    z = read(ROOT / "src" / "bigint_z.mojo")
+    z = read(ROOT / "src" / "finite_exact" / "bigint_z.mojo")
     smoke = read(ROOT / "src" / "smoke_tests.mojo")
     assert "dynamic_limb_bigz_backend_status" in src
     assert '"MojoDynamicLimbBigZ"' in src
@@ -115,7 +115,7 @@ def test_current_q_uses_bigz_but_blocks_proof_acceptance():
 
 
 def test_q_storage_is_normalized_bigz_and_fail_closed():
-    src = read(ROOT / "src" / "rat_q.mojo")
+    src = read(ROOT / "src" / "finite_exact" / "rat_q.mojo")
     smoke = read(ROOT / "src" / "smoke_tests.mojo")
     assert "struct Q(Copyable)" in src
     assert "var num: BigZ" in src
@@ -134,8 +134,8 @@ def test_q_storage_is_normalized_bigz_and_fail_closed():
 
 
 def test_bigz_interval_layer_enforces_spec_fail_closed_contracts():
-    src = read(ROOT / "src" / "interval_q.mojo")
-    rat = read(ROOT / "src" / "rat_q.mojo")
+    src = read(ROOT / "src" / "finite_exact" / "closed_q.mojo")
+    rat = read(ROOT / "src" / "finite_exact" / "rat_q.mojo")
     smoke = read(ROOT / "src" / "smoke_tests.mojo")
     assert "var rejected: Bool" in src
     assert "if not self.rejected and not lo.le(hi):" in src

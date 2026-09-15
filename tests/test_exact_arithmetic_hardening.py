@@ -41,7 +41,7 @@ def test_boundary_document_declares_names_semantics_and_promise():
 
 
 def test_long_division_replaces_shift_and_subtract_and_keeps_the_reference():
-    z = text("src/bigint_z.mojo")
+    z = text("src/finite_exact/bigint_z.mojo")
     assert "def bigz_abs_divmod_shift_subtract(" in z
     assert "def bigz_abs_divmod(" in z
     assert "Knuth Algorithm D" in z
@@ -51,7 +51,7 @@ def test_long_division_replaces_shift_and_subtract_and_keeps_the_reference():
 
 
 def test_rational_operations_cancel_before_multiplying():
-    q = text("src/rat_q.mojo")
+    q = text("src/finite_exact/rat_q.mojo")
     assert "struct QCrossTerms(Copyable)" in q
     assert "def q_cross_terms(" in q
     assert "var g1 = bigz_gcd(self.num, other.den)" in q
@@ -63,7 +63,7 @@ def test_rational_operations_cancel_before_multiplying():
 
 
 def test_singleton_replaces_point_everywhere_in_core():
-    iq = text("src/interval_q.mojo")
+    iq = text("src/finite_exact/closed_q.mojo")
     assert "def singleton(x: Q) -> IQ:" in iq
     assert "def singleton(re: Q, im: Q) -> ComplexIQ:" in iq
     assert "No ideal point" in iq
@@ -90,7 +90,7 @@ def test_property_probe_is_wired_into_pixi_ci_and_binding_table():
     assert "src/exact_arithmetic_property_probe.mojo" in text("docs/mojo-toolchain-boundary.md")
     probe = text("src/exact_arithmetic_property_probe.mojo")
     assert "docs/rational-interval-arithmetic-spec.md" in probe
-    assert "from bigint_z import" in probe and "from rat_q import" in probe and "from interval_q import" in probe
+    assert "from finite_exact.bigint_z import" in probe and "from finite_exact.rat_q import" in probe and "from finite_exact.closed_interval import" in probe
 
 
 # --- oracle self-checks ---------------------------------------------------------

@@ -19,6 +19,9 @@ jobs:
       - name: Compile Mojo smoke target
         run: pixi run mojo-build
 
+      - name: Verify finite-math-kernels pin
+        run: pixi run vendored
+
       - name: Run Mojo smoke target
         run: pixi run mojo-smoke
 

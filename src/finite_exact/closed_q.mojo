@@ -1,12 +1,12 @@
-# interval_q.mojo
+# closed_q.mojo
 #
-# Specification: docs/rational-interval-arithmetic-spec.md (binding 6.2).
+# Specification: larsbx/finite_exact:docs/rational-interval-arithmetic-spec.md (sections 2 and 3).
 #
 # Rational interval arithmetic scaffold for certificate witnesses.
 # Endpoints are normalized rationals backed by dynamic-limb BigZ values.
 # Public boundary: docs/exact-arithmetic-public-boundary.md.
 
-from rat_q import Q, q_min, q_max, q_rejected
+from finite_exact.rat_q import Q, q_min, q_max, q_rejected
 
 
 struct IQBoolResult(Copyable):
@@ -47,7 +47,7 @@ struct IQ(Copyable):
     @staticmethod
     def singleton(x: Q) -> IQ:
         # Singleton box [x, x] with an exact rational endpoint. No ideal point
-        # is introduced (docs/no-points-invariant.md).
+        # is introduced (larsbx/NLAP-JT:docs/no-points-invariant.md).
         return IQ(x, x)
 
     def contains_zero(self) -> IQBoolResult:
@@ -135,7 +135,7 @@ struct ComplexIQ(Copyable):
     @staticmethod
     def singleton(re: Q, im: Q) -> ComplexIQ:
         # Rank-2 singleton box from two exact rational coordinates. No ideal
-        # point is introduced (docs/no-points-invariant.md).
+        # point is introduced (larsbx/NLAP-JT:docs/no-points-invariant.md).
         return ComplexIQ(IQ.singleton(re), IQ.singleton(im))
 
     def add(self, other: ComplexIQ) -> ComplexIQ:

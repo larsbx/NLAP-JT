@@ -31,13 +31,13 @@ def test_no_forbidden_trig_tokens_in_src() -> None:
 
 
 def test_rational_arithmetic_demo_entrypoints_exist() -> None:
-    text = read("src/rat_q.mojo")
+    text = read("src/finite_exact/rat_q.mojo")
     assert "def demo_q_normalization()" in text
     assert "def demo_q_order()" in text
 
 
 def test_interval_demo_entrypoints_exist() -> None:
-    text = read("src/interval_q.mojo")
+    text = read("src/finite_exact/closed_q.mojo")
     assert "def demo_interval_mul()" in text
     assert "def demo_complex_quadrance_point()" in text
 

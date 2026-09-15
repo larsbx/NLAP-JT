@@ -118,9 +118,19 @@ src/
 tools/
   audit_*.py
   exact_arithmetic_allowlist.md
+  claim_governance/          # vendored from larsbx/finite-math-kernels audit/, pinned in vendored.toml
+  check_vendored_sync.py
 tests/
   test_*.py
+claim_governance.toml        # repository policy for the vendored audit
 ```
+
+`claim_governance.toml` restates the terminology, no-trigonometry, no-points,
+rank-2 locus, and paper-language rules as configuration for the vendored
+`tools/claim_governance` package, and keeps the C1 proof-block statuses of
+`docs/C1_final_proof_block_ledger.md` and `src/C1_final_proof_block_ledger.mojo`
+in agreement. CI runs it beside the `tools/audit_*.py` scripts, which remain
+the executable record of the same rules until they are retired.
 
 ## Boundary of claims
 

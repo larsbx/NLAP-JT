@@ -60,12 +60,12 @@ Every non-rejected record carries:
 
 - `schema_id`: stable schema name;
 - `schema_version`: positive integer;
-- `record_id`: canonical identifier derived from the canonical record bytes;
+- `record_id`: canonical identifier derived from the record-ID preimage defined in section 8;
 - `kind`: one value from section 2;
 - `claim_id`: stable consumer-owned claim identifier;
 - `claim_text`: human-readable statement;
 - `scope`: exact domain on which the claim is asserted;
-- `dependencies`: ordered list of dependency record identifiers;
+- `dependencies`: ordered list of identity-bearing `DependencyEdge` records;
 - `producer`: implementation and version that created the record;
 - `payload_encoding`: canonical encoding identifier;
 - `evidence`: ordered references needed for replay or source inspection.
@@ -73,6 +73,19 @@ Every non-rejected record carries:
 Unknown schema versions, unknown record kinds, duplicate dependency
 identifiers, noncanonical ordering, missing required fields, and identifier
 mismatches reject the record.
+
+Each `DependencyEdge` carries:
+
+- `dependency_record_id`: the referenced record;
+- `expected_claim_id`: the exact premise or proposition expected from it;
+- `use_site_id`: the consumer-owned position at which that premise is used;
+- `required_scope_relation`: the declared relation required between dependency
+  scope and consumer scope;
+- `required_outcome`: the validation outcome required by this use.
+
+All five fields are identity-bearing. The validator must compare the referenced
+record's claim, scope, and validation result with the edge instead of accepting
+a structurally valid but unrelated record.
 
 Display text, timestamps, filesystem paths, repository URLs, and diagnostic
 rendering are not identity-bearing unless a schema explicitly declares them
@@ -188,7 +201,7 @@ The validator must:
 1. reject missing dependency identifiers;
 2. reject cycles;
 3. validate every dependency under the same schema and policy context;
-4. verify that every dependency's declared conclusion matches its use;
+4. verify each dependency's claim, scope, and outcome against its identity-bearing `DependencyEdge`;
 5. propagate `rejected`, `incomplete`, and `open` without converting them
    into negative mathematical evidence;
 6. reject an accepted general claim that depends only on a bounded experiment;
@@ -222,13 +235,27 @@ maps are prohibited unless their canonical key order is specified.
 
 Canonical encoding and hashing are separate:
 
-- the package may emit canonical bytes and verify `record_id`;
+- the record-ID preimage is the canonical encoding of every identity-bearing
+  envelope, dependency-edge, and payload field except `record_id` itself;
+- `record_id` is the consumer-selected digest identifier of that preimage;
+- the authoritative record encoding contains the preimage fields followed by
+  `record_id`, allowing a validator to recompute the preimage and verify the
+  identifier without circularity;
+- the package may emit the preimage and authoritative record bytes and verify
+  `record_id`;
 - consumers select a hash suite and commitment protocol;
 - changing a schema, codec, field order, or identity-bearing field changes the
   record identifier;
 - a diagnostic renderer is never an encoding oracle.
 
-Rejected and incomplete constructions have no authoritative record encoding.
+A structurally well-formed record has canonical bytes and a verifiable
+`record_id` even when validation yields `incomplete`, `open`, or
+`bounded`; those states must remain addressable so dependency closure can
+report and propagate the exact unacceptable link. A malformed construction
+that cannot produce the common envelope is not a record, has no authoritative
+encoding, and validates as `rejected`. A structurally well-formed record
+rejected only by consumer policy retains its identity and records the policy
+result separately.
 
 ## 9. Initial implementation boundary
 
@@ -236,7 +263,7 @@ The first Mojo implementation includes:
 
 - record-kind and validation-state closed types;
 - common envelope validation;
-- dependency DAG validation;
+- identity-bearing dependency-edge and DAG validation;
 - imported-theorem hypothesis-match records;
 - bounded-experiment scope records;
 - countermodel records;
@@ -260,7 +287,7 @@ It excludes:
 Extraction into its own repository is allowed only after:
 
 1. the implementation is in the compiled Mojo CI closure;
-2. canonical encoding has deterministic golden vectors;
+2. record-ID preimage and authoritative encoding have deterministic golden vectors;
 3. dependency cycles and missing links fail closed;
 4. bounded evidence cannot satisfy a general claim;
 5. imported theorem use requires a checked hypothesis match;

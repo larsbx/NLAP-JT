@@ -79,3 +79,31 @@ def test_first_implementation_must_be_compiled_and_negative_tested():
         "bounded-to-general",
     ]:
         assert case in body
+
+
+def test_dependency_edges_bind_expected_claim_scope_and_use():
+    body = text()
+    for field in [
+        "dependency_record_id",
+        "expected_claim_id",
+        "use_site_id",
+        "required_scope_relation",
+        "required_outcome",
+    ]:
+        assert f"`{field}`" in body
+    assert "structurally valid but unrelated record" in body
+
+
+def test_record_identifier_has_non_circular_preimage():
+    body = text()
+    assert "record-ID preimage" in body
+    assert "except `record_id` itself" in body
+    assert "verify the identifier without circularity" in body
+
+
+def test_incomplete_records_remain_addressable():
+    body = text()
+    assert "even when validation yields `incomplete`, `open`, or" in body
+    assert "must remain addressable" in body
+    assert "malformed construction" in body
+    assert "rejected only by consumer policy retains its identity" in body

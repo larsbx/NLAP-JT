@@ -8,6 +8,7 @@ from bigint_z import BigZ, bigz_add, bigz_from_i64, bigz_mul
 from rat_q import Q, q_from_bigz, q_rejected
 
 
+# Regime correspondence: rational-ray-address
 struct BigQRayAddr(Copyable):
     var value: Q
     var rejected: Bool
@@ -68,6 +69,7 @@ def bigq_double_ray_addr(address: BigQRayAddr) -> BigQRayAddr:
     return BigQRayAddr(reduced, False)
 
 
+# Regime correspondence: rational-ray-address
 def verify_bigq_one_half_orbit(num: BigZ, den: BigZ) -> BigQRayOrbitStatus:
     var start = make_bigq_ray_addr(num, den)
     var tail = bigq_double_ray_addr(start)

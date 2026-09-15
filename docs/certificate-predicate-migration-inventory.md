@@ -12,6 +12,9 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 | Same-box forbidden collisions | `src/interval_orbit.mojo` | replayed 5/5 on the same parameterized BigZ box constructor as localization; rejection distinct from ambiguity | accepts the finite exact-type arithmetic replay only |
 | Rational ray-address orbit for `1/2` | `src/bigq_ray_address.mojo` | replayed with normalized BigZ-backed `Q`, including a representation whose inputs exceed `Int64`; malformed and out-of-range values reject | accepts finite symbolic address data only |
 | Rational parameter-ray landing target | `src/bigq_landing_target_adapter.mojo` | composes same-exponent BigZ localization, exact-type exclusion, and symbolic address replay; correspondence citation remains metadata | finite association only; theorem import and certificate acceptance are explicitly false |
+| Rational parameter-ray landing import | `src/bigq_theorem_tag_payload_instances.mojo` | BigZ/Q finite source scope matched; classification proof attachment explicitly absent | final import remains false |
+| Known trivial-fiber class import | `src/bigq_theorem_tag_payload_instances.mojo` | BigZ/Q Misiurewicz instance data matched; classification proof attachment explicitly absent | final import remains false |
+| Finite-certificate composition | `src/bigq_finite_certificate_gate.mojo` | BigZ/Q finite inputs compose at standard and beyond-`Int64` widths; ambiguity and invalid widths reject | theorem tags and complete certificate acceptance remain false |
 | Squarefree `P_{2,1}` evaluation and strict localization | `src/checked_krawczyk_witness.mojo` | computed, checked-width | accepts bounded localization only |
 | Same-box forbidden collisions | `src/checked_interval_exclusion.mojo` | computed 5/5, checked-width | accepts bounded exact-type evidence only |
 | Joint arithmetic localization | `src/certificate_arithmetic_migration_gate.mojo` | computed, same-box, checked-width | proof-grade acceptance remains false |
@@ -26,8 +29,8 @@ proof-grade certificate and cannot discharge an imported theorem or C1.
 
 ## Next obligations
 
-1. Re-run the remaining certificate predicates on the
-   backend; bounded-width success remains transitional evidence only.
+1. Audit and attach the source-specific classical theorem payloads; executable
+   source-scope matching alone must not accept an import.
 2. Port incidence packaging only after item 1, preserving the rule that
    an emitted point is a finite vertex whose carrier is a set of vertices.
 3. Keep the C1 residual-closure proof track separate; no finite example or

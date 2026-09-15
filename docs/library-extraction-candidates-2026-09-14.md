@@ -20,7 +20,7 @@ Markers: `[V]` was checked in this session by reading or executing the repositor
 | 2. Migrate PSC, delete `Rat` and `CheckedRat` | done | in PSC |
 | 3. Extract `substitution_dynamics` | done | `larsbx/substitution_dynamics`, from PSC |
 | 4. Separate exact linear algebra | done | `larsbx/finite_linear_algebra`, from PSC |
-| 5. Specify `finite_proof_records` | specification and Python reference model done; Mojo implementation pending | `larsbx/finite_proof_records`; nothing moved from `src/mojo_theorem_kernel.mojo` or the C1 ledgers |
+| 5. Specify `finite_proof_records` | specification, Python reference model, and canonical Mojo implementation done (replays the shared vectors under the pinned toolchain); NLAP-JT has not yet migrated its ledgers onto it | `larsbx/finite_proof_records`; nothing moved from `src/mojo_theorem_kernel.mojo` or the C1 ledgers |
 | 6. Extract the audit tooling with per-repository policy | not started | `tools/audit_*.py` |
 
 The heads and paths quoted below are those of 2026-09-14 and are kept as the audit record.

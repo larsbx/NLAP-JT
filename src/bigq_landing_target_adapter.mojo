@@ -72,6 +72,7 @@ def bigq_schleicher_correspondence_metadata() -> BigQLandingCorrespondenceRule:
     return BigQLandingCorrespondenceRule("SchleicherRationalParameterRays", 1, True)
 
 
+# Regime correspondence: landing-association-replay
 def verify_bigq_c_minus_2_landing_target_association(half_width_den_power: Int) -> BigQLandingTargetAssociation:
     var beyond_i64 = bigz_add(bigz_from_i64(9223372036854775807), bigz_from_i64(1))
     return BigQLandingTargetAssociation(

@@ -70,6 +70,7 @@ def complex_minus_two_point() -> ComplexIQ:
     return ComplexIQ.singleton(Q(-2, 1), Q.zero())
 
 
+# Regime correspondence: rational-box-half-width
 def c_minus_2_box(half_width_den_power: Int) -> ComplexIQ:
     # Dyadic box centered at -2 with half-width 2^{-half_width_den_power} in each coordinate.
     if half_width_den_power < 0:
@@ -92,6 +93,7 @@ def p21_krawczyk_image(beta: ComplexIQ) -> ComplexIQ:
     return m.sub(a.mul(p_m)).add(one_minus_a_dp.mul(beta_minus_m))
 
 
+# Regime correspondence: rational-box-krawczyk-replay
 def verify_bigq_p21_krawczyk_c_minus_2(half_width_den_power: Int) -> BigQKrawczykResult:
     var beta = c_minus_2_box(half_width_den_power)
     var image = p21_krawczyk_image(beta)

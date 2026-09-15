@@ -1,6 +1,6 @@
 # Claim-governance policy for larsbx/NLAP-JT.
 #
-# Read by the vendored `tools/claim_governance` package (larsbx/claim_governance_tools,
+# Read by the vendored `tools/claim_governance` package (audit/claim_governance in larsbx/finite-math-kernels,
 # pinned in vendored.toml).  It restates, as configuration, the repository
 # policy that `tools/audit_terminology.py`, `tools/audit_no_trig.py`,
 # `tools/audit_no_points.py`, and the banned-term half of

@@ -118,7 +118,7 @@ src/
 tools/
   audit_*.py
   exact_arithmetic_allowlist.md
-  claim_governance/          # vendored larsbx/claim_governance_tools, pinned in vendored.toml
+  claim_governance/          # vendored from larsbx/finite-math-kernels audit/, pinned in vendored.toml
   check_vendored_sync.py
 tests/
   test_*.py

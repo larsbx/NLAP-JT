@@ -3,8 +3,8 @@
 
 [[package]]
 name = "claim_governance"
-repository = "larsbx/claim_governance_tools"
-commit = "5a8519e0e98c80f674419325054e820a83d0d53a"
+repository = "larsbx/finite-math-kernels"
+commit = "807ae7ed5461af9fe07b1cbbca96f680a105e0e7"
 root = "tools"
 
 [package.files]
@@ -18,6 +18,6 @@ root = "tools"
 "claim_governance/cli.py" = "122f6b5acf8d5910ded64d93b83390c64aa8ee702179b5e71d0138b988855257"
 "claim_governance/findings.py" = "a8dafbaacc963b725d3b4fa32c8ac04ba10f4d69606362f52e5858af775bf3b4"
 "claim_governance/lexing.py" = "9c93d3660fe4a8bf15e5bd7727771f9d2714574f2d78691c831ac11bc670d4e7"
-"claim_governance/policy.py" = "e79eae641d34b0c4cabcb2f8d66493bc75e5831765e61af212b60e4a44d6661b"
+"claim_governance/policy.py" = "3dbd2e3596db32a30b48a747b150ed669ca7d6fde700004afafc519c5684bee6"
 "claim_governance/repo.py" = "11a603c0288f9030ec0c5990d260f2c3f593b7e44a2b86d49f13920f84348dd3"
 "claim_governance/runner.py" = "2284d080cfa0b600fd0c297c3bdc796d73062aa85be2341360c68a0d6a327319"

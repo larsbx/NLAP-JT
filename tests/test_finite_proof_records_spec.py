@@ -98,7 +98,7 @@ def test_record_identifier_has_non_circular_preimage():
     body = text()
     assert "record-ID preimage" in body
     assert "except `record_id` itself" in body
-    assert "verify the identifier without circularity" in body
+    assert "verify the identifier without circularity" in " ".join(body.split())
 
 
 def test_incomplete_records_remain_addressable():

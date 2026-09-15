@@ -1,0 +1,23 @@
+# Vendored packages, checked by check_vendored_sync.py; re-pin with
+# `check_vendored_sync.py pin NAME COMMIT` after copying from upstream.
+
+[[package]]
+name = "claim_governance"
+repository = "larsbx/claim_governance_tools"
+commit = "5a8519e0e98c80f674419325054e820a83d0d53a"
+root = "tools"
+
+[package.files]
+"claim_governance/__init__.py" = "55338310cbbb86146aaee2a93bdd6e73210d253c0fa7e3ab2de15a6a87bbc9b5"
+"claim_governance/checks/__init__.py" = "aeb4d89c1eeee260ab01df84e6576e954342c1a3a76ab126408e52bf44d7fe07"
+"claim_governance/checks/claims.py" = "35580a55a2f62e97ebeebf7128c8a255ccf5f3a12144c74dff6514ec15ef17ab"
+"claim_governance/checks/consistency.py" = "79ff0709ea01a044ddbd3941190765281b05c59c93ee91ee57dfbba484836947"
+"claim_governance/checks/numerics.py" = "5af0bba117d7503a2ea81d1aaeb4ef6fdd83504345925779224749ddd5666598"
+"claim_governance/checks/promotion.py" = "297aced859ea014d6cbb37166b9787bcda8f74ad52bba52fef83df7be04c1840"
+"claim_governance/checks/terminology.py" = "adfa2be8c2f49e6c81aa4f661293c6a088af3624f006a901a8d1d747924baef1"
+"claim_governance/cli.py" = "122f6b5acf8d5910ded64d93b83390c64aa8ee702179b5e71d0138b988855257"
+"claim_governance/findings.py" = "a8dafbaacc963b725d3b4fa32c8ac04ba10f4d69606362f52e5858af775bf3b4"
+"claim_governance/lexing.py" = "9c93d3660fe4a8bf15e5bd7727771f9d2714574f2d78691c831ac11bc670d4e7"
+"claim_governance/policy.py" = "e79eae641d34b0c4cabcb2f8d66493bc75e5831765e61af212b60e4a44d6661b"
+"claim_governance/repo.py" = "11a603c0288f9030ec0c5990d260f2c3f593b7e44a2b86d49f13920f84348dd3"
+"claim_governance/runner.py" = "2284d080cfa0b600fd0c297c3bdc796d73062aa85be2341360c68a0d6a327319"

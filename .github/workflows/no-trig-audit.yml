@@ -37,6 +37,12 @@ jobs:
       - name: Run terminology governance audit
         run: python3 tools/audit_terminology.py
 
+      - name: Check vendored claim-governance package against vendored.toml
+        run: python3 tools/check_vendored_sync.py
+
+      - name: Run claim governance audit (claim_governance.toml)
+        run: PYTHONPATH=tools python3 -m claim_governance.cli --root .
+
       - name: Run field-facing paper language audit
         run: python3 tools/audit_paper_language.py
 

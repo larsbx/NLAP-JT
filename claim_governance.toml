@@ -1,0 +1,264 @@
+# Claim-governance policy for larsbx/NLAP-JT.
+#
+# Read by the vendored `tools/claim_governance` package (larsbx/claim_governance_tools,
+# pinned in vendored.toml).  It restates, as configuration, the repository
+# policy that `tools/audit_terminology.py`, `tools/audit_no_trig.py`,
+# `tools/audit_no_points.py`, and the banned-term half of
+# `tools/audit_paper_language.py` enforce in code, and adds the claim ledger
+# that keeps the C1 proof-block statuses of the Markdown ledger and of
+# `src/C1_final_proof_block_ledger.mojo` in agreement.  It states no
+# mathematics; C1 remains open here as everywhere else in the repository.
+#
+# Run: PYTHONPATH=tools python -m claim_governance.cli --root .
+
+[repository]
+name = "larsbx/NLAP-JT"
+
+[scan]
+prose = ["README.md", "docs/**/*.md", "src/**/*.md"]
+source = ["src/**/*.mojo", "src/**/*.py"]
+exclude = []
+
+# ---------------------------------------------------------------------------
+# Status vocabulary: the proof-block ledger values, the Mojo status tuple of
+# ProofBlockStatus(name, proved_or_imported_checked, scaffolded, open_frontier,
+# research_only, required_for_final), and the planning labels.
+# ---------------------------------------------------------------------------
+[status]
+classes = ["proved-or-imported-checked", "scaffolded", "open-frontier", "research-only"]
+
+[status.synonyms]
+"PROVED_OR_IMPORTED_CHECKED" = "proved-or-imported-checked"
+"True, False, False, False" = "proved-or-imported-checked"
+"SCAFFOLDED" = "scaffolded"
+"False, True, False, False" = "scaffolded"
+"OPEN_FRONTIER" = "open-frontier"
+"PRIORITY_ZERO" = "open-frontier"
+"False, False, True, False" = "open-frontier"
+"RESEARCH_ONLY" = "research-only"
+"False, False, False, True" = "research-only"
+
+# ---------------------------------------------------------------------------
+# Terminology: docs/terminology-governance.md, the registry, and the use
+# manifest.  Mirrors the constants of tools/audit_terminology.py.
+# ---------------------------------------------------------------------------
+[terminology]
+registry = "docs/terminology-registry.md"
+registry_sections = ["## Established field terms", "## Project terms with declarations", "## Deprecated project terms"]
+declaration_marker = "Terminology declaration:"
+declaration_fields = ["Terminology declaration:", "Genealogy:", "Bridge claim:", "Known leaks:", "Use discipline:"]
+project_terms = ["PointVertex", "rank-2 coordinate record", "finite rational-ray nest", "SeparatorCatalogueAdequacy", "persistent non-separation", "persistent wake ambiguity", "Mojo theorem kernel"]
+risky_phrases = ["obvious isomorphism", "canonical analogy", "essentially the same", "same as", "just a", "nothing but", "isomorphic to", "equivalent to", "corresponds exactly", "proof by analogy"]
+negating_context = ["not ", "no ", "without ", "unless ", "forbidden", "disallow", "reject", "blocked", "must not", "cannot", "does not", "is not"]
+migration_context = ["deprecated", "legacy", "replaces", "rather than", "migration", "old term"]
+allow = ["docs/terminology-governance.md", "docs/terminology-registry.md", "docs/terminology-use-manifest.md"]
+
+[[terminology.scoped]]
+term = "finite rational-ray nest"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "persistent non-separation"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "persistent wake ambiguity"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "wake ambiguity"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "SeparatorCatalogueAdequacy"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "SeparatorCatalogueSoundness"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "SeparatorCatalogueCompleteness"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "side-assignment witness"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "separator code"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+
+[[terminology.deprecated]]
+term = "catalogue extensionality"
+replacement = "SeparatorCatalogueAdequacy, SeparatorCatalogueSoundness, or SeparatorCatalogueCompleteness"
+allow = ["docs/C1_catalogue_extensionality.md", "docs/C1_catalogue_extensionality_proof_consolidation.md", "docs/alignment_audit_deep_research_findings.md", "docs/linter_skill_paper_language.md"]
+
+# ---------------------------------------------------------------------------
+# Statements need a status label.  Repository notes declare their status in a
+# `Status:` line at the top; the field-facing paper is audited separately by
+# tools/audit_paper_language.py and is not a status surface.
+# ---------------------------------------------------------------------------
+[claims]
+paths = ["docs/*.md"]
+statement_kinds = ["Theorem", "Proposition", "Lemma", "Corollary", "Conjecture"]
+window_lines = 6
+file_status_marker = "Status:"
+file_status_lines = 10
+allow = []
+
+# ---------------------------------------------------------------------------
+# Promotion: nothing unsettled may be described as proved.
+# ---------------------------------------------------------------------------
+[promotion]
+proving_phrases = ["is proved", "are proved", "has been proved", "we prove", "we have proved", "is a theorem", "is now a theorem", "is established", "completes the proof", "settles"]
+negating_context = ["not ", "no ", "would", "conditional", "without", "if ", "once ", "unless", "cannot", "suffic", "assum", "requir", "target", "obligation", "must", "does not", "do not", "unproved", "remains", "remain ", "open", "OPEN", "frontier", "PRIORITY", "skeleton", "route", "criterion", "claim", "does *not*"]
+settled_classes = ["proved-or-imported-checked"]
+radius = 120
+allow = []
+
+# ---------------------------------------------------------------------------
+# Forbidden primitives (tools/audit_no_trig.py, tools/audit_no_points.py, the
+# rank-2 locus ban of tools/audit_terminology.py, and the banned-term table
+# of tools/audit_paper_language.py, whose positive checks stay in that script).
+# ---------------------------------------------------------------------------
+[[numerics.rule]]
+name = "no-trig"
+pattern = '(?i)\b(?:sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|exp|log|sqrt|radians?)\b|unit circle|polar angle|\b(?:angle[_ ]?degrees?|degrees?[_ ]?angle)\b'
+paths = ["src/**/*.mojo"]
+message = "analytic or transcendental primitive; use quadrance, spread, dot/cross determinants, algebraic rotors, or Q/Z doubling"
+
+[[numerics.rule]]
+name = "no-points"
+pattern = '\b(?:Point(?!Vertex)|point_eval|eval_point|point_value|to_point_interval)\b|(?:fn|def)\s+point\s*\(|\.point\s*\('
+paths = ["src/**/*.mojo"]
+message = "analytic point API; use CoordRecord, IQ.singleton, RootHandle, or PointVertex finite incidence (docs/no-points-invariant.md)"
+
+[[numerics.rule]]
+name = "rank2-loci"
+pattern = '(?i)unit circle|circle object|circle primitive|disk object|arc object|circumference|analytic locus'
+paths = ["docs/rank2-coordinate-substrate.md", "src/rank2_operator.mojo"]
+message = "rank-2 locus phrase is not allowed"
+negating_context = ["not ", "no ", "without ", "unless ", "forbidden", "disallow", "reject", "blocked", "must not", "cannot", "does not", "is not"]
+
+[[numerics.rule]]
+name = "paper-internal-terms"
+pattern = '\bC1\b|(?i:NLAP-JT|Mojo|theorem kernel|separator-catalogue|separator catalogue|catalogue extensionality|carrier|ResidualClosureNoMissingLinks|ExitClosureForC1|ResidualFrontierRefinement|ResidualDescentContradiction|PRIORITY_ZERO|OPEN_FRONTIER)'
+paths = ["paper/*.tex"]
+message = "project-internal term in the field-facing manuscript (tools/audit_paper_language.py lists the replacements)"
+
+# ---------------------------------------------------------------------------
+# Claim ledger: the required blocks of the final C1 proof object, on the
+# Markdown ledger and its Mojo mirror, plus C1 itself.
+# ---------------------------------------------------------------------------
+[[claim]]
+name = "C1"
+status = "open-frontier"
+[[claim.surfaces]]
+path = "README.md"
+anchor = "C1 proof work is"
+window_lines = 0
+[[claim.surfaces]]
+path = "docs/C1_proof_definition_and_priority.md"
+anchor = "Status: PRIORITY_ZERO"
+expect = "present"
+[[claim.surfaces]]
+path = "src/C1_theorem_status.mojo"
+anchor = "return C1Status(local, True, True, False, False)"
+expect = "present"
+[[claim.surfaces]]
+path = "src/C1_theorem_status.mojo"
+anchor = "fn bounded_search_proves_c1() -> Bool:\n    return False"
+expect = "present"
+
+[[claim]]
+name = "SeparatorCatalogueSoundness"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `SeparatorCatalogueSoundness` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("SeparatorCatalogueSoundness",'
+window_lines = 0
+
+[[claim]]
+name = "SeparatorCatalogueCompleteness"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `SeparatorCatalogueCompleteness` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("SeparatorCatalogueCompleteness",'
+window_lines = 0
+
+[[claim]]
+name = "FiberDefinitionAdapter"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `FiberDefinitionAdapter` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("FiberDefinitionAdapter",'
+window_lines = 0
+
+[[claim]]
+name = "ResidualClosureNoMissingLinks"
+status = "open-frontier"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `ResidualClosureNoMissingLinks` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("ResidualClosureNoMissingLinks",'
+window_lines = 0
+
+[[claim]]
+name = "ExitClosureForC1"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `ExitClosureForC1` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("ExitClosureForC1",'
+window_lines = 0
+
+[[claim]]
+name = "BoundaryEqualitySoundness"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `BoundaryEqualitySoundness` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("BoundaryEqualitySoundness",'
+window_lines = 0
+
+[[claim]]
+name = "TheoremTagImportSoundness"
+status = "scaffolded"
+[[claim.surfaces]]
+path = "docs/C1_final_proof_block_ledger.md"
+anchor = "| `TheoremTagImportSoundness` |"
+window_lines = 0
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("TheoremTagImportSoundness",'
+window_lines = 0
+
+[[claim]]
+name = "TheoremTagImportLedger"
+status = "proved-or-imported-checked"
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("TheoremTagImportLedger",'
+window_lines = 0
+
+[[claim]]
+name = "TheoremTagAssumptionPayloads"
+status = "proved-or-imported-checked"
+[[claim.surfaces]]
+path = "src/C1_final_proof_block_ledger.mojo"
+anchor = 'ProofBlockStatus("TheoremTagAssumptionPayloads",'
+window_lines = 0

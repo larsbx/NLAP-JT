@@ -10,13 +10,13 @@ The compiler-checked dependency closure currently consists of:
 - `src/smoke_tests.mojo`;
 - `src/poly_z.mojo`;
 - `src/cert_types.mojo`;
-- `src/rat_q.mojo`;
+- `src/finite_exact/rat_q.mojo`;
 - `src/integer_gcd.mojo`;
 - `src/ray_address.mojo`;
 - `src/rational_trig.mojo`;
 - `src/alignment_audit_status.mojo`;
 - `src/mojo_optimization_contract.mojo`;
-- `src/interval_q.mojo`;
+- `src/finite_exact/closed_q.mojo`;
 - `src/poly_interval_eval.mojo`;
 - `src/krawczyk_witness.mojo`.
 - `src/C1_final_proof_block_ledger.mojo`.
@@ -36,7 +36,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/checked_finite_certificate_gate.mojo`.
 - `src/C1_theorem_tag_payload_instances.mojo`.
 - `src/checked_landing_target_adapter.mojo`.
-- `src/bigint_z.mojo`.
+- `src/finite_exact/bigint_z.mojo`.
 - `src/bigint_adapter.mojo`.
 - `src/bigq_ray_address.mojo`.
 - `src/bigq_landing_target_adapter.mojo`.

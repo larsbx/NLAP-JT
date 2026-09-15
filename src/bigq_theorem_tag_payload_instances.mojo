@@ -4,8 +4,8 @@
 # Finite source-scope matching is executable. Attaching and accepting the
 # cited classical classifications is a separate, deliberately absent step.
 
-from bigint_z import bigz_add, bigz_from_i64, bigz_mul
-from rat_q import Q, q_from_bigz
+from finite_exact.bigint_z import bigz_add, bigz_from_i64, bigz_mul
+from finite_exact.rat_q import Q, q_from_bigz
 from bigq_landing_target_adapter import BigQLandingTargetAssociation, verify_bigq_c_minus_2_landing_target_association
 
 

@@ -7,7 +7,7 @@
 # the multiplication law (x,y) star (u,v) = (xu-yv, xv+yu). It is not an
 # analytic singleton and it does not introduce measured-angle geometry.
 
-from rat_q import Q
+from finite_exact.rat_q import Q
 
 
 # Regime correspondence: rank2-coordinate-record

@@ -1,0 +1,16 @@
+# Vendored packages, checked by check_vendored_sync.py; re-pin with
+# `check_vendored_sync.py pin NAME COMMIT` after copying from upstream.
+
+[[package]]
+name = "finite_exact"
+repository = "larsbx/finite-math-kernels"
+commit = "807ae7ed5461af9fe07b1cbbca96f680a105e0e7"
+root = "src"
+
+[package.files]
+"finite_exact/__init__.mojo" = "b7cdb9dafe62fd6fe2594446d5f90e5c596e8841635a72498269a31e9d10fa56"
+"finite_exact/bigint_z.mojo" = "d02a0c033042661161a24f0b31f1e89fbf3ed908ccc86e42b5b80b8df4240df1"
+"finite_exact/closed_interval.mojo" = "6a276e8f6f0d1ebe2c2795a9ba590857aea4e5617807cbc0bfe3ff1f1b26bf08"
+"finite_exact/closed_q.mojo" = "72f66b6ed05913b9055c3e44c8f3e32e27a6e2908a407eb29c8ef2d790f9b186"
+"finite_exact/rat_q.mojo" = "d7f8cc3a3879d76bfc242304a13d4f2c9d4cf2cdeeba586fa4af95980a4b9fa6"
+"finite_exact/rational.mojo" = "6d84b8f4c3b1699648eee2512f49c7736dd5d4c8f7236809585b09cf1b5631c0"

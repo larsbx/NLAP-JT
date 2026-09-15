@@ -6,8 +6,8 @@
 # operations from interval_q.mojo. Arithmetic is BigZ-backed; this consumer
 # remains barred from certificate acceptance until its replay is complete.
 
-from interval_q import ComplexIQ, IQ, IQBoolResult
-from rat_q import Q
+from finite_exact.closed_interval import ComplexIQ, IQ, IQBoolResult
+from finite_exact.rat_q import Q
 from krawczyk_witness import c_minus_2_box
 
 

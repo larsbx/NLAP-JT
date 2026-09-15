@@ -53,7 +53,14 @@ FLOAT_RE = re.compile(
     r")(?![\w.])"
 )
 PATH_RE = re.compile(r"`([\w./-]+\.(?:mojo|py))`")
-ARITHMETIC_IMPORT_RE = re.compile(r"^from\s+(?:rat_q|interval_q)\s+import\b", re.MULTILINE)
+ARITHMETIC_IMPORT_RE = re.compile(
+    r"^from\s+finite_exact\.(?:rat_q|rational|closed_q|closed_interval)\s+import\b",
+    re.MULTILINE,
+)
+VENDORED_FACADES = {
+    "src/finite_exact/rational.mojo",
+    "src/finite_exact/closed_interval.mojo",
+}
 
 
 def _section(text: str, heading: str) -> str:
@@ -122,7 +129,7 @@ def audit() -> list[str]:
                 continue
             if cls == "QUARANTINED":
                 quarantined.add(rel)
-            if SPEC_REL not in path.read_text(encoding="utf-8"):
+            if rel not in VENDORED_FACADES and SPEC_REL not in path.read_text(encoding="utf-8"):
                 errors.append(f"{rel} does not cite {SPEC_REL} (C7)")
     errors += [
         f"arithmetic consumer lacks binding row: {rel}"

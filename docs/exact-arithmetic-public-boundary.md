@@ -1,6 +1,6 @@
 # Exact arithmetic public boundary
 
-Status: repository invariant for `src/bigint_z.mojo`, `src/rat_q.mojo`, and `src/interval_q.mojo`. It declares which names, semantics, and encodings downstream modules may rely on, so that the three modules can later move into a shared library without changing their consumers. It states no theorem and enables no certificate acceptance: arithmetic readiness is a property of the backend, acceptance is decided by the consumers named in `docs/bigint-migration-handoff.md`.
+Status: repository invariant for `src/finite_exact/bigint_z.mojo`, `src/finite_exact/rat_q.mojo`, and `src/finite_exact/closed_q.mojo`. It declares which names, semantics, and encodings downstream modules may rely on, so that the three modules can later move into a shared library without changing their consumers. It states no theorem and enables no certificate acceptance: arithmetic readiness is a property of the backend, acceptance is decided by the consumers named in `docs/bigint-migration-handoff.md`.
 
 Specification of the arithmetic itself: `docs/rational-interval-arithmetic-spec.md`. Encodings: `docs/canonical-serialization.md`. Rationale for the boundary: `docs/library-extraction-candidates-2026-09-14.md`, section 1.
 

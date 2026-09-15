@@ -25,9 +25,9 @@
 # Integer and rational values are their canonical bytes as decimal octets
 # joined by "."; a rejected value prints as "rejected"; booleans print 0/1.
 
-from bigint_z import BIGZ_BASE, BigZ, BigZCanonicalBytes, bigz_abs_divmod, bigz_abs_divmod_shift_subtract, bigz_add, bigz_canonical_bytes, bigz_divmod, bigz_eq, bigz_from_i64, bigz_gcd, bigz_is_canonical, bigz_lt, bigz_mul, bigz_sub
-from rat_q import Q, QCanonicalBytes, q_canonical_bytes, q_from_bigz, q_max, q_min
-from interval_q import IQ
+from finite_exact.bigint_z import BIGZ_BASE, BigZ, BigZCanonicalBytes, bigz_abs_divmod, bigz_abs_divmod_shift_subtract, bigz_add, bigz_canonical_bytes, bigz_divmod, bigz_eq, bigz_from_i64, bigz_gcd, bigz_is_canonical, bigz_lt, bigz_mul, bigz_sub
+from finite_exact.rat_q import Q, QCanonicalBytes, q_canonical_bytes, q_from_bigz, q_max, q_min
+from finite_exact.closed_interval import IQ
 
 comptime PROBE_SEED = UInt64(11400714819323198485)
 comptime PROBE_Z_CASES = 300

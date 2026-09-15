@@ -7,7 +7,7 @@
 # rational data record that may feed a singleton box or RootHandle witness.
 
 from complex_inverse import ComplexQ, m41_center
-from rat_q import Q
+from finite_exact.rat_q import Q
 
 
 struct CoordEvalStatus:

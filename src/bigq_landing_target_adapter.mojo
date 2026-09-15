@@ -4,7 +4,7 @@
 # classical correspondence is not proved or accepted here, so this module
 # cannot accept a theorem import, a certificate, C1, or residual closure.
 
-from bigint_z import bigz_add, bigz_from_i64, bigz_mul
+from finite_exact.bigint_z import bigz_add, bigz_from_i64, bigz_mul
 from bigq_ray_address import BigQRayOrbitStatus, verify_bigq_one_half_orbit
 from interval_orbit import BigQExactTypeExclusionResult, bigq_p21_exact_type_exclusions
 from krawczyk_witness import BigQKrawczykResult, verify_bigq_p21_krawczyk_c_minus_2

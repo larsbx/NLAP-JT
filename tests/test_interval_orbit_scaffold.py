@@ -18,7 +18,7 @@ def test_interval_orbit_scaffold_exists():
 
 def test_native_interval_recurrence_exists():
     src = text()
-    assert "from interval_q import ComplexIQ, IQ, IQBoolResult" in src
+    assert "from finite_exact.closed_interval import ComplexIQ, IQ, IQBoolResult" in src
     assert "def next_orbit_value" in src
     assert "return z.square().add(c_box)" in src
     assert "def build_interval_orbit_h3" in src

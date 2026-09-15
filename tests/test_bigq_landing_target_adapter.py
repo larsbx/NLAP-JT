@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_bigq_ray_address_is_normalized_fail_closed_and_unbounded():
     src = (ROOT / "src" / "bigq_ray_address.mojo").read_text(encoding="utf-8")
-    assert "from rat_q import Q, q_from_bigz, q_rejected" in src
+    assert "from finite_exact.rat_q import Q, q_from_bigz, q_rejected" in src
     assert "value.num.sign < 0 or not value.lt(Q.one())" in src
     assert "var beyond_i64 = bigz_add(bigz_from_i64(9223372036854775807)" in src
     assert "bigz_mul(beyond_i64, bigz_from_i64(2))" in src

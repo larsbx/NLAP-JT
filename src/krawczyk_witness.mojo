@@ -12,9 +12,9 @@
 # - P_{4,1}=C(C+2)(C^3+2C^2+2C+2)F7 has general interval evaluation
 #   functions available, but its final inclusion witness remains pending.
 
-from interval_q import ComplexIQ, IQ
-from bigint_z import bigz_from_i64, bigz_mul
-from rat_q import Q, q_from_bigz, q_rejected
+from finite_exact.closed_interval import ComplexIQ, IQ
+from finite_exact.bigint_z import bigz_from_i64, bigz_mul
+from finite_exact.rat_q import Q, q_from_bigz, q_rejected
 from rat_backend_plan import current_q_backend_status, q_backend_blocks_proof_acceptance
 from poly_interval_eval import eval_p21, eval_p21_derivative, eval_p41, eval_p41_derivative
 

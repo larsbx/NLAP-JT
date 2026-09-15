@@ -4,8 +4,8 @@
 # Addresses are exact symbolic fractions modulo one, not measured angles.
 # Rejected Q values and values outside [0, 1) fail closed.
 
-from bigint_z import BigZ, bigz_add, bigz_from_i64, bigz_mul
-from rat_q import Q, q_from_bigz, q_rejected
+from finite_exact.bigint_z import BigZ, bigz_add, bigz_from_i64, bigz_mul
+from finite_exact.rat_q import Q, q_from_bigz, q_rejected
 
 
 # Regime correspondence: rational-ray-address

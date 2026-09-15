@@ -10,6 +10,7 @@
 from rat_q import Q
 
 
+# Regime correspondence: rank2-coordinate-record
 struct Coord2:
     var x: Q
     var y: Q
@@ -59,11 +60,13 @@ struct Matrix2Special:
         )
 
 
+# Regime correspondence: rank2-coordinate-record
 fn operator_matrix(u: Coord2) -> Matrix2Special:
     # M(u,v) = [[u, -v], [v, u]]
     return Matrix2Special(u.x, u.y.neg(), u.y, u.x)
 
 
+# Regime correspondence: rank2-coordinate-record
 fn operator_apply_by_star(v: Coord2, u: Coord2) -> Coord2:
     return v.star(u)
 
@@ -86,6 +89,7 @@ fn quadrance_scaling_law(v: Coord2, u: Coord2) -> Bool:
     return lhs.eq(rhs)
 
 
+# Regime correspondence: unit-quadrance-rotor
 fn is_rotor(u: Coord2) -> Bool:
     return u.quadrance().eq(Q.one())
 

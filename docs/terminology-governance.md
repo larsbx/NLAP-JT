@@ -91,3 +91,9 @@ The repository linter checks for two classes of violations:
 2. declared novel terms missing `Genealogy`, `Bridge claim`, `Known leaks`, or `Use discipline`.
 
 The linter is intentionally conservative. It will not prove mathematical correctness. It enforces intellectual hygiene so the paper trail remains readable to mathematicians outside the project.
+
+The companion regime-correspondence audit validates
+`spec/regime_correspondences.toml` and its Mojo source tags. Each mapping has a
+closed correspondence class, preserved and non-inherited structure, domain
+conditions, evidence, proof status, and a proof boundary. Specification and
+source bindings are checked in both directions.

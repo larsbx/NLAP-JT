@@ -1,0 +1,107 @@
+schema_version = 1
+allowed_classes = ["exact_algebraic_realization", "axiom_preserving_finite_analogue", "finite_certificate_surrogate", "symbolic_encoding", "prohibited_correspondence"]
+allowed_statuses = ["defined", "implemented_tested", "theorem_dependent", "prohibited"]
+
+[[correspondence]]
+id = "rank2-coordinate-record"
+analytic_concepts = ["complex number", "complex multiplication"]
+finite_term = "rank-2 coordinate record"
+class = "exact_algebraic_realization"
+status = "implemented_tested"
+preserves = ["addition", "subtraction", "polynomial coordinate multiplication", "multiplication matrix action", "quadrance multiplicativity"]
+does_not_inherit = ["analytic topology", "limits", "polar form", "argument", "circle or disk ontology"]
+domain_conditions = ["normalized rational coordinates", "accepted Q operands"]
+symbols = ["src/rank2_operator.mojo::Coord2", "src/rank2_operator.mojo::operator_matrix", "src/rank2_operator.mojo::operator_apply_by_star"]
+evidence = ["tests/test_rank2_operator.py", "docs/rank2-coordinate-substrate.md"]
+proof_boundary = "Polynomial coordinate equivalence imports no analytic or topological conclusion."
+
+[[correspondence]]
+id = "unit-quadrance-rotor"
+analytic_concepts = ["rotation", "unit complex number"]
+finite_term = "unit-quadrance rotor action"
+class = "axiom_preserving_finite_analogue"
+status = "implemented_tested"
+preserves = ["quadrance", "composition through coordinate multiplication"]
+does_not_inherit = ["unit circle", "measured angle", "sine", "cosine", "continuous rotation group"]
+domain_conditions = ["quadrance equals one", "accepted rational coordinates"]
+symbols = ["src/rank2_operator.mojo::is_rotor"]
+evidence = ["tests/test_rank2_operator.py", "tests/test_rank2_no_circle.py"]
+proof_boundary = "A general nonzero rank-2 record is not thereby a rotation."
+
+[[correspondence]]
+id = "rational-ray-address"
+analytic_concepts = ["external angle", "angle doubling"]
+finite_term = "normalized rational ray address modulo one"
+class = "symbolic_encoding"
+status = "implemented_tested"
+preserves = ["doubling modulo one", "eventual period", "preperiod"]
+does_not_inherit = ["metric angle", "radians", "trigonometric value", "ray landing"]
+domain_conditions = ["normalized Q in the half-open interval from zero to one"]
+symbols = ["src/bigq_ray_address.mojo::BigQRayAddr", "src/bigq_ray_address.mojo::verify_bigq_one_half_orbit"]
+evidence = ["tests/test_ray_address_terminology.py", "tests/test_ray_address_consolidation.py"]
+proof_boundary = "Address arithmetic alone does not prove that a parameter ray lands."
+
+[[correspondence]]
+id = "rational-box-half-width"
+analytic_concepts = ["radius", "neighborhood"]
+finite_term = "rational rectangular-box half-width"
+class = "finite_certificate_surrogate"
+status = "implemented_tested"
+preserves = ["explicit enclosure", "coordinatewise containment", "finite denominator refinement"]
+does_not_inherit = ["circle", "disk", "radial distance", "open neighborhood", "square-root norm"]
+domain_conditions = ["nonnegative denominator exponent", "accepted interval endpoints"]
+symbols = ["src/krawczyk_witness.mojo::c_minus_2_box"]
+evidence = ["tests/test_krawczyk_joint_scaffold.py", "docs/krawczyk-native-p21.md"]
+proof_boundary = "A rectangular rational enclosure is not a metric ball or topological neighborhood."
+
+[[correspondence]]
+id = "formal-polynomial-derivative"
+analytic_concepts = ["derivative"]
+finite_term = "formal polynomial derivative"
+class = "exact_algebraic_realization"
+status = "implemented_tested"
+preserves = ["coefficientwise power rule over integer polynomials", "polynomial evaluation"]
+does_not_inherit = ["limit definition", "differentiability of a general function", "analytic continuation"]
+domain_conditions = ["finite coefficient list", "integer polynomial"]
+symbols = ["src/poly_interval_eval.mojo::derivative_coeffs_ascending", "src/poly_interval_eval.mojo::eval_p21_derivative"]
+evidence = ["tests/test_poly_interval_eval.py", "docs/polynomial-reference-oracle.md"]
+proof_boundary = "Only formal differentiation of the represented polynomial is asserted."
+
+[[correspondence]]
+id = "rational-box-krawczyk-replay"
+analytic_concepts = ["Krawczyk operator", "localization neighborhood"]
+finite_term = "rational-box Krawczyk inclusion replay"
+class = "finite_certificate_surrogate"
+status = "implemented_tested"
+preserves = ["finite interval inclusion calculation", "strict coordinatewise enclosure test", "arithmetic rejection distinction"]
+does_not_inherit = ["ray landing", "fiber triviality", "local connectivity", "certificate acceptance"]
+domain_conditions = ["accepted BigZ-backed Q intervals", "squarefree P_2_1 polynomial", "shared box half-width"]
+symbols = ["src/krawczyk_witness.mojo::verify_bigq_p21_krawczyk_c_minus_2"]
+evidence = ["tests/test_krawczyk_joint_scaffold.py", "docs/krawczyk-native-p21.md"]
+proof_boundary = "Successful arithmetic replay is not a global analytic theorem or proof-grade certificate."
+
+[[correspondence]]
+id = "landing-association-replay"
+analytic_concepts = ["external-ray landing", "landing association"]
+finite_term = "finite landing-target association replay"
+class = "finite_certificate_surrogate"
+status = "theorem_dependent"
+preserves = ["same-box composition of localization and exact-type exclusion", "rational-address orbit metadata"]
+does_not_inherit = ["landing theorem", "theorem-tag acceptance", "fiber triviality", "C1", "ResidualClosureNoMissingLinks"]
+domain_conditions = ["accepted component replays", "matching half-width exponent", "explicit correspondence metadata"]
+symbols = ["src/bigq_landing_target_adapter.mojo::verify_bigq_c_minus_2_landing_target_association"]
+evidence = ["tests/test_bigq_landing_target_adapter.py", "docs/certificate-predicate-migration-inventory.md"]
+proof_boundary = "The imported analytic correspondence remains metadata until a checked theorem tag is bound."
+
+[[correspondence]]
+id = "unit-circle-primitive"
+analytic_concepts = ["unit circle", "circle locus"]
+finite_term = "no rank-2 finite-regime object"
+class = "prohibited_correspondence"
+status = "prohibited"
+preserves = ["nothing"]
+does_not_inherit = ["all circle and locus structure"]
+domain_conditions = ["not applicable"]
+symbols = []
+evidence = ["tests/test_rank2_no_circle.py", "docs/no-points-invariant.md"]
+proof_boundary = "The polynomial predicate quadrance equals one does not construct a circle."

@@ -2,6 +2,11 @@
 
 Status: controlled vocabulary registry.
 
+Machine-readable analytic-to-finite mappings and their executable bindings are
+normative in `spec/regime_correspondences.toml`. This prose registry governs
+readable mathematical terminology; the correspondence specification governs
+which properties an implementation may inherit from an analytic concept.
+
 This registry exists so the research program does not drift into private jargon. Mathematical language should be recognizable in the field. Project-specific names are allowed only when their status is explicit.
 
 ## Established field terms
@@ -162,3 +167,14 @@ Any phrase such as `isomorphic to`, `equivalent to`, `same as`, `analogue of`, o
 - conditional on named lemmas;
 - definition-only;
 - analogy/metaphor.
+
+## Executable correspondence tags
+
+Public Mojo types and functions implementing an analytic-to-finite translation
+must carry an immediately preceding `# Regime correspondence: <registry-id>`
+tag. The identifier must exist in `spec/regime_correspondences.toml`, whose
+entry must bind the exact `path::symbol`.
+
+A tag grants only the properties listed under `preserves`; every item under
+`does_not_inherit` remains unavailable. Shared terminology, notation, or
+genealogy never transfers an unstated theorem.

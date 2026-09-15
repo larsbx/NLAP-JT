@@ -42,6 +42,7 @@ The compiler-checked dependency closure currently consists of:
 - `src/bigq_landing_target_adapter.mojo`.
 - `src/bigq_theorem_tag_payload_instances.mojo`.
 - `src/bigq_finite_certificate_gate.mojo`.
+- `src/bigq_certificate_incidence.mojo`.
 
 A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
 `bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,
@@ -118,6 +119,10 @@ The BigZ theorem-payload and finite-certificate layers now replay finite source
 scope and compose the c=-2 inputs. Their classification-proof flags remain
 false, so theorem imports, complete certificate acceptance, C1, and
 `ResidualClosureNoMissingLinks` all remain unaccepted.
+The BigZ incidence layer packages the finite root-handle, symbolic-address-set,
+and rational-box vertices as three explicit carrier members. It validates their
+roles and distinctness, while keeping certificate emission false because the
+theorem imports remain unaccepted.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

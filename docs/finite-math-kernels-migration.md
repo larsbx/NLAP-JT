@@ -8,6 +8,12 @@ every vendored Mojo file by SHA-256 in CI. Arithmetic consumers import the
 package-qualified modules under `src/finite_exact/`; the former root-level
 implementations were removed.
 
+The same pin also vendors the monorepo's `substitution_dynamics` tuning,
+directive-prefix, and column-coincidence modules under
+`src/substitution_dynamics/`, consumed by `src/C1_residual_directive_carrier.mojo`
+(`docs/C1_residual_directive_carrier.md`); the balanced-pair and automaton
+modules are not vendored.
+
 This changes ownership, not mathematical semantics:
 
 - `BigZ` and `Q` remain exact, unbounded, and fail closed;

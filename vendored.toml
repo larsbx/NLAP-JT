@@ -4,11 +4,11 @@
 [[package]]
 name = "finite_exact"
 repository = "larsbx/finite-math-kernels"
-commit = "807ae7ed5461af9fe07b1cbbca96f680a105e0e7"
+commit = "dc8bee9b130348525802762a70aeeafa92e871a8"
 root = "src"
 
 [package.files]
-"finite_exact/__init__.mojo" = "b7cdb9dafe62fd6fe2594446d5f90e5c596e8841635a72498269a31e9d10fa56"
+"finite_exact/__init__.mojo" = "6c12cff9ef6a09417bddaa8324372888a30b4c75b2b64438eb47bb17ea9138c9"
 "finite_exact/bigint_z.mojo" = "d02a0c033042661161a24f0b31f1e89fbf3ed908ccc86e42b5b80b8df4240df1"
 "finite_exact/closed_interval.mojo" = "6a276e8f6f0d1ebe2c2795a9ba590857aea4e5617807cbc0bfe3ff1f1b26bf08"
 "finite_exact/closed_q.mojo" = "72f66b6ed05913b9055c3e44c8f3e32e27a6e2908a407eb29c8ef2d790f9b186"
@@ -18,11 +18,11 @@ root = "src"
 [[package]]
 name = "claim_governance"
 repository = "larsbx/finite-math-kernels"
-commit = "807ae7ed5461af9fe07b1cbbca96f680a105e0e7"
+commit = "dc8bee9b130348525802762a70aeeafa92e871a8"
 root = "tools"
 
 [package.files]
-"claim_governance/__init__.py" = "55338310cbbb86146aaee2a93bdd6e73210d253c0fa7e3ab2de15a6a87bbc9b5"
+"claim_governance/__init__.py" = "6aedea2e9e57d34764b0824c4251257a69fba7b5762a2d383647f376477c7664"
 "claim_governance/checks/__init__.py" = "aeb4d89c1eeee260ab01df84e6576e954342c1a3a76ab126408e52bf44d7fe07"
 "claim_governance/checks/claims.py" = "35580a55a2f62e97ebeebf7128c8a255ccf5f3a12144c74dff6514ec15ef17ab"
 "claim_governance/checks/consistency.py" = "79ff0709ea01a044ddbd3941190765281b05c59c93ee91ee57dfbba484836947"
@@ -32,6 +32,18 @@ root = "tools"
 "claim_governance/cli.py" = "122f6b5acf8d5910ded64d93b83390c64aa8ee702179b5e71d0138b988855257"
 "claim_governance/findings.py" = "a8dafbaacc963b725d3b4fa32c8ac04ba10f4d69606362f52e5858af775bf3b4"
 "claim_governance/lexing.py" = "9c93d3660fe4a8bf15e5bd7727771f9d2714574f2d78691c831ac11bc670d4e7"
-"claim_governance/policy.py" = "3dbd2e3596db32a30b48a747b150ed669ca7d6fde700004afafc519c5684bee6"
+"claim_governance/policy.py" = "888a8ca0c65fb57b5ff107592d6ab5364e5bb5d4b96b78b73369d411117d649f"
 "claim_governance/repo.py" = "11a603c0288f9030ec0c5990d260f2c3f593b7e44a2b86d49f13920f84348dd3"
 "claim_governance/runner.py" = "2284d080cfa0b600fd0c297c3bdc796d73062aa85be2341360c68a0d6a327319"
+
+[[package]]
+name = "substitution_dynamics"
+repository = "larsbx/finite-math-kernels"
+commit = "dc8bee9b130348525802762a70aeeafa92e871a8"
+root = "src"
+
+[package.files]
+"substitution_dynamics/coincidence.mojo" = "a62aaa0a03d972261a317bfc64619b84541c5b97a8c87c78bdaaba2e85bae77e"
+"substitution_dynamics/sadic.mojo" = "dda1a9b2c355050395679f8dc36c3985dc18405fdc6186d45d262a4ba0262450"
+"substitution_dynamics/substitution.mojo" = "ffa0dafbd11abf612acad3cdd6e75f910ae91e6b24548cf979253372f1ffddde"
+"substitution_dynamics/tuning.mojo" = "3597cdeb191db042f39562b2d6003af4d9bb65162a95ee4fe052882968682a09"

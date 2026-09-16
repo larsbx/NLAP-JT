@@ -105,3 +105,16 @@ domain_conditions = ["not applicable"]
 symbols = []
 evidence = ["tests/test_rank2_no_circle.py", "docs/no-points-invariant.md"]
 proof_boundary = "The polynomial predicate quadrance equals one does not construct a circle."
+
+[[correspondence]]
+id = "angle-kneading-prefix"
+analytic_concepts = ["kneading sequence", "Douady-Hubbard tuning", "renormalization level"]
+finite_term = "residual directive carrier"
+class = "symbolic_encoding"
+status = "implemented_tested"
+preserves = ["0/1 itinerary of a periodic address under doubling", "internal-address continuation", "star product of tuning patterns"]
+does_not_inherit = ["parameter-plane shrinking", "a priori bounds", "fibre triviality", "companion address identification", "measured angle"]
+domain_conditions = ["periodic address in the open interval from zero to one with odd reduced denominator", "period at most 62", "checked Int64 arithmetic accepted"]
+symbols = ["src/C1_residual_directive_carrier.mojo::checked_kneading_prefix", "src/C1_residual_directive_carrier.mojo::continuation_last_letter", "src/C1_residual_directive_carrier.mojo::checked_directive_level"]
+evidence = ["tests/test_C1_residual_directive_carrier.py", "docs/C1_residual_directive_carrier.md", "tools/kneading_reference.py"]
+proof_boundary = "A directive prefix encodes finitely many renormalization levels; it does not decide residual membership or same-fibre relations."

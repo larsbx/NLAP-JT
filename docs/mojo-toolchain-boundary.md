@@ -43,6 +43,9 @@ The compiler-checked dependency closure currently consists of:
 - `src/bigq_theorem_tag_payload_instances.mojo`.
 - `src/bigq_finite_certificate_gate.mojo`.
 - `src/bigq_certificate_incidence.mojo`.
+- `src/substitution_dynamics/substitution.mojo`.
+- `src/substitution_dynamics/tuning.mojo`.
+- `src/C1_residual_directive_carrier.mojo`.
 
 A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
 `bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,

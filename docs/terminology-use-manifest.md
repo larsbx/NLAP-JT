@@ -31,6 +31,7 @@ The following terms may appear without a full local declaration only because the
 - `persistent non-separation`
 - `persistent wake ambiguity`
 - `Mojo theorem kernel`
+- `residual directive carrier`
 
 ## Terms requiring local declaration outside C1 files
 
@@ -38,6 +39,7 @@ These terms are allowed freely only inside files whose path begins with `docs/C1
 
 - `finite rational-ray nest`
 - `persistent non-separation`
+- `residual directive carrier`
 - `persistent wake ambiguity`
 - `wake ambiguity`
 - `SeparatorCatalogueAdequacy`

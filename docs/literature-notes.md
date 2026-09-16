@@ -49,6 +49,18 @@ Use as classical background for:
 - Misiurewicz and parabolic boundary structure;
 - Mandelbrot local connectivity formulation.
 
+## Tuning and kneading sequences
+
+Use as classical background for the residual directive carrier
+(`docs/C1_residual_directive_carrier.md`):
+
+- Douady and Hubbard, *Étude dynamique des polynômes complexes*: tuning and polynomial-like renormalization;
+- Bruin and Schleicher, symbolic dynamics of quadratic polynomials: 0/1 kneading sequences of angles, the `rho` function, internal addresses, and the periodic continuations `A(nu)`;
+- Derrida, Gervois, and Pomeau: the star product of real unimodal kneading sequences (the parity twist, real case only);
+- Milnor, *Periodic orbits, external rays and the Mandelbrot set*: orbit portraits and root angles.
+
+Role in this project: sources for the scaffolded theorem tag `TuningKneadingSubstitution` behind the residual directive carrier, a project term registered in `docs/terminology-registry.md`. None of them is a statement about parameter-plane shrinking or fibre triviality.
+
 ## Interval / Krawczyk methods
 
 Use for finite localization witnesses.

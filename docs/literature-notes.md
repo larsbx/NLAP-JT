@@ -49,6 +49,25 @@ Use as classical background for:
 - Misiurewicz and parabolic boundary structure;
 - Mandelbrot local connectivity formulation.
 
+## Tuning in kneading form
+
+Douady and Hubbard, *Étude dynamique des polynômes complexes* (tuning);
+Derrida, Gervois, and Pomeau, the star product of unimodal kneading sequences;
+Milnor, *Periodic orbits, external rays and the Mandelbrot set* (from rational
+ray addresses to kneading sequences).
+
+Use as the source family of the `KneadingFormOfTuning` theorem tag only:
+
+- tuning by a centre of period `p` acts on kneading sequences as the
+  constant-length-`p` substitution `A' . (s xor dgp(A'))`, real slice;
+- the kneading letters of a periodic ray address are its itinerary under
+  doubling relative to the two cut points `theta/2` and `(theta+1)/2`.
+
+Not covered by that tag: the postcritical odometer of bounded-type infinitely
+renormalizable maps (Lyubich), Dekking's coincidence theorem for
+constant-length substitutions, and every a priori-bounds statement. Each
+needs its own tag before any ledger uses it.
+
 ## Interval / Krawczyk methods
 
 Use for finite localization witnesses.

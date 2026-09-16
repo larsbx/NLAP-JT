@@ -43,6 +43,8 @@ The compiler-checked dependency closure currently consists of:
 - `src/bigq_theorem_tag_payload_instances.mojo`.
 - `src/bigq_finite_certificate_gate.mojo`.
 - `src/bigq_certificate_incidence.mojo`.
+- `src/substitution_dynamics/substitution.mojo`, `src/substitution_dynamics/sadic.mojo`, and `src/substitution_dynamics/tuning.mojo` (vendored from `larsbx/finite-math-kernels`; the rest of that package is pinned but outside the closure).
+- `src/C1_residual_directive_carrier.mojo`.
 
 A second compile target, `src/exact_arithmetic_property_probe.mojo`, imports
 `bigint_z`, `rat_q`, and `interval_q` and is executed by `pixi run property`,
@@ -123,6 +125,14 @@ The BigZ incidence layer packages the finite root-handle, symbolic-address-set,
 and rational-box vertices as three explicit carrier members. It validates their
 roles and distinctness, while keeping certificate emission false because the
 theorem imports remain unaccepted.
+The residual directive carrier computes kneading letters of periodic rational
+ray addresses with the exact `BigZ` doubling kernel, forms DGP tuning patterns
+with the vendored `substitution_dynamics` kernels, and checks the pinned
+identities of `docs/C1_residual_directive_carrier.md`: the star square of the
+`1/3` pattern equals the `2/5` pattern, level-two composite images are `1010`
+and `1011`, extension is strict refinement, preperiodic and period-one
+addresses reject, and the `KneadingFormOfTuning` payload instance matches its
+source scope while remaining inadmissible as a final import.
 Passing it does not imply that
 every `.mojo` file compiles, that the Int64 coefficient backend is proof-grade,
 or that any open C1 theorem obligation has been discharged.

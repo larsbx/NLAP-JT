@@ -26,6 +26,11 @@ These terms may be used without a project terminology declaration, provided they
 - hyperbolic component
 - wake
 - kneading sequence
+- itinerary
+- tuning
+- star product
+- constant-length substitution
+- directive sequence
 - orbit portrait
 - cyclic order
 - dyadic box

@@ -34,6 +34,7 @@ def test_allowed_conclusion_kinds_are_explicit_in_doc_and_mojo():
         "YoccozPuzzleLocalConnectivityUnderHypotheses",
         "RenormalizationWithAprioriBounds",
         "BoundaryIdentificationSoundness",
+        "TuningKneadingSubstitution",
     ]:
         assert kind in text
     assert "allowed_conclusion_kind" in text
@@ -97,3 +98,20 @@ def test_next_priority_is_assumption_payloads():
     text = body(DOC) + "\n" + body(SRC)
     assert "TheoremTagAssumptionPayloads" in text
     assert "next_priority_after_theorem_tag_ledger" in text
+
+
+def test_kneading_form_of_tuning_tag_is_recorded_with_source_and_stays_scaffolded():
+    doc = body(DOC)
+    src = body(SRC)
+    assert "### Kneading form of tuning" in doc
+    assert "KneadingFormOfTuning" in doc and "KneadingFormOfTuning" in src
+    for source in ["Douady", "Hubbard", "Derrida, Gervois, and Pomeau", "Milnor"]:
+        assert source in doc
+    assert "Covered class: kneading sequences of real quadratic parameters" in doc
+    assert "Strength class: `CLASSICAL_IMPORTED_CLASS_SPECIFIC`" in doc.split("### Kneading form of tuning")[1]
+    assert "def tuning_kneading_substitution() -> Self: return Self(7)" in src
+    assert "kind.code <= 7" in src
+    tag = src.split("def kneading_form_of_tuning_tag_ready()")[1].split("\n\n\n")[0]
+    assert "ImportConclusionKind.tuning_kneading_substitution()" in tag
+    assert "ImportStrengthClass.classical_class_specific()" in tag
+    assert "ImportStatus.scaffolded()" in tag

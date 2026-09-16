@@ -21,6 +21,8 @@ struct ImportConclusionKind(ImplicitlyCopyable):
     def renormalization_with_apriori_bounds() -> Self: return Self(5)
     @staticmethod
     def boundary_identification_soundness() -> Self: return Self(6)
+    @staticmethod
+    def tuning_kneading_substitution() -> Self: return Self(7)
 
 
 struct ImportStrengthClass(ImplicitlyCopyable):
@@ -79,7 +81,7 @@ struct TheoremTagRecord(ImplicitlyCopyable):
 
 
 def allowed_conclusion_kind(kind: ImportConclusionKind) -> Bool:
-    return kind.code >= 0 and kind.code <= 6
+    return kind.code >= 0 and kind.code <= 7
 
 
 def allowed_strength_class(strength_class: ImportStrengthClass) -> Bool:
@@ -154,6 +156,24 @@ def known_trivial_fiber_class_tag_ready() -> TheoremTagRecord:
         True,
         ImportConclusionKind.known_trivial_fiber_class(),
         False,
+        True,
+        ImportStrengthClass.classical_class_specific(),
+        ImportStatus.scaffolded(),
+    )
+
+
+def kneading_form_of_tuning_tag_ready() -> TheoremTagRecord:
+    # Source family: Douady-Hubbard tuning, in the kneading form of Derrida,
+    # Gervois, and Pomeau (star product) and Milnor. Covered class: kneading
+    # sequences of real quadratic parameters. The finite side is the DGP tuning
+    # pattern computed by src/C1_residual_directive_carrier.mojo; the payload
+    # instance there records the source scope, and the import stays scaffolded.
+    return TheoremTagRecord(
+        "KneadingFormOfTuning",
+        True,
+        True,
+        ImportConclusionKind.tuning_kneading_substitution(),
+        False,  # per-address payload instance supplied by the directive carrier
         True,
         ImportStrengthClass.classical_class_specific(),
         ImportStatus.scaffolded(),

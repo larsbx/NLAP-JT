@@ -37,8 +37,10 @@ def test_core_policy_mappings_are_seeded():
         "rank2-coordinate-record", "unit-quadrance-rotor", "rational-ray-address",
         "rational-box-half-width", "formal-polynomial-derivative",
         "rational-box-krawczyk-replay", "landing-association-replay",
-        "unit-circle-primitive",
+        "residual-directive-prefix", "unit-circle-primitive",
     } <= entries.keys()
+    assert entries["residual-directive-prefix"]["status"] == "theorem_dependent"
+    assert "a priori bounds" in entries["residual-directive-prefix"]["does_not_inherit"]
     assert entries["landing-association-replay"]["status"] == "theorem_dependent"
     assert "C1" in entries["landing-association-replay"]["does_not_inherit"]
     assert entries["unit-circle-primitive"]["symbols"] == []

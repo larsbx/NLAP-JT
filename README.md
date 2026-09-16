@@ -115,6 +115,8 @@ examples/
   stress-test-m41.md
 src/
   *.mojo
+  finite_exact/              # vendored from larsbx/finite-math-kernels, pinned in vendored.toml
+  substitution_dynamics/     # vendored from larsbx/finite-math-kernels, pinned in vendored.toml
 tools/
   audit_*.py
   exact_arithmetic_allowlist.md
@@ -123,6 +125,7 @@ tools/
 tests/
   test_*.py
 claim_governance.toml        # repository policy for the vendored audit
+vendored.toml                # upstream commit and per-file digests of every vendored package
 ```
 
 `claim_governance.toml` restates the terminology, no-trigonometry, no-points,

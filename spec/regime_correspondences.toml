@@ -94,6 +94,19 @@ evidence = ["tests/test_bigq_landing_target_adapter.py", "docs/certificate-predi
 proof_boundary = "The imported analytic correspondence remains metadata until a checked theorem tag is bound."
 
 [[correspondence]]
+id = "residual-directive-prefix"
+analytic_concepts = ["infinitely renormalizable parameter", "iterated tuning", "kneading sequence"]
+finite_term = "directive prefix of DGP tuning patterns"
+class = "symbolic_encoding"
+status = "theorem_dependent"
+preserves = ["itinerary of a periodic address under doubling", "star product as composition of tuning substitutions", "kneading-prefix growth under one more renormalization level"]
+does_not_inherit = ["Douady-Hubbard tuning identification without its theorem tag", "a priori bounds", "fiber triviality", "same fiber", "pure discrete spectrum", "C1", "ResidualClosureNoMissingLinks", "certificate acceptance"]
+domain_conditions = ["normalized periodic address of period at least two", "period found within the explicit cap", "real-slice kneading convention declared"]
+symbols = ["src/C1_residual_directive_carrier.mojo::kneading_letters", "src/C1_residual_directive_carrier.mojo::ResidualDirectiveCarrier"]
+evidence = ["tests/test_C1_residual_directive_carrier.py", "docs/C1_residual_directive_carrier.md"]
+proof_boundary = "A directive prefix is finite combinatorics of the residual parameter's kneading data; it decides no fiber, bound, or spectral property."
+
+[[correspondence]]
 id = "unit-circle-primitive"
 analytic_concepts = ["unit circle", "circle locus"]
 finite_term = "no rank-2 finite-regime object"

@@ -72,6 +72,9 @@ def test_compiler_checked_boundary_is_explicit():
         "src/checked_landing_target_adapter.mojo",
         "src/finite_exact/bigint_z.mojo",
         "src/bigint_adapter.mojo",
+        "src/substitution_dynamics/tuning.mojo",
+        "src/substitution_dynamics/sadic.mojo",
+        "src/C1_residual_directive_carrier.mojo",
     ]:
         assert path in boundary
     assert "Passing it does not imply that" in boundary

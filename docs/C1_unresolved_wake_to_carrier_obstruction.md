@@ -110,6 +110,10 @@ This lemma may not conclude:
 - a finite bounded failure proves same fiber;
 - rank-2 circle-like geometry is available.
 
+## Residual-class carrier representation
+
+On the residual class of the program, the infinitely renormalizable parameters, the carrier is no longer an untyped incidence record: `docs/C1_residual_directive_carrier.md` represents it as a directive prefix of DGP tuning patterns, each computed from a periodic rational ray address, with `CarrierTooCoarse` read as "one more renormalization level needed" and strict carrier refinement as appending one pattern. That representation is a definition and imports the tuning identification only through the `KneadingFormOfTuning` theorem tag.
+
 ## Next local target
 
 Prove or formalize `CarrierRefinementProgress`:

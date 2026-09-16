@@ -40,6 +40,7 @@ KnownTrivialFiberClass
 YoccozPuzzleLocalConnectivityUnderHypotheses
 RenormalizationWithAprioriBounds
 BoundaryIdentificationSoundness
+TuningKneadingSubstitution
 ```
 
 Any other conclusion kind is rejected by the final proof checker until added to this ledger with source, scope, assumptions, and strength classification.
@@ -256,6 +257,39 @@ label_only_equality_rejected
 Strength class: `CLASSICAL_IMPORTED_LOCAL` or `CLASSICAL_IMPORTED_CLASS_SPECIFIC`, depending on the source used.
 
 Final use: allowed only when equality is not merely a label or presentation identity.
+
+### Kneading form of tuning
+
+Tag family:
+
+```text
+KneadingFormOfTuning
+```
+
+Source family: Douady–Hubbard tuning (*Étude dynamique des polynômes complexes*), in the kneading form given by the star product of Derrida, Gervois, and Pomeau for unimodal kneading sequences, with Milnor (*Periodic orbits, external rays and the Mandelbrot set*) for the passage from rational ray addresses to kneading sequences.
+
+Covered class: kneading sequences of real quadratic parameters under tuning by a superattracting centre of period `p >= 2` whose kneading prefix `A'` has `p - 1` letters. The imported statement is that tuning by that centre acts on kneading sequences as the constant-length substitution `tau_{A', dgp}(s) = A' . (s xor dgp(A'))`, where `dgp(A')` is the parity of the number of `1` in `A'`.
+
+Conclusion kind: `TuningKneadingSubstitution`.
+
+Assumption payload:
+
+```text
+tuning_centre_ray_address
+centre_period_at_least_two
+kneading_letters_from_doubling_kernel
+dgp_parity_twist
+real_slice_convention_declared
+tuning_source
+substitution_kernel_pin
+conclusion_scope_is_kneading_identity_only
+```
+
+Strength class: `CLASSICAL_IMPORTED_CLASS_SPECIFIC`.
+
+Finite side: `src/C1_residual_directive_carrier.mojo` computes the kneading letters of a periodic rational ray address with the exact `BigZ`-backed doubling kernel and forms the DGP pattern with the vendored `substitution_dynamics` package of `larsbx/finite-math-kernels` (pinned in `vendored.toml`). `kneading_tuning_instance` is the source-specific payload record; `kneading_form_of_tuning_tag_ready` is the ledger record, which stays `scaffolded`. See `docs/C1_residual_directive_carrier.md`.
+
+Final use: allowed only for reading a residual-class carrier as a directive prefix of tuning substitutions. It imports no landing theorem, no a priori bound, no fibre statement, and no spectral conclusion; the odometer and Dekking statements of the round-two audit are separate tags that this ledger does not yet record.
 
 ## Forbidden imports
 

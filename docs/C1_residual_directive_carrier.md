@@ -34,7 +34,7 @@ The parity twist shipped by the vendored kernel as `TuningPattern.dgp` (Derridaâ
 
 ### Kneading prefix of a carrier
 
-`ResidualDirectiveCarrier.kneading_word()` is the vendored `kneading_prefix` of the levels' patterns: the prefix of the star product `A_1 * ... * A_n`, of length `p_1 ... p_n - 1`, which every image of the composite substitution begins with. `agrees_to_depth(other, k)` compares the first `k` addresses; `refined(level)` returns a new carrier.
+`ResidualDirectiveCarrier.kneading_word()` is the vendored `kneading_prefix` of the levels' patterns: the prefix of the star product `A_1 * ... * A_n`, of length `p_1 ... p_n - 1`, which every image of the composite substitution begins with. `agrees_to_depth(other, k)` compares the first `k` addresses; `refined(level)` returns a new carrier; `checked_period()` is the product of the levels' periods with `Int64` overflow reported, never wrapped.
 
 ## Exact checks
 

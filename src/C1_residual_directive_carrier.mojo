@@ -62,7 +62,7 @@ def checked_kneading_prefix(num: Int64, den: Int64) -> KneadingPrefixResult:
         return rejected_kneading_prefix()
     var prefix = List[Int]()
     var current = theta
-    for k in range(MAX_CARRIER_PERIOD + 1):
+    for k in range(MAX_CARRIER_PERIOD):
         # Compare current = a/b with theta/2 = num/(2 den) and (theta+1)/2 = (num+den)/(2 den).
         var lhs = _cross(current.num, two_den.value)
         var low = _cross(theta.num, current.den)
@@ -219,10 +219,14 @@ struct ResidualDirectiveCarrier(Copyable, Movable):
             patterns.append(self.levels[i].pattern.copy())
         return kneading_prefix(patterns)
 
-    def period(self) -> Int:
-        var p = 1
+    def checked_period(self) -> CheckedI64Result:
+        """`p_1 ... p_n`, or an overflowed result: sixty-three period-2 levels
+        already exceed `Int64`, so the product is never trusted unchecked."""
+        var p = CheckedI64Result(1, False)
         for i in range(len(self.levels)):
-            p *= self.levels[i].pattern.period()
+            p = checked_mul_i64(p.value, Int64(self.levels[i].pattern.period()))
+            if p.overflowed:
+                return p
         return p
 
 
@@ -329,7 +333,18 @@ def residual_directive_carrier_smoke() -> Bool:
     # Refinement is strict and agreement is prefix-wise.
     var base = _carrier(n1, d1)
     var deeper = _carrier(n2, d2)
-    if not (base.depth() == 2 and deeper.depth() == 3 and deeper.period() == 8):
+    var deeper_period = deeper.checked_period()
+    if not (base.depth() == 2 and deeper.depth() == 3 and deeper_period.accepted() and deeper_period.value == 8):
+        return False
+    # Sixty-three period-2 levels form a valid carrier whose period 2^63 does not fit.
+    var doubling_level = checked_directive_level(1, 3)
+    var wide = ResidualDirectiveCarrier.empty()
+    for _ in range(63):
+        wide = wide.refined(doubling_level.level)
+    if not (wide.depth() == 63 and wide.checked_period().overflowed):
+        return False
+    # Period 63 lies beyond MAX_CARRIER_PERIOD: 92737 divides 2^63 - 1.
+    if checked_kneading_prefix(1, 92737).accepted():
         return False
     if not (base.agrees_to_depth(deeper, 2) and not base.agrees_to_depth(deeper, 3)):
         return False

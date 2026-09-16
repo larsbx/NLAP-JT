@@ -86,6 +86,14 @@ def test_kneading_prefixes_of_named_centres():
         assert kr.kneading_prefix(bad) is None
 
 
+def test_period_limit_is_sixty_two_in_reference_and_mojo():
+    assert pow(2, 63, 92737) == 1 and kr.period(F(1, 92737)) is None
+    assert kr.period(F(1, 2**62 - 1)) == 62
+    src = text(SRC)
+    assert "comptime MAX_CARRIER_PERIOD = 62" in src and "for k in range(MAX_CARRIER_PERIOD):" in src
+    assert "checked_kneading_prefix(1, 92737).accepted()" in src and "checked_mul_i64(p.value" in src
+
+
 def test_every_periodic_angle_has_a_kneading_prefix_of_length_period_minus_one():
     for theta in periodic_angles(10):
         assert len(kr.kneading_prefix(theta)) == kr.period(theta) - 1

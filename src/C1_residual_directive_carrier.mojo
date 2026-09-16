@@ -262,7 +262,7 @@ def _carrier(nums: List[Int64], dens: List[Int64]) -> ResidualDirectiveCarrier:
         if level.rejected:
             return ResidualDirectiveCarrier.empty()
         carrier = carrier.refined(level.level)
-    return carrier
+    return carrier^
 
 
 def _tuned_matches(nums: List[Int64], dens: List[Int64], tuned_num: Int64, tuned_den: Int64) -> Bool:

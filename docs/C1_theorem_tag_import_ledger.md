@@ -40,6 +40,7 @@ KnownTrivialFiberClass
 YoccozPuzzleLocalConnectivityUnderHypotheses
 RenormalizationWithAprioriBounds
 BoundaryIdentificationSoundness
+TuningKneadingSubstitution
 ```
 
 Any other conclusion kind is rejected by the final proof checker until added to this ledger with source, scope, assumptions, and strength classification.
@@ -256,6 +257,36 @@ label_only_equality_rejected
 Strength class: `CLASSICAL_IMPORTED_LOCAL` or `CLASSICAL_IMPORTED_CLASS_SPECIFIC`, depending on the source used.
 
 Final use: allowed only when equality is not merely a label or presentation identity.
+
+### Tuning as a kneading substitution
+
+Tag family:
+
+```text
+TuningKneadingSubstitution
+```
+
+Source family: Douady–Hubbard tuning (polynomial-like renormalization and the tuning operator on parameter space), written on kneading sequences in the symbolic dynamics of Bruin and Schleicher; the Derrida–Gervois–Pomeau star product for the real case.
+
+Covered class: a superattracting centre of period `p` given by a periodic rational ray address, and the kneading sequences of the parameters in its tuned copy.
+
+Conclusion kind: `TuningKneadingSubstitution`: the kneading sequence of the tuned parameter is the image of the kneading sequence of the base parameter under the constant-length-`p` substitution `s -> prefix . (s xor twist)` of `docs/C1_residual_directive_carrier.md`.
+
+Assumption payload:
+
+```text
+centre_address
+period
+kneading_prefix
+continuation_rule_source
+tuning_theorem_source
+angle_tuning_instances_checked
+adapter_domain_matches
+```
+
+Strength class: `CLASSICAL_IMPORTED_CLASS_SPECIFIC`.
+
+Final use: allowed only to read a residual directive carrier as a statement about kneading sequences of tuned parameters. It is not a statement about parameter-plane shrinking, a priori bounds, or fibre triviality, and it cannot be used as a residual exit.
 
 ## Forbidden imports
 

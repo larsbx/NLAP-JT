@@ -115,6 +115,8 @@ examples/
   stress-test-m41.md
 src/
   *.mojo
+  finite_exact/              # vendored from larsbx/finite-math-kernels, pinned in vendored.toml
+  substitution_dynamics/     # vendored tuning, directive-prefix, and coincidence kernels, same pin
 tools/
   audit_*.py
   exact_arithmetic_allowlist.md

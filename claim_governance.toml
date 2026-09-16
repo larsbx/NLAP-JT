@@ -47,7 +47,7 @@ registry = "docs/terminology-registry.md"
 registry_sections = ["## Established field terms", "## Project terms with declarations", "## Deprecated project terms"]
 declaration_marker = "Terminology declaration:"
 declaration_fields = ["Terminology declaration:", "Genealogy:", "Bridge claim:", "Known leaks:", "Use discipline:"]
-project_terms = ["PointVertex", "rank-2 coordinate record", "finite rational-ray nest", "SeparatorCatalogueAdequacy", "persistent non-separation", "persistent wake ambiguity", "Mojo theorem kernel"]
+project_terms = ["PointVertex", "rank-2 coordinate record", "finite rational-ray nest", "SeparatorCatalogueAdequacy", "persistent non-separation", "persistent wake ambiguity", "Mojo theorem kernel", "residual directive carrier"]
 risky_phrases = ["obvious isomorphism", "canonical analogy", "essentially the same", "same as", "just a", "nothing but", "isomorphic to", "equivalent to", "corresponds exactly", "proof by analogy"]
 negating_context = ["not ", "no ", "without ", "unless ", "forbidden", "disallow", "reject", "blocked", "must not", "cannot", "does not", "is not"]
 migration_context = ["deprecated", "legacy", "replaces", "rather than", "migration", "old term"]
@@ -56,6 +56,9 @@ allow = ["docs/terminology-governance.md", "docs/terminology-registry.md", "docs
 [[terminology.scoped]]
 term = "finite rational-ray nest"
 home = ["docs/C1_", "src/C1_", "tests/test_C1_"]
+[[terminology.scoped]]
+term = "residual directive carrier"
+home = ["docs/C1_", "src/C1_", "tests/test_C1_", "tools/kneading_reference.py", "spec/regime_correspondences.toml"]
 [[terminology.scoped]]
 term = "persistent non-separation"
 home = ["docs/C1_", "src/C1_", "tests/test_C1_"]

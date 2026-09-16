@@ -21,6 +21,8 @@ struct ImportConclusionKind(ImplicitlyCopyable):
     def renormalization_with_apriori_bounds() -> Self: return Self(5)
     @staticmethod
     def boundary_identification_soundness() -> Self: return Self(6)
+    @staticmethod
+    def tuning_kneading_substitution() -> Self: return Self(7)
 
 
 struct ImportStrengthClass(ImplicitlyCopyable):
@@ -79,7 +81,7 @@ struct TheoremTagRecord(ImplicitlyCopyable):
 
 
 def allowed_conclusion_kind(kind: ImportConclusionKind) -> Bool:
-    return kind.code >= 0 and kind.code <= 6
+    return kind.code >= 0 and kind.code <= 7
 
 
 def allowed_strength_class(strength_class: ImportStrengthClass) -> Bool:
@@ -153,6 +155,21 @@ def known_trivial_fiber_class_tag_ready() -> TheoremTagRecord:
         True,
         True,
         ImportConclusionKind.known_trivial_fiber_class(),
+        False,
+        True,
+        ImportStrengthClass.classical_class_specific(),
+        ImportStatus.scaffolded(),
+    )
+
+
+def tuning_kneading_substitution_tag_ready() -> TheoremTagRecord:
+    # docs/C1_residual_directive_carrier.md: the substitution form of tuning on
+    # kneading sequences. Scaffolded: the payload is per-level and unchecked.
+    return TheoremTagRecord(
+        "TuningKneadingSubstitution",
+        True,
+        True,
+        ImportConclusionKind.tuning_kneading_substitution(),
         False,
         True,
         ImportStrengthClass.classical_class_specific(),

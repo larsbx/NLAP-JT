@@ -34,9 +34,23 @@ def test_allowed_conclusion_kinds_are_explicit_in_doc_and_mojo():
         "YoccozPuzzleLocalConnectivityUnderHypotheses",
         "RenormalizationWithAprioriBounds",
         "BoundaryIdentificationSoundness",
+        "TuningKneadingSubstitution",
     ]:
         assert kind in text
     assert "allowed_conclusion_kind" in text
+
+
+def test_tuning_kneading_substitution_tag_is_class_specific_and_scaffolded():
+    src = body(SRC)
+    block = src[src.index("def tuning_kneading_substitution_tag_ready"):src.index("def generic_mlc_import_admissible")]
+    assert "ImportConclusionKind.tuning_kneading_substitution()" in block
+    assert "ImportStrengthClass.classical_class_specific()" in block
+    assert "ImportStatus.scaffolded()" in block
+    doc = body(DOC)
+    section = doc[doc.index("### Tuning as a kneading substitution"):doc.index("## Forbidden imports")]
+    for field in ["centre_address", "period", "kneading_prefix", "continuation_rule_source", "tuning_theorem_source", "angle_tuning_instances_checked", "adapter_domain_matches"]:
+        assert field in section
+    assert "cannot be used as a residual exit" in section
 
 
 def test_strength_classes_block_global_mlc_imports():

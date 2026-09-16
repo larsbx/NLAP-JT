@@ -126,6 +126,18 @@ Known leaks: The kernel can check finite derivations encoded in its rule set. It
 
 Use discipline: Use Mojo as the first-class computation language and the first-class finite proof-object checker. Do not treat an unchecked theorem tag as a proved internal theorem.
 
+### residual directive carrier
+
+Terminology declaration: `residual directive carrier` is the project term for a finite list of renormalization levels, each an exact periodic rational ray address with the tuning pattern (0/1 kneading prefix and twist) it determines; its kneading prefix is the star product of the levels' patterns (`docs/C1_residual_directive_carrier.md`).
+
+Genealogy: It joins the C1 carrier vocabulary to the directive-sequence vocabulary of S-adic substitution dynamics, through the Douady–Hubbard tuning operator written on kneading sequences.
+
+Bridge claim: Definition-only project term. The identification of a level's substitution with tuning on kneading sequences is the scaffolded theorem tag `TuningKneadingSubstitution`.
+
+Known leaks: It carries dynamical-plane combinatorics only; parameter-plane shrinking needs a priori bounds. Levels compare by address, not by component. Agreement to every finite depth restates the persistent non-separation frontier.
+
+Use discipline: Use in C1 files or with a pointer to this registry. Never as evidence of same-fibre membership.
+
 ## Deprecated project terms
 
 - `catalogue extensionality`: deprecated. Use `SeparatorCatalogueAdequacy`, `SeparatorCatalogueSoundness`, or `SeparatorCatalogueCompleteness`.

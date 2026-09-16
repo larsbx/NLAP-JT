@@ -22,7 +22,8 @@ from bigq_certificate_incidence import bigq_certificate_incidence_smoke
 from C1_final_proof_block_ledger import FinalEvidencePolicy, canonical_final_evidence_policy, final_evidence_policy_valid, final_ledger_ready_for_c1, current_priority_block, next_immediate_block
 from C1_residual_closure_no_missing_links import FinalExitKind, accepted_final_exit, rejected_final_exit
 from C1_theorem_tag_assumption_payloads import AssumptionPayloadKind, PayloadConclusionKind, PayloadStrengthClass, allowed_payload_kind, allowed_payload_conclusion, allowed_payload_strength, theorem_tag_payload_admissible, rational_parameter_ray_landing_payload_scaffold, fiber_definition_payload_scaffold, generic_mlc_payload_rejected, bounded_search_payload_rejected
-from C1_theorem_tag_import_ledger import ImportConclusionKind, ImportStrengthClass, ImportStatus, allowed_conclusion_kind, allowed_strength_class, forbidden_strength_class, rational_parameter_ray_landing_tag_ready, fiber_definition_equivalence_tag_ready, known_trivial_fiber_class_tag_ready, theorem_tag_admissible_for_final
+from C1_theorem_tag_import_ledger import ImportConclusionKind, ImportStrengthClass, ImportStatus, allowed_conclusion_kind, allowed_strength_class, forbidden_strength_class, rational_parameter_ray_landing_tag_ready, fiber_definition_equivalence_tag_ready, known_trivial_fiber_class_tag_ready, tuning_kneading_substitution_tag_ready, theorem_tag_admissible_for_final
+from C1_residual_directive_carrier import residual_directive_carrier_smoke
 from integer_gcd import gcd_int, gcd_i64, gcd_i64_or_one
 from ray_address import RayAddr, RayAddr64, same_ray_addr, ray_addr_before
 from rational_trig import demo_spread_orthogonal_axes, demo_ray_addr_doubling_half
@@ -142,6 +143,8 @@ def test_typed_theorem_import_kinds() -> Bool:
         not theorem_tag_admissible_for_final(rational_parameter_ray_landing_tag_ready()) and
         not theorem_tag_admissible_for_final(fiber_definition_equivalence_tag_ready()) and
         not theorem_tag_admissible_for_final(known_trivial_fiber_class_tag_ready()) and
+        allowed_conclusion_kind(ImportConclusionKind.tuning_kneading_substitution()) and
+        not theorem_tag_admissible_for_final(tuning_kneading_substitution_tag_ready()) and
         ImportStatus.checked().code != ImportStatus.scaffolded().code
     )
 
@@ -332,6 +335,8 @@ def run_smoke_tests() -> Bool:
     if not checked_finite_certificate_gate_smoke():
         return False
     if not theorem_tag_payload_instances_smoke():
+        return False
+    if not residual_directive_carrier_smoke():
         return False
     if not checked_landing_target_adapter_smoke():
         return False

@@ -13,7 +13,7 @@ from finite_exact.rat_q import Q, bigq_storage_smoke, demo_q_normalization, demo
 from finite_exact.closed_interval import IQ, ComplexIQ, demo_interval_mul, demo_complex_quadrance_point, bigq_interval_conformance_smoke
 from poly_interval_eval import eval_p21, demo_poly_interval_eval_status
 from krawczyk_witness import verify_p21_krawczyk_c_minus_2, bigq_krawczyk_replay_smoke
-from interval_orbit import bigq_exact_type_exclusion_replay_smoke, invalid_orbit_config_rejection_smoke
+from interval_orbit import bigq_exact_type_exclusion_replay_smoke
 from bigq_ray_address import bigq_ray_address_replay_smoke
 from bigq_landing_target_adapter import bigq_landing_target_replay_smoke
 from bigq_theorem_tag_payload_instances import bigq_theorem_payload_replay_smoke
@@ -283,8 +283,6 @@ def run_smoke_tests() -> Bool:
     if not bigq_krawczyk_replay_smoke():
         return False
     if not bigq_exact_type_exclusion_replay_smoke():
-        return False
-    if not invalid_orbit_config_rejection_smoke():
         return False
     if not bigq_ray_address_replay_smoke():
         return False

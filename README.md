@@ -1,8 +1,8 @@
 # Repository moved
 
-**This repository is historical and should not receive new development.** The finite-regime Mandelbrot research program moved to [`larsbx/finite-mandlebrot-research`](https://github.com/larsbx/finite-mandlebrot-research) on September 16, 2026.
+**This repository is historical and should not receive new development.** The finite-regime Mandelbrot research program moved to [`larsbx/finite-mandelbrot-research`](https://github.com/larsbx/finite-mandelbrot-research) on September 16, 2026.
 
-The migrated repository is the sole active source of truth for source code, specifications, proofs, tests, CI, papers, and future issues or pull requests. This repository remains available only to preserve its original history and old links. The migration was pinned at NLAP-JT commit `d00c64d4ec703564a2d8ceb606279d2025f2352a`; subsequent work belongs in the new repository.
+The migrated repository is the sole active source of truth for source code, specifications, proofs, tests, CI, papers, and future issues or pull requests. This repository remains available only to preserve its original history and old links. The migration was pinned at NLAP-JT commit `d00c64d4ec703564a2d8ceb606279d2025f2352a`; subsequent work belongs in the new repository. A post-cutover orbit-validation fix was accidentally merged here on September 17/18 and is explicitly non-canonical; the historical tree is restored below, and the fix is carried in the canonical repository.
 
 ---
 

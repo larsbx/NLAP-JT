@@ -107,6 +107,10 @@ struct IntervalOrbitStatus:
         )
 
 
+def invalid_orbit_status() -> IntervalOrbitStatus:
+    return IntervalOrbitStatus(False, False, False, 0, 0)
+
+
 struct BigQExactTypeExclusionResult(Copyable):
     var box_name: String
     var half_width_den_power: Int
@@ -129,6 +133,10 @@ struct BigQExactTypeExclusionResult(Copyable):
 
 
 def intended_pair(ell: Int, period: Int, i: Int, j: Int) -> Bool:
+    # Public verifiers reject invalid OrbitEvalConfig values before partitioning.
+    # Keep this primitive total as defense in depth for internal callers.
+    if ell < 1 or period < 1:
+        return False
     return i >= ell and ((j - i) % period == 0)
 
 
@@ -216,6 +224,9 @@ def bigq_p21_exact_type_exclusions(half_width_den_power: Int) -> BigQExactTypeEx
 
 
 def verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
+    var config = OrbitEvalConfig(ell, period, 3)
+    if not config.valid():
+        return invalid_orbit_status()
     var orbit = build_interval_orbit_h3(c_box)
     var excluded = 0
     var total = 0
@@ -230,6 +241,9 @@ def verify_exact_type_exclusions_h3(c_box: ComplexIQ, ell: Int, period: Int) -> 
 
 
 def verify_exact_type_exclusions_h6(c_box: ComplexIQ, ell: Int, period: Int) -> IntervalOrbitStatus:
+    var config = OrbitEvalConfig(ell, period, 6)
+    if not config.valid():
+        return invalid_orbit_status()
     var orbit = build_interval_orbit_h6(c_box)
     var excluded = 0
     var total = 0
@@ -259,6 +273,23 @@ def demo_m41_status() -> IntervalOrbitStatus:
 
 def demo_native_c_minus_2_accepts() -> Bool:
     return demo_c_minus_2_status().accepted()
+
+
+def invalid_orbit_config_rejection_smoke() -> Bool:
+    var h3_zero_ell = verify_exact_type_exclusions_h3(c_minus_2_box(8), 0, 1)
+    var h3_zero_period = verify_exact_type_exclusions_h3(c_minus_2_box(8), 2, 0)
+    var h3_horizon_short = verify_exact_type_exclusions_h3(c_minus_2_box(8), 3, 1)
+    var h6_zero_ell = verify_exact_type_exclusions_h6(c_minus_2_box(8), 0, 1)
+    var h6_zero_period = verify_exact_type_exclusions_h6(c_minus_2_box(8), 4, 0)
+    var h6_horizon_short = verify_exact_type_exclusions_h6(c_minus_2_box(8), 6, 1)
+    return (
+        not h3_zero_ell.accepted() and
+        not h3_zero_period.accepted() and
+        not h3_horizon_short.accepted() and
+        not h6_zero_ell.accepted() and
+        not h6_zero_period.accepted() and
+        not h6_horizon_short.accepted()
+    )
 
 
 def bigq_exact_type_exclusion_replay_smoke() -> Bool:

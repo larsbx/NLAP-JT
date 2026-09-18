@@ -45,8 +45,21 @@ def test_bigq_exact_type_replay_uses_shared_box_and_typed_failure():
 
 def test_intended_pair_has_clean_semantics():
     src = text()
+    assert "if ell < 1 or period < 1:" in src
     assert "return i >= ell and ((j - i) % period == 0)" in src
     assert "j >= ell" not in src
+
+
+def test_public_verifiers_reject_invalid_orbit_configs_before_partitioning():
+    src = text()
+    smoke = (ROOT / "src" / "smoke_tests.mojo").read_text(encoding="utf-8")
+    assert "var config = OrbitEvalConfig(ell, period, 3)" in src
+    assert "var config = OrbitEvalConfig(ell, period, 6)" in src
+    assert src.count("if not config.valid():") >= 2
+    assert "def invalid_orbit_config_rejection_smoke() -> Bool:" in src
+    assert "verify_exact_type_exclusions_h3(c_minus_2_box(8), 2, 0)" in src
+    assert "verify_exact_type_exclusions_h6(c_minus_2_box(8), 4, 0)" in src
+    assert "invalid_orbit_config_rejection_smoke" in smoke
 
 
 def test_same_box_and_exact_endpoint_gate_present():
